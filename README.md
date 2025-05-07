@@ -11,6 +11,7 @@
 # Laravel Blog Application
  ![Dashboard Screenshot](https://i.postimg.cc/9QsqkdMZ/Screenshot-2025-05-07-212353.png)
  ![Dashboard Screenshot](https://i.postimg.cc/59HyhHhm/Screenshot-2025-05-07-212412.png)
+ ![Dashboard Screenshot](https://i.postimg.cc/hPPy4B0M/Screenshot-2025-05-07-215634.png)
  ![Dashboard Screenshot](https://i.postimg.cc/zfXX03wK/Screenshot-2025-05-07-212853.png)
  ![Dashboard Screenshot](https://i.postimg.cc/2SjDfMqf/Screenshot-2025-05-07-212912.png)
  
