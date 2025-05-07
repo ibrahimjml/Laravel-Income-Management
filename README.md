@@ -7,8 +7,6 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
-# Laravel Blog Application
  ![Dashboard Screenshot](https://i.postimg.cc/9QsqkdMZ/Screenshot-2025-05-07-212353.png)
  ![Dashboard Screenshot](https://i.postimg.cc/59HyhHhm/Screenshot-2025-05-07-212412.png)
  ![Dashboard Screenshot](https://i.postimg.cc/hPPy4B0M/Screenshot-2025-05-07-215634.png)
