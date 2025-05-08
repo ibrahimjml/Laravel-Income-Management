@@ -10,12 +10,14 @@ use App\Models\Income;
 use App\Models\Outcome;
 use App\Models\Payment;
 use App\Models\Subcategory;
+use App\Services\BarChartService;
+use App\Services\IncomeReportService;
+use App\Services\OutcomeReportService;
 use Illuminate\Support\Carbon;
-
 
 class AdminController extends Controller
 {
-  public function index(){
+  public function index(BarChartService $barChart){
 
    $firstDayOfMonth = Carbon::now()->startOfMonth();
    $currentDay = Carbon::now()->addDay();
@@ -38,10 +40,10 @@ class AdminController extends Controller
       $query->where('type_name','student');
       })->count();
     $profit = $totalIncome - $totalOutcome;
-
+    // Bar chart data
     $labels = range(1, date('t')); // Days of current month
-    $incomeData = $this->getDailyIncomeData($firstDayOfMonth);
-    $outcomeData = $this->getDailyOutcomeData($firstDayOfMonth);
+    $incomeData = $barChart->getDailyIncomeData($firstDayOfMonth);
+    $outcomeData = $barChart->getDailyOutcomeData($firstDayOfMonth);
     $profitData = array_map(function($i) use ($incomeData, $outcomeData) {
         return $incomeData[$i] - $outcomeData[$i];
     }, array_keys($labels));
@@ -145,7 +147,7 @@ class AdminController extends Controller
     'upcoming_payments' => $upcomingPayments
     ]);
   }
-  public function report(){
+  public function report(IncomeReportService $incomeReport,OutcomeReportService $outcomeReport){
 
     $totalIncome = Payment::where('is_deleted', 0)
         ->whereHas('income', function($query) {
@@ -172,6 +174,11 @@ class AdminController extends Controller
   ->where('is_deleted',0)
   ->get();
 
+$incomeCategoryData = $incomeReport->getIncomeByCategory();
+$incomeSubcategoryData = $incomeReport->getIncomeBySubcategory();
+$outcomeCategoryData = $outcomeReport->getOutcomeByCategory();
+$outcomeSubcategoryData = $outcomeReport->getOutcomeBySubcategory();
+
     return view('admin.reports',[
       'total_income' => $totalIncome,
       'total_outcome' => $totalOutcome,
@@ -179,45 +186,13 @@ class AdminController extends Controller
       'total_students' => $totalStudents,
       'incomes'=>$incomes,
       'outcomes' => $outcomes,
+      'incomeCategoryData' => $incomeCategoryData,
+      'incomeSubcategoryData' => $incomeSubcategoryData,
+      'outcomeCategoryData' => $outcomeCategoryData,
+      'outcomeSubcategoryData' =>$outcomeSubcategoryData
 
     ]);
   }
-
-  protected function getDailyIncomeData($firstDayOfMonth)
-  {
-      $daysInMonth = date('t');
-      $dailyData = [];
-      
-      for ($day = 1; $day <= $daysInMonth; $day++) {
-          $date = $firstDayOfMonth->copy()->addDays($day - 1);
-          
-          $amount = Payment::where('is_deleted', 0)
-              ->whereDate('created_at', $date)
-              ->sum('payment_amount');
-              
-          $dailyData[] = $amount ?? 0;
-      }
-      
-      return $dailyData;
-  }
   
-
-  protected function getDailyOutcomeData($firstDayOfMonth)
-  {
-      $daysInMonth = date('t');
-      $dailyData = [];
-      
-      for ($day = 1; $day <= $daysInMonth; $day++) {
-          $date = $firstDayOfMonth->copy()->addDays($day - 1);
-          
-          $amount = Outcome::where('is_deleted', 0)
-              ->whereDate('created_at', $date)
-              ->sum('amount');
-              
-          $dailyData[] = $amount ?? 0;
-      }
-      
-      return $dailyData;
-  }
 }
 

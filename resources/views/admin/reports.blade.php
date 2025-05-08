@@ -75,7 +75,14 @@
                               <tbody>
                           @foreach($incomes as $income)
                                       <tr>
-                                          <td>{{$income->client->client_fname}} {{$income->client->client_lname}}</td>
+                                          <td>{{$income->client->client_fname}} {{$income->client->client_lname}}
+                                            <span class="badge bg-{{ 
+                                              $income->status == 'complete' ? 'success' : 
+                                              ($income->status == 'partial' ? 'warning' : 'danger') 
+                                          }}">
+                                            <small>{{ ucfirst($income->status) }}</small>  
+                                          </span>
+                                          </td>
                                           <td>${{$income->amount}}</td>
                                           <td>${{$income->paid}}</td>
                                           <td>{{ date('M d, Y', strtotime($income->created_at)) }}</td>
@@ -133,17 +140,17 @@
               </div>
               <div class="col-lg-3">
                   <div class="shadow p-3 mb-3">
+                      <h3 class="text-center">Income by Subcategory</h3>
+                      <canvas id="incomeSubcategoryChart"></canvas>
+                  </div>
+              </div>
+              <div class="col-lg-3">
+                  <div class="shadow p-3 mb-3">
                       <h3 class="text-center">Outcome by Category</h3>
                       <canvas id="outcomeCategoryChart"></canvas>
                   </div>
               </div>
   
-              <div class="col-lg-3">
-                  <div class="shadow p-3 mb-3">
-                      <h3 class="text-center">Income by Subcategory</h3>
-                      <canvas id="incomeSubcategoryChart"></canvas>
-                  </div>
-              </div>
               <div class="col-lg-3">
                   <div class="shadow p-3 mb-3" >
                       <h4 class="text-center">Outcome by Subcategory</h4>
@@ -153,8 +160,59 @@
           </div>
       </div>
     </div>
-
 @push('scripts')
+<script>
+  var incomeCategoryCtx = document.getElementById('incomeCategoryChart').getContext('2d');
+        var incomeCategoryChart = new Chart(incomeCategoryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: @json(array_column($incomeCategoryData->toArray(), 'category')),
+                datasets: [{
+                    label: 'Income by Category',
+                    data: @json(array_column($incomeCategoryData->toArray(), 'total_amount')),
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+                }]
+            }
+          });
 
-@endpush    
+          var incomeSubcategoryCtx = document.getElementById('incomeSubcategoryChart').getContext('2d');
+        var incomeSubcategoryChart = new Chart(incomeSubcategoryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: @json(array_column($incomeSubcategoryData->toArray(), 'subcategory')),
+                datasets: [{
+                    label: 'Income by Subcategory',
+                    data: @json(array_column($incomeSubcategoryData->toArray(), 'total_amount')),
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+                }]
+            }
+        });    
+        var outcomeCategoryCtx = document.getElementById('outcomeCategoryChart').getContext('2d');
+        var outcomeCategoryChart = new Chart(outcomeCategoryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: @json(array_column($outcomeCategoryData->toArray(), 'category')),
+                datasets: [{
+                    label: 'Outcome by Category',
+                    data: @json(array_column($outcomeCategoryData->toArray(), 'total_amount')),
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+                }]
+            }
+        });
+
+        var outcomeSubcategoryCtx = document.getElementById('outcomeSubcategoryChart').getContext('2d');
+        var outcomeSubcategoryChart = new Chart(outcomeSubcategoryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: @json(array_column($outcomeSubcategoryData->toArray(), 'subcategory')),
+                datasets: [{
+                    label: 'Outcome by Subcategory',
+                    data: @json(array_column($outcomeSubcategoryData->toArray(), 'total_amount')),
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+                }]
+            }
+        });
+
+</script>
+@endpush   
 @endsection
