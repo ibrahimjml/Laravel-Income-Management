@@ -10,7 +10,7 @@
  ![Dashboard Screenshot](https://i.postimg.cc/KjrFby4C/Screenshot-2025-05-08-152623.png)
  ![Dashboard Screenshot](https://i.postimg.cc/59HyhHhm/Screenshot-2025-05-07-212412.png)
  ![Dashboard Screenshot](https://i.postimg.cc/hPPy4B0M/Screenshot-2025-05-07-215634.png)
- ![Dashboard Screenshot](https://i.postimg.cc/zfXX03wK/Screenshot-2025-05-07-212853.png)
+ ![Dashboard Screenshot](https://i.postimg.cc/QdnVnVW3/Screenshot-2025-05-09-160413.png)
  ![Dashboard Screenshot](https://i.postimg.cc/7Y0JCCTy/Screenshot-2025-05-08-155644.png)
  ![Dashboard Screenshot](https://i.postimg.cc/wBGj4HsV/Screenshot-2025-05-08-155515.png)
  
