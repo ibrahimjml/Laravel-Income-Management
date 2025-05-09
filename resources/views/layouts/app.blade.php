@@ -58,7 +58,6 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- general JS -->
 <script src="{{asset('js/script.js')}}"></script>
-<script src="{{asset('js/print.js')}}"></script>
 @stack('scripts')
 </body>
 </html>

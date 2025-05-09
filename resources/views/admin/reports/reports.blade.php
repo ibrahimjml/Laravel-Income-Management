@@ -11,7 +11,7 @@
               <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal">
                   Filter by Date
               </button>
-              <button id="print-report" class="btn btn-warning ms-2">Print Report</button>
+              <button onclick="window.print()" class="btn btn-warning ms-2">Print Report</button>
           </div>
 
           <div class="row mb-4">
