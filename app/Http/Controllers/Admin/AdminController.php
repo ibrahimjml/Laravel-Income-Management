@@ -148,18 +148,13 @@ class AdminController extends Controller
   }
   public function report(IncomeReportService $incomeReport,OutcomeReportService $outcomeReport){
 
-    $selectedMonth = request()->input('month') ?? '';
-    $selectedYear = request()->input('year') ?? '';
-    $incomeDateFrom = request()->input('dateFrom') ?? '';
-    $incomeDateTo = request()->input('dateTo') ?? '';
+    $dateFrom = request('dateFrom');
+    $dateTo = request('dateTo');
 
-    $dateFrom = $incomeDateFrom;
-    $dateTo = $incomeDateTo;
-
-    if ($selectedMonth && $selectedYear) {
-      $dateFrom = "$selectedYear-$selectedMonth-01";
-      $dateTo = date("Y-m-t", strtotime($dateFrom));
-  };
+    if (request('month') && request('year')) {
+      $dateFrom = request('year') . '-' . request('month') . '-01';
+      $dateTo = date('Y-m-t', strtotime($dateFrom));
+  }
 
   $totalIncome = Payment::where('is_deleted', 0)
                         ->whereHas('income', function($query) use ($dateFrom, $dateTo) {
