@@ -33,4 +33,13 @@ class Income extends Model
 {
     return $this->amount - $this->paid;
 }
+
+public function scopeDateBetween($query, $from, $to)
+{
+    if ($from && $to) {
+        return $query->whereBetween('created_at', [$from, $to]);
+    }
+
+    return $query;
+}
 }

@@ -23,25 +23,25 @@ class AdminController extends Controller
    $currentDay = Carbon::now()->addDay();
 
     $totalIncome = Payment::with(['income.client'])
-    ->where('is_deleted', 0)
-    ->whereHas('income', function($query) {
-        $query->where('is_deleted', 0)
-              ->whereHas('client', function($q) {
-                  $q->where('is_deleted', 0);
-              });
-    })
-    ->whereBetween('created_at', [$firstDayOfMonth, $currentDay])
-    ->sum('payment_amount');
+                          ->where('is_deleted', 0)
+                          ->whereHas('income', function($query) {
+                          $query->where('is_deleted', 0)
+                          ->whereHas('client', function($q) {
+                          $q->where('is_deleted', 0);
+                              });
+                           })
+                         ->whereBetween('created_at', [$firstDayOfMonth, $currentDay])
+                         ->sum('payment_amount');
 
     $totalOutcome = Outcome::where('is_deleted', 0)
-    ->whereBetween('created_at', [$firstDayOfMonth, $currentDay])
-    ->sum('amount');
+                           ->whereBetween('created_at', [$firstDayOfMonth, $currentDay])
+                           ->sum('amount');
     $totalStudents = Client::whereHas('types', function($query) {
-      $query->where('type_name','student');
-      })->count();
+                           $query->where('type_name','student');
+                           })->count();
     $profit = $totalIncome - $totalOutcome;
     // Bar chart data
-    $labels = range(1, date('t')); // Days of current month
+    $labels = range(1, date('t')); 
     $incomeData = $barChart->getDailyIncomeData($firstDayOfMonth);
     $outcomeData = $barChart->getDailyOutcomeData($firstDayOfMonth);
     $profitData = array_map(function($i) use ($incomeData, $outcomeData) {
@@ -63,8 +63,8 @@ class AdminController extends Controller
   public function client(){
     $clienttype = ClientType::where('is_deleted',0)->get();
     $clients = Client::with('types') 
-    ->where('is_deleted', 0)
-    ->paginate(6);
+                     ->where('is_deleted', 0)
+                     ->paginate(6);
     return view('admin.clients.clients',['clienttype'=>$clienttype,'clients'=>$clients]);
   }
   public function income(){
@@ -73,11 +73,11 @@ class AdminController extends Controller
     $subcategories = Subcategory::where('is_deleted',0)->get();
     $clients = Client::with('types')->where('is_deleted',0)->get();
     $incomes = Income::with(['client', 'subcategory.category', 'payments'])
-    ->where('is_deleted', 0)
-    ->get()
-    ->each(function ($income) {
-        $income->paid = $income->payments->sum('payment_amount');
-    });
+                     ->where('is_deleted', 0)
+                     ->get()
+                     ->each(function ($income) {
+                    $income->paid = $income->payments->sum('payment_amount');
+                    });
   
     return view('admin.incomes.incomes',[
       'categories' => $categories,
@@ -89,58 +89,57 @@ class AdminController extends Controller
   public function outcome(){
     $categories = Category::where('is_deleted',0)->where('category_type','Outcome')->get();
     $subcategories = Subcategory::whereHas('category', function($query) {
-      $query->where('category_type', 'Outcome')
-            ->where('is_deleted', 0);
-  })
-  ->where('is_deleted', 0)
-  ->get();
+                                $query->where('category_type', 'Outcome')
+                                      ->where('is_deleted', 0);
+                                      })
+                               ->where('is_deleted', 0)
+                               ->get();
     $outcomes = Outcome::with('subcategory.category')
-    ->where('is_deleted',0)
-    ->get();
+                       ->where('is_deleted',0)
+                       ->get();
     return view('admin.outcomes.outcomes',['categories'=>$categories,'subcategories'=>$subcategories,'outcomes'=>$outcomes]);
   }
   public function payment(){
     $today = Carbon::today()->toDateString();
 
     $outdatedPayments = Income::with(['client', 'payments'])
-        ->whereDate('next_payment', '<', $today)
-        ->where('is_deleted', 0)
-        ->whereHas('client', function($query) {
-            $query->where('is_deleted', 0);
-        })
-        ->get()
-        ->map(function($income) {
-            $income->total_paid = $income->payments->sum('payment_amount');
-            return $income;
-        });
+                              ->whereDate('next_payment', '<', $today)
+                              ->where('is_deleted', 0)
+                              ->whereHas('client', function($query) {
+                                  $query->where('is_deleted', 0);
+                              })
+                              ->get()
+                              ->map(function($income) {
+                             $income->total_paid = $income->payments->sum('payment_amount');
+                             return $income;
+                              });
 
     $todayPayments = Income::with(['client', 'payments'])
-    ->whereDate('next_payment', $today)
-    ->where('is_deleted', 0)
-    ->where('status','!=','complete')
-    ->whereHas('client', function($query) {
-        $query->where('is_deleted', 0);
-    })
-    ->get()
-    ->map(function($income) {
-        $income->total_paid = $income->payments->sum('payment_amount');
-        return $income;
-    });
+                           ->whereDate('next_payment', $today)
+                           ->where('is_deleted', 0)
+                           ->where('status','!=','complete')
+                           ->whereHas('client', function($query) {
+                               $query->where('is_deleted', 0);
+                           })
+                           ->get()
+                           ->map(function($income) {
+                          $income->total_paid = $income->payments->sum('payment_amount');
+                          return $income;
+                          });
 
     $upcomingPayments = Income::with(['client', 'payments'])
-        ->whereDate('next_payment', '>', $today)
-        ->where('is_deleted', 0)
-        ->where('status','!=','complete')
-        ->whereHas('client', function($query) {
-            $query->where('is_deleted', 0);
-        })
-        ->get()
-        ->map(function($income) {
-          $totalPaid = (float)$income->payments->sum('payment_amount');
-          $income->total_paid = $totalPaid;
-    
-            return $income;
-        });
+                              ->whereDate('next_payment', '>', $today)
+                              ->where('is_deleted', 0)
+                              ->where('status','!=','complete')
+                              ->whereHas('client', function($query) {
+                                  $query->where('is_deleted', 0);
+                              })
+                              ->get()
+                              ->map(function($income) {
+                                $totalPaid = (float)$income->payments->sum('payment_amount');
+                                $income->total_paid = $totalPaid;
+                                return $income;
+                               });
     return view('admin.payments',[
     'outdated_payments' => $outdatedPayments,
     'today_payments' => $todayPayments,
@@ -149,37 +148,56 @@ class AdminController extends Controller
   }
   public function report(IncomeReportService $incomeReport,OutcomeReportService $outcomeReport){
 
-    $totalIncome = Payment::where('is_deleted', 0)
-        ->whereHas('income', function($query) {
-            $query->where('is_deleted', 0)
-                  ->whereHas('client', function($q) {
-                      $q->where('is_deleted', 0);
-                  });
-        })
-        ->sum('payment_amount');
+    $selectedMonth = request()->input('month') ?? '';
+    $selectedYear = request()->input('year') ?? '';
+    $incomeDateFrom = request()->input('dateFrom') ?? '';
+    $incomeDateTo = request()->input('dateTo') ?? '';
 
-  $totalOutcome = Outcome::where('is_deleted', 0)->sum('amount');
+    $dateFrom = $incomeDateFrom;
+    $dateTo = $incomeDateTo;
+
+    if ($selectedMonth && $selectedYear) {
+      $dateFrom = "$selectedYear-$selectedMonth-01";
+      $dateTo = date("Y-m-t", strtotime($dateFrom));
+  };
+
+  $totalIncome = Payment::where('is_deleted', 0)
+                        ->whereHas('income', function($query) use ($dateFrom, $dateTo) {
+                        $query->where('is_deleted', 0)
+                        ->dateBetween($dateFrom, $dateTo)
+                        ->whereHas('client', function($q) {
+                        $q->where('is_deleted', 0);
+                        });
+                        })->sum('payment_amount');
+
+  $totalOutcome = Outcome::where('is_deleted', 0)
+                         ->dateBetween($dateFrom, $dateTo)
+                         ->sum('amount');
   $totalStudents = Client::whereHas('types', function($query) {
-    $query->where('type_name','student');
-    })->count();
+                          $query->where('type_name','student');
+                          })
+                          ->dateBetween($dateFrom, $dateTo)
+                          ->count();
   $totalProfit = $totalIncome - $totalOutcome;
 
   $incomes = Income::with(['client', 'subcategory.category', 'payments'])
-  ->where('is_deleted', 0)
-  ->get()
-  ->each(function ($income) {
-      $income->paid = $income->payments->sum('payment_amount');
-  });
+                    ->where('is_deleted', 0)
+                    ->dateBetween($dateFrom, $dateTo)
+                    ->get()
+                    ->each(function ($income) {
+                    $income->paid = $income->payments->sum('payment_amount');
+                        });
   $outcomes = Outcome::with('subcategory.category')
-  ->where('is_deleted',0)
-  ->get();
+                      ->where('is_deleted',0)
+                      ->dateBetween($dateFrom, $dateTo)
+                      ->get();
+// doughnut chart data
+$incomeCategoryData = $incomeReport->getIncomeByCategory($dateFrom, $dateTo);
+$incomeSubcategoryData = $incomeReport->getIncomeBySubcategory($dateFrom, $dateTo);
+$outcomeCategoryData = $outcomeReport->getOutcomeByCategory($dateFrom, $dateTo);
+$outcomeSubcategoryData = $outcomeReport->getOutcomeBySubcategory($dateFrom, $dateTo);
 
-$incomeCategoryData = $incomeReport->getIncomeByCategory();
-$incomeSubcategoryData = $incomeReport->getIncomeBySubcategory();
-$outcomeCategoryData = $outcomeReport->getOutcomeByCategory();
-$outcomeSubcategoryData = $outcomeReport->getOutcomeBySubcategory();
-
-    return view('admin.reports',[
+    return view('admin.reports.reports',[
       'total_income' => $totalIncome,
       'total_outcome' => $totalOutcome,
       'total_profit' => $totalProfit,

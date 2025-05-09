@@ -15,9 +15,8 @@ class BarChartService
           $date = $firstDayOfMonth->copy()->addDays($day - 1);
           
           $amount = Payment::where('is_deleted', 0)
-              ->whereDate('created_at', $date)
-              ->sum('payment_amount');
-              
+                           ->whereDate('created_at', $date)
+                           ->sum('payment_amount');
           $dailyData[] = $amount ?? 0;
       }
       
@@ -32,9 +31,8 @@ class BarChartService
           $date = $firstDayOfMonth->copy()->addDays($day - 1);
           
           $amount = Outcome::where('is_deleted', 0)
-              ->whereDate('created_at', $date)
-              ->sum('amount');
-              
+                           ->whereDate('created_at', $date)
+                           ->sum('amount');
           $dailyData[] = $amount ?? 0;
       }
       

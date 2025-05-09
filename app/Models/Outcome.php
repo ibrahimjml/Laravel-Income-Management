@@ -18,4 +18,13 @@ class Outcome extends Model
   {
       return $this->belongsTo(Subcategory::class, 'subcategory_id');
   }
+
+  public function scopeDateBetween($query, $from, $to)
+{
+    if ($from && $to) {
+        return $query->whereBetween('created_at', [$from, $to]);
+    }
+
+    return $query;
+}
 }

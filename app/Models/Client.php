@@ -24,4 +24,13 @@ class Client extends Model
   {
       return $this->hasMany(Income::class, 'client_id');
   }
+
+  public function scopeDateBetween($query, $from, $to)
+{
+    if ($from && $to) {
+        return $query->whereBetween('created_at', [$from, $to]);
+    }
+
+    return $query;
+}
 }

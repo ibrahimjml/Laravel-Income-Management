@@ -8,17 +8,18 @@
         <h1 class="mb-4 text-center">Reports</h1>
         <div id="content" class="container-fluid">
           <div class="d-flex justify-content-end mb-3">
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal">
+                  Filter by Date
+              </button>
               <button id="print-report" class="btn btn-warning ms-2">Print Report</button>
           </div>
-  
 
-  
           <div class="row mb-4">
               <div class="col-md-3">
                   <div class="card text-white bg-success shadow">
                       <div class="card-body">
                           <h5 class="card-title">Total Income</h5>
-                          <p class="card-text">${{$total_income}}</p>
+                          <p class="card-text">${{number_format($total_income)}}</p>
                       </div>
                   </div>
               </div>
@@ -27,7 +28,7 @@
                   <div class="card text-white bg-danger shadow">
                       <div class="card-body">
                           <h5 class="card-title">Total Outcome</h5>
-                          <p class="card-text">${{$total_outcome}}</p>
+                          <p class="card-text">${{number_format($total_outcome)}}</p>
                       </div>
                   </div>
               </div>
@@ -36,7 +37,7 @@
                   <div class="card text-white bg-primary shadow">
                       <div class="card-body">
                           <h5 class="card-title">Total Profit</h5>
-                          <p class="card-text">${{$total_profit}}</p>
+                          <p class="card-text">${{number_format($total_profit, 2)}}</p>
                       </div>
                   </div>
               </div>
@@ -83,7 +84,7 @@
                                             <small>{{ ucfirst($income->status) }}</small>  
                                           </span>
                                           </td>
-                                          <td>${{$income->amount}}</td>
+                                          <td>${{number_format($income->amount, 2)}}</td>
                                           <td>${{$income->paid}}</td>
                                           <td>{{ date('M d, Y', strtotime($income->created_at)) }}</td>
                                       </tr>
@@ -120,7 +121,7 @@
                                       <tr>
                                           <td>{{$outcome->subcategory->category->category_name}}</td>
                                           <td>{{$outcome->subcategory->sub_name}}</td>
-                                          <td>${{$outcome->amount}}</td>
+                                          <td>${{number_format($outcome->amount,2)}}</td>
                                           <td>{{ date('M d, Y', strtotime($outcome->created_at)) }}</td>
                                       </tr>
                           @endforeach
@@ -159,8 +160,12 @@
               </div>
           </div>
       </div>
-    </div>
+{{-- filter by date model --}}
+@include('admin.reports.partials.filter-date-model')
+</div>
 @push('scripts')
+{{-- filter date model script --}}
+<script src="{{asset('js/filter.js')}}"></script>
 <script>
   var incomeCategoryCtx = document.getElementById('incomeCategoryChart').getContext('2d');
         var incomeCategoryChart = new Chart(incomeCategoryCtx, {

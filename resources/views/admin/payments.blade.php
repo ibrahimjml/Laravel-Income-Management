@@ -7,7 +7,7 @@
   <h1 class="mb-4">Payments Schedule</h1>
   <div id="content" class="d-flex flex-wrap gap-3 mt-5">
       <!-- Outdated Payments Card -->
-      <div class="card flex-grow-1" style="min-width: 320px; max-width: 420px;">
+      <div class="card flex-grow-1" style="min-width: 320px; max-width: 420px;height: fit-content;">
           <div class="card-header bg-danger text-white text-center">
               <h3 class="text-white">Outdated Payments</h3>
           </div>
@@ -20,6 +20,12 @@
                       <strong>Amount: {{$out->amount}}</strong> $<br>
                       <strong>Paid:</strong> ${{$out->total_paid}}<br>
                       <strong>Remaining:</strong> $ {{$out->remaining}}<br>
+                      <strong>Status:</strong> <span class="badge bg-{{ 
+                        $out->status == 'complete' ? 'success' : 
+                        ($out->status == 'partial' ? 'warning' : 'danger') 
+                    }}">
+                        {{ ucfirst($out->status) }}
+                    </span><br>
                       <strong>Due Date: {{ date('M d, Y', strtotime($out->next_payment)) }}</strong>
                   </div>
               </div>
@@ -33,7 +39,7 @@
       </div>
 
       <!-- Today's Payments Card -->
-      <div class="card flex-grow-1" style="min-width: 320px; max-width: 420px;">
+      <div class="card flex-grow-1" style="min-width: 320px; max-width: 420px;height: fit-content;">
           <div class="card-header bg-primary text-white text-center">
               <h3 class="text-white">Today's Payments</h3>
           </div>
@@ -46,10 +52,16 @@
                       <strong>Amount:</strong> ${{$today->amount}}<br>
                       <strong>Paid:</strong> ${{$today->total_paid}}<br>
                       <strong>Remaining:</strong> ${{ number_format($today->remaining - $today->total_paid, 2) }}<br>
+                      <strong>Status:</strong> <span class="badge bg-{{ 
+                        $today->status == 'complete' ? 'success' : 
+                        ($today->status == 'partial' ? 'warning' : 'danger') 
+                    }}">
+                        {{ ucfirst($today->status) }}
+                    </span><br>
                       <strong>Due Date: {{ date('M d, Y', strtotime($today->next_payment)) }}</strong>
                   </div>
               </div>
-              @if($index < count($outdated_payments) - 1)
+              @if($index < count($today_payments) - 1)
               <hr style="border: none; height: 1px; background-color: #000;">
               @endif
               @empty
@@ -59,7 +71,7 @@
       </div>
 
       <!-- Upcoming Payments Card -->
-      <div class="card flex-grow-1" style="min-width: 320px; max-width: 420px;">
+      <div class="card flex-grow-1" style="min-width: 320px; max-width: 420px; height: fit-content;">
           <div class="card-header bg-success text-white text-center">
               <h3 class="text-white">Upcoming Payments</h3>
           </div>
@@ -81,7 +93,7 @@
                       <strong>Due Date: {{ date('M d, Y', strtotime($upcoming->next_payment)) }}</strong>
                   </div>
               </div>
-              @if($index < count($outdated_payments) - 1)
+              @if($index < count($upcoming_payments) - 1)
               <hr style="border: none; height: 1px; background-color: #000;">
               @endif
               @empty
