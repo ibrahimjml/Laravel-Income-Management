@@ -13,6 +13,16 @@
  ![Dashboard Screenshot](https://i.postimg.cc/QdnVnVW3/Screenshot-2025-05-09-160413.png)
  ![Dashboard Screenshot](https://i.postimg.cc/c4DD1K9j/Screenshot-2025-05-09-183048.png)
  
+### Features
+- **Manage Clients** 
+- **Manage Categories and Subcategories** 
+- **Manage Incomes**
+- **Manage Outcomes**
+- **Payments Schedule:** Outdated Payements/Today Payments/Upcoming Payments**
+- **Manage Reports** 
+- **Print and Export PDF** 
+- **ChartJS Analytics** 
+- **Advanced Filtering date**
 
 ## Admin Login
 `Use these credentails to log in as admin`
