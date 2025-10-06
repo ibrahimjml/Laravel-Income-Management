@@ -16,11 +16,11 @@ Route::prefix('admin')
 ->group(function(){
 Route::controller(AdminController::class)->group(function(){
   Route::get('/dashboard', 'index')->name('dashboard');
-  Route::get('/clients', 'client')->name('admin.clients');
-  Route::get('/incomes', 'income')->name('admin.incomes');
-  Route::get('/outcomes', 'outcome')->name('admin.outcomes');
-  Route::get('/payments', 'payment')->name('admin.payments');
-  Route::get('/reports', 'report')->name('admin.reports');
+  Route::get('/clients', 'clients_page')->name('admin.clients');
+  Route::get('/incomes', 'incomes_page')->name('admin.incomes');
+  Route::get('/outcomes', 'outcomes_page')->name('admin.outcomes');
+  Route::get('/payments', 'payments_page')->name('admin.payments');
+  Route::get('/reports', 'reports_page')->name('admin.reports');
 });
 Route::controller(ClientsController::class)->group(function(){
   Route::post('/add-client-type', 'add_type')->name('add.client.type');

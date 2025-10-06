@@ -8,6 +8,12 @@
         <h1 class="mb-4 text-center">Reports</h1>
         <div id="content" class="container-fluid">
           <div class="d-flex justify-content-end mb-3">
+            {{-- clear filters --}}
+            @if($date_range)
+              <button class="btn btn-danger mr-3" onclick="window.location.href='/admin/reports'">
+                X Clear
+              </button>
+              @endif
               <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal">
                   Filter by Date
               </button>
