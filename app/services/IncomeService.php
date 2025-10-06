@@ -2,7 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\{Category, Client, Income, Subcategory};
+use App\Models\{Category, Client, Income, Payment, Subcategory};
+use Illuminate\Support\Facades\DB;
 
 class IncomeService
 {
@@ -19,6 +20,96 @@ class IncomeService
          'clients'        => $clients,
          'incomes'        => $incomes
       ];
+    }
+    public function createIncome(array $data)
+    {
+      return DB::transaction(function() use($data){
+          $data['date'] = now()->format('Y-m-d');
+
+         $income = Income::create([
+             'client_id'      => $data['client_id'],
+             'subcategory_id' => $data['subcategory_id'],
+             'amount'         => $data['amount'],
+             'description'    => $data['description'],
+             'next_payment'   => $data['next_payment'],
+             'status'         => 'Pending' 
+         ]);
+ 
+
+         if (isset($data['paid']) && $data['paid'] > 0) {
+             if ($data['paid'] > $data['amount']) {
+                 return back()->with('error',"Paid amount cannot be greater than total income amount");
+             }
+ 
+             Payment::create([
+                 'income_id' => $income->income_id,
+                 'payment_amount' => $data['paid']
+             ]);
+ 
+             $totalPaid = Payment::where('income_id', $income->income_id)->sum('payment_amount');
+ 
+             $status = 'pending';
+             if ($totalPaid == $data['amount']) {
+                 $status = 'complete';
+             } elseif ($totalPaid > 0) {
+                 $status = 'partial';
+             }
+ 
+             $income->update(['status' => $status]);
+         }
+         return $income;
+      });
+    }
+    public function updateIncome(int $incomeId, array $data)
+    { 
+       return DB::transaction(function() use($incomeId, $data){
+            $income = Income::where('income_id',$incomeId)->firstOrFail();
+            $data['date'] = now()->format('Y-m-d');
+
+         $income->update([
+             'client_id'      => $data['client_id'],
+             'subcategory_id' => $data['subcategory_id'],
+             'amount'         => $data['amount'],
+             'description'    => $data['description'],
+             'next_payment'   => $data['next_payment'],
+         ]);
+         return $income;
+      });
+    }
+    public function deleteIncome(int $incomeId)
+    {
+      return DB::transaction(function() use($incomeId){
+          $income = Income::where('income_id', $incomeId)->firstOrFail();
+          $income->update(['is_deleted' => 1]);
+          
+          Payment::where('income_id', $incomeId)
+                ->update(['is_deleted' => 1]);
+
+          return true;      
+      });
+    }
+    public function getIcomeDetails(int $incomeId)
+    {
+         $income = Income::with(['client','subcategory.category','payments'])
+                      ->withSum('payments as paid', 'payment_amount')
+                      ->where('income_id', $incomeId)
+                      ->where('is_deleted', 0)
+                      ->firstOrFail();
+      if ($income->client->is_deleted == 1) {
+            abort(404, 'Client not found');
+            };
+        $payments = Payment::where('income_id',$incomeId)->where('is_deleted',0)->get();
+        $clients = Client::where('is_deleted',0)->get();
+        $categories = Category::where('is_deleted',0)->get();
+        $subcategories = Subcategory::where('is_deleted',0)->get();
+
+        return [
+           'income'        => $income,
+           'payments'      => $payments,
+           'clients'       => $clients,
+           'categories'    => $categories,
+           'subcategories' => $subcategories
+        ];
     }
     protected function getCategories()
     {

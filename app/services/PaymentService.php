@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Models\Income;
+use App\Models\Payment;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class PaymentService
 {
@@ -21,6 +23,34 @@ class PaymentService
            'today_payments'    => $todayPayments,
            'upcoming_payments' => $upcomingPayments
         ];
+    }
+    public function addPayment(int $incomeId, array $data)
+    {
+       return DB::transaction(function() use($incomeId, $data){
+          $payment =  Payment::create([
+               'income_id'      => $incomeId,
+               'payment_amount' => $data['payment_amount'],
+               'description'    => $data['description'] ?? null
+             ]);
+
+           if (isset($data['next_payment'])) {
+               Income::where('income_id', $incomeId)
+                   ->update(['next_payment' => $data['next_payment']]);
+           }
+
+           $income    = Income::findOrFail($incomeId);
+           $totalPaid = Payment::where('income_id', $incomeId)->sum('payment_amount');
+           
+           $status = 'pending';
+           if ($totalPaid > 0 && $totalPaid < $income->amount) {
+               $status = 'partial';
+           } elseif ($totalPaid >= $income->amount) {
+               $status = 'complete';
+           }
+   
+           $income->update(['status' => $status]);
+           return $payment;
+       });
     }
     protected function getOutDatedPayments(string $today)
     {

@@ -20,6 +20,29 @@ class OutcomeService
            'outcomes'       => $outcomes
         ];         
   }
+  public function addOutcome(array $data)
+  {
+       if ($data['amount'] <= 0) {
+        return back()->with('error', 'Amount must be greater than 0');
+        }
+
+    $category = Category::find($data['category_id']);
+    if (!$category || $category->category_type !== 'Outcome') {
+        return back()->with('error', 'Invalid category type');
+    }
+    $outcome =  Outcome::create([
+        'subcategory_id' => $data['subcategory_id'],
+        'amount'         => $data['amount'],
+        'description'    => $data['description'],
+      ]);
+      return $outcome;
+  }
+  public function deleteOutcome(int $outcomeId)
+  {
+      $outcome = Outcome::where('outcome_id',$outcomeId)->firstOrFail();
+      $outcome->update(['is_deleted'=>1]);
+      return $outcome;
+  }
   protected function getCategories()
   {
     return Category::where('is_deleted',0)
