@@ -31,6 +31,7 @@
                         <tr>
                             <th onclick="sortTable(0, this)">Nb <span class="arrow"></span></th>
                             <th onclick="sortTable(1, this)">Name <span class="arrow"></span></th>
+                            <th onclick="sortTable(1, this)">Email <span class="arrow"></span></th>
                             <th onclick="sortTable(2, this)">Phone <span class="arrow"></span></th>
                             <th onclick="sortTable(3, this)">Types <span class="arrow"></span></th>
                             <th>Actions</th>
@@ -41,6 +42,7 @@
                             <tr>
                                 <td>{{$index + 1}}</td>
                                 <td>{{$client->client_fname}} {{$client->client_lname}}</td>
+                                <td>{{$client->email}}</td>
                                 <td>{{$client->client_phone}}</td>
                                 <td>
                                   {{ $client->types->firstWhere('pivot.is_deleted', 0)?->type_name ?? 'No Type' }}
@@ -52,6 +54,7 @@
                                       data-client-id="{{ $client->client_id }}"
                                       data-client-fname="{{ $client->client_fname }}"
                                       data-client-lname="{{ $client->client_lname }}"
+                                      data-client-email="{{ $client->email }}"
                                       data-client-phone="{{ $client->client_phone }}"
                                       data-client-types='@json($client->types->where("pivot.is_deleted", 0)->pluck("type_id"))'>
                                   <span class="d-sm-inline d-none">Edit</span>
@@ -97,6 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.querySelector('#edit_client_id').value = button.dataset.clientId;
         modal.querySelector('#edit_client_fname').value = button.dataset.clientFname;
         modal.querySelector('#edit_client_lname').value = button.dataset.clientLname;
+        modal.querySelector('#edit_client_email').value = button.dataset.clientEmail;
         modal.querySelector('#edit_client_phone').value = button.dataset.clientPhone;
         
         // Parse the types JSON
@@ -138,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error(data.message || 'Update failed');
             }
             
-            alert('Client updated successfully');
+            alert(data.message);
             location.reload();
             
         } catch (error) {

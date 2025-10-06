@@ -11,7 +11,12 @@ class Client extends Model
   public $timestamps = false;
 
   protected $fillable = [
-      'client_fname', 'client_lname', 'client_phone', 'created_at', 'is_deleted',
+          'client_fname',
+          'client_lname',
+          'email',
+          'client_phone',
+          'created_at',
+          'is_deleted',
   ];
 
   public function types()

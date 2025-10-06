@@ -22,6 +22,10 @@
                    required>
                   </div>
                   <div class="mb-3">
+                      <label for="edit_client_email" class="form-label">Email</label>
+                      <input type="text" class="form-control border" id="edit_client_email" name="email">
+                  </div>
+                  <div class="mb-3">
                       <label for="edit_client_phone" class="form-label">Phone Number</label>
                       <input type="tel" class="form-control border" id="edit_client_phone" name="client_phone"
                        required>

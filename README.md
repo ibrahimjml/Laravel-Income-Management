@@ -18,11 +18,11 @@
 - **Manage Categories and Subcategories** 
 - **Manage Incomes**
 - **Manage Outcomes**
-- **Payments Schedule:** Outdated Payements/Today Payments/Upcoming Payments**
+- **Payments Schedule: Outdated Payements - Today Payments - Upcoming Payments**
 - **Manage Reports** 
 - **Print and Export PDF** 
 - **ChartJS Analytics** 
-- **Advanced Filtering date**
+- **Advanced Filtering by date-range, status, categories**
 
 ## Admin Login
 `Use these credentails to log in as admin`

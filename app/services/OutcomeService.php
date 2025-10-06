@@ -10,9 +10,9 @@ class OutcomeService
 {
   public function getOutcomesData()
   {
-      $categories = $this->getCategories();
+      $categories    = $this->getCategories();
       $subcategories = $this->getSubCategories();
-      $outcomes = $this->getOutcomes();
+      $outcomes      = $this->getOutcomes();
 
         return [
            'categories'     => $categories,

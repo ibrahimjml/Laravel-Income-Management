@@ -8,10 +8,10 @@ class IncomeService
 {
     public function getIcomeData()
     {
-      $categories = $this->getCategories();
+      $categories    = $this->getCategories();
       $subcategories = $this->getSubCategories();
-      $clients = $this->getClients();
-      $incomes = $this->getIncomes();
+      $clients       = $this->getClients();
+      $incomes       = $this->getIncomes();
 
       return [
          'categories'     => $categories,

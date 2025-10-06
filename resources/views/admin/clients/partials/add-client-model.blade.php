@@ -19,6 +19,10 @@
                       <input type="text" class="form-control border" id="client_lname" name="client_lname" required>
                   </div>
                   <div class="mb-3">
+                      <label for="email" class="form-label">Email</label>
+                      <input type="text" class="form-control border" id="email" name="email">
+                  </div>
+                  <div class="mb-3">
                       <label for="client_phone" class="form-label">Phone Number</label>
                       <input type="tel" class="form-control border" id="client_phone" name="client_phone" required>
                   </div>

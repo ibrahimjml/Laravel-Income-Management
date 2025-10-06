@@ -11,7 +11,7 @@
             {{-- clear filters --}}
             @if($date_range)
               <button class="btn btn-danger mr-3" onclick="window.location.href='/admin/reports'">
-                X Clear
+                <i class="fa fa-close mr-2"></i>Clear
               </button>
               @endif
               <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal">

@@ -23,12 +23,12 @@ Route::controller(AdminController::class)->group(function(){
   Route::get('/reports', 'reports_page')->name('admin.reports');
 });
 Route::controller(ClientsController::class)->group(function(){
-  Route::post('/add-client-type', 'add_type')->name('add.client.type');
-  Route::put('/edit-type/{id}', 'edit_type')->name('edit.type');
+  Route::post('/add-client-type', 'add_client_type')->name('add.client.type');
+  Route::put('/edit-type/{id}', 'edit_client_type')->name('edit.type');
   Route::delete('/delete-type/{id}', 'delete_type')->name('delete.type');
-  Route::post('/add-client', 'add')->name('add.client');
-  Route::put('/edit-client/{id}', 'edit')->name('edit.client');
-  Route::put('/delete-client/{id}', 'delete')->name('delete.client');
+  Route::post('/add-client', 'add_client')->name('add.client');
+  Route::put('/edit-client/{id}', 'edit_client')->name('edit.client');
+  Route::put('/delete-client/{id}', 'delete_client')->name('delete.client');
 });
 
 Route::controller(IncomesController::class)->group(function(){
