@@ -25,46 +25,81 @@
   }
 </style>
 <div id="content" class="d-flex flex-column">
-        <h1 class="mb-4 text-center">Dashboard</h1>
+        <h1 class="mb-4 text-center">{{__('message.Dashboard')}}</h1>
         <div class="flex-grow-1 p-3 ">
-              <div class="d-flex justify-content-end mb-3">
-                  <button class="no-print btn btn-primary mb-3 me-2" onclick="window.print()">Print Dashboard</button>
-                  <button class="no-print btn btn-secondary mb-3" id="exportPdfBtn">Export as PDF</button>
+              <div class="d-flex justify-content-end gap-3 mb-3">
+                  <button class="no-print btn btn-primary mb-3 me-2" onclick="window.print()">{{__('message.Print Dashboard')}}</button>
+                  <button class="no-print btn btn-secondary mb-3" id="exportPdfBtn">{{__('message.Export as PDF')}}</button>
               </div>
   
-              <div class="d-flex flex-wrap justify-content-between mb-4">
-                  <div class="card flex-fill mx-2 mb-3">
-                      <div class="card-body text-center bg-success text-white d-flex flex-column">
-                          <h5 class="card-title text-center">Total Income (Month)</h5>
-                          <h2 class="card-text text-white">{{$totalIncome}} USD</h2>
-                          <small>{{$currentMonth}}</small>
-                      </div>
-                  </div>
-                  <div class="card flex-fill mx-2 mb-3">
-                      <div class="card-body text-center text-white bg-danger d-flex flex-column">
-                          <h5 class="card-title">Total Outcome (Month)</h5>
-                          <h2 class="card-text text-white">{{$totalOutcome}} USD</h2>
-                          <small>{{$currentMonth}}</small>
-                      </div>
-                  </div>
-                  <div class="card flex-fill mx-2 mb-3">
-                      <div class="card-body text-center text-white bg-primary d-flex flex-column">
-                          <h5 class="card-title">Profit (Month)</h5>
-                          <h2 class="card-text text-white">{{$profit}} USD</h2>
-                          <small>{{$currentMonth}}</small>
-                      </div>
-                  </div>
-                  <div class="card flex-fill mx-2 mb-3">
-                      <div class="card-body text-center text-white bg-info d-flex flex-column">
-                          <h5 class="card-title">New Students</h5>
-                          <h2 class="card-text text-white">{{$totalStudents}}</h2>
-                          <small>{{$currentMonth}}</small>
-                      </div>
-                  </div>
-              </div>
-  
+            <div class="row mb-4">
+    <!-- Total Income Card -->
+    <div class="col-md-3">
+        <div class="small-box bg-success">
+            <div class="inner">
+                <h3>${{ number_format($totalIncome) }}</h3>
+                <p>{{ __('message.Total Income') }}</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-money-bill-wave"></i>
+            </div>
+            <a href="" class="small-box-footer">
+                {{ $currentMonth }} <i class="fa fa-info"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Total Outcome Card -->
+    <div class="col-md-3">
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>${{ number_format($totalOutcome) }}</h3>
+                <p>{{ __('message.Total Outcome') }}</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-receipt"></i>
+            </div>
+            <a href="" class="small-box-footer">
+                {{ $currentMonth }} <i class="fa fa-info"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Total Profit Card -->
+    <div class="col-md-3">
+        <div class="small-box bg-primary">
+            <div class="inner">
+                <h3>${{ number_format($profit) }}</h3>
+                <p>{{ __('message.Total Profit') }}</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-chart-line"></i>
+            </div>
+            <a href="" class="small-box-footer">
+                {{ $currentMonth }} <i class="fa fa-info"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Total Clients Card -->
+    <div class="col-md-3">
+        <div class="small-box bg-info">
+            <div class="inner">
+                <h3>{{ $totalStudents }}</h3>
+                <p>{{ __('message.Total Clients') }}</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-users"></i>
+            </div>
+            <a href="" class="small-box-footer">
+                {{ $currentMonth }} <i class="fa fa-info"></i>
+            </a>
+        </div>
+    </div>
+</div>
+              
               <div style="position: relative; height:500px; margin-bottom: 20px">
-                  <h3 class="text-center mb-4">Income, Outcome, and Profit for {{$currentMonth}}</h3>
+                  <h3 class="text-center mb-4">{{__('message.Income, Outcome, and Profit for')}} {{$currentMonth}}</h3>
                   <canvas id="lineChart" class="w-100"></canvas>
               </div>
       </div>
@@ -94,7 +129,7 @@
               labels: @json($labels),
               datasets: [
                   {
-                      label: 'Income',
+                      label: '{{__("message.Total Income")}}',
                       data: @json($incomeData),
                       borderColor: '#28a745',
                       backgroundColor: 'rgba(40, 167, 69, 0.7)',
@@ -105,7 +140,7 @@
                       fill: true
                   },
                   {
-                      label: 'Outcome',
+                      label: '{{__("message.Total Outcome")}}',
                       data: @json($outcomeData),
                       borderColor: '#dc3545',
                       backgroundColor: 'rgba(220, 53, 69, 0.5)',
@@ -116,7 +151,7 @@
                       fill: true
                   },
                   {
-                      label: 'Profit',
+                      label: '{{__("message.Total Profit")}}',
                       data: @json($profitData),
                       borderColor: '#17a2b8',
                       backgroundColor: 'rgba(23, 162, 184, 0.4)',
@@ -137,7 +172,7 @@
               plugins: {
                   title: {
                       display: true,
-                      text: 'Daily Income, Outcome, and Profit ({{ $currentMonth }})',
+                      text: '{{__("message.Daily Income, Outcome, and Profit")}} ({{ $currentMonth }})',
                       font: {
                           size: 18,
                           weight: 'bold'

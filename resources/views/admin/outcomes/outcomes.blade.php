@@ -4,23 +4,26 @@
 
 @section('content')
     <div class="container-fluid">
-        <h1 class="mb-4 text-center">Outcomes</h1>
+        <h1 class="mb-4 text-center">{{__('message.Outcomes')}}</h1>
         <div class="card">
           <div class="flex-grow-1 p-3">
             <div class="d-flex justify-content-between mb-3">
                 <div class="d-flex justify-content-start">
-                    <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#addCategoryModal">Add
-                        Category</button>
-                    <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#addSubcategoryModal">Add
-                        Subcategory</button>
+                    <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                    {{__('message.Add Category')}}
+                    </button>
+                    <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#addSubcategoryModal">
+                    {{__('message.Add Subcategory')}}
+                    </button>
                 </div>
-                <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addOutcomeModal">Add
-                    Outcome</button>
+                <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addOutcomeModal">
+                  {{__('message.Add Outcome')}}
+                </button>
             </div>
     
             <div class="row mb-3">
                 <div class="col-sm-12">
-                    <input type="text" id="search-input" class="form-control border" placeholder="Search for Items...">
+                    <input type="text" id="search-input" class="form-control border" placeholder="{{__('message.Search for Items')}}...">
                 </div>
             </div>
     
@@ -29,13 +32,13 @@
                 <table id="sortableTable" class="table">
                     <thead>
                         <tr>
-                            <th onclick="sortTable(0, this)">Nb <span class="arrow"></span></th>
-                            <th onclick="sortTable(1, this)">Category <span class="arrow"></span></th>
-                            <th onclick="sortTable(2, this)">Subcategory <span class="arrow"></span></th>
-                            <th onclick="sortTable(3, this)">Amount <span class="arrow"></span></th>
-                            <th onclick="sortTable(4, this)">Description <span class="arrow"></span></th>
-                            <th onclick="sortTable(5, this)">Date <span class="arrow"></span></th>
-                            <th>Actions</th>
+                            <th onclick="sortTable(0, this)">{{__('message.Nb')}} <span class="arrow"></span></th>
+                            <th onclick="sortTable(1, this)">{{__('message.Category')}} <span class="arrow"></span></th>
+                            <th onclick="sortTable(2, this)">{{__('message.Subcategory')}} <span class="arrow"></span></th>
+                            <th onclick="sortTable(3, this)">{{__('message.Amount')}} <span class="arrow"></span></th>
+                            <th onclick="sortTable(4, this)">{{__('message.Description')}} <span class="arrow"></span></th>
+                            <th onclick="sortTable(5, this)">{{__('message.Date')}}  <span class="arrow"></span></th>
+                            <th>{{__('message.Actions')}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -50,7 +53,7 @@
                                 <td>
                                     <button id="delete-btn" class='btn btn-danger' data-bs-toggle='modal'
                                         data-bs-target='#deleteOutcomeModal' data-outcome-id="{{$outcome->outcome_id}}">
-                                        <span class="d-sm-inline d-none">Delete</span>
+                                        <span class="d-sm-inline d-none">{{__('message.Delete')}}</span>
                                         <span class="d-inline d-sm-none">D</span>
                                     </button>
                                 </td>

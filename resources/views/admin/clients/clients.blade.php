@@ -3,25 +3,24 @@
 @section('title', 'Dashboard')
 
 @section('content')
-
-        <h1 class="mb-4 text-center">Clients</h1>
+        <h1 class="mb-4 text-center">{{__('message.Clients')}}</h1>
         <div class="card">
           <div class="flex-grow-1 p-3">
 
             <div class="d-flex justify-content-between mb-3 ">
                 <div class="flex justify-content-start gap-2">
                     <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#addTypeModal">
-                      Add Client Type</button>
+                      {{__('message.Add Client Type')}}</button>
                     <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#editTypeModal">
-                      Edit Client Type</button>
+                      {{__('message.Edit Client Type')}}</button>
                 </div>
                 <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addClientModal">
-                  Add Client</button>
+                  {{__('message.Add Client')}}</button>
             </div>
     
             <div class="row mb-3">
                 <div class="col-sm-12">
-                    <input type="text" id="search-input" class="form-control border" placeholder="Search for Items...">
+                    <input type="text" id="search-input" class="form-control border" placeholder="{{(__('message.Search for Items'))}}...">
                 </div>
             </div>
     
@@ -29,42 +28,42 @@
                 <table id="sortableTable" class="table">
                     <thead>
                         <tr>
-                            <th onclick="sortTable(0, this)">Nb <span class="arrow"></span></th>
-                            <th onclick="sortTable(1, this)">Name <span class="arrow"></span></th>
-                            <th onclick="sortTable(1, this)">Email <span class="arrow"></span></th>
-                            <th onclick="sortTable(2, this)">Phone <span class="arrow"></span></th>
-                            <th onclick="sortTable(3, this)">Types <span class="arrow"></span></th>
-                            <th>Actions</th>
+                            <th onclick="sortTable(0, this)">{{__('message.Nb')}} <span class="arrow"></span></th>
+                            <th onclick="sortTable(1, this)">{{__('message.Name')}} <span class="arrow"></span></th>
+                            <th onclick="sortTable(1, this)">{{__('message.Email')}} <span class="arrow"></span></th>
+                            <th onclick="sortTable(2, this)">{{__('message.Phone')}} <span class="arrow"></span></th>
+                            <th onclick="sortTable(3, this)">{{__('message.Types')}} <span class="arrow"></span></th>
+                            <th>{{__('message.Actions')}}</th>
                         </tr>
                     </thead>
                     <tbody>
                   @foreach($clients as $index => $client)
                             <tr>
                                 <td>{{$index + 1}}</td>
-                                <td>{{$client->client_fname}} {{$client->client_lname}}</td>
+                                <td>{{$client->full_name}}</td>
                                 <td>{{$client->email}}</td>
                                 <td>{{$client->client_phone}}</td>
                                 <td>
-                                  {{ $client->types->firstWhere('pivot.is_deleted', 0)?->type_name ?? 'No Type' }}
+                                  {{ $client->types->firstWhere('pivot.is_deleted', 0)?->types_name ?? 'No Type' }}
                               </td>
                                 <td>
                                     <div class="flex gap-1">
                                       <button id="btn-edit" class='btn btn-primary' data-bs-toggle='modal'
                                       data-bs-target='#editClientModal' 
                                       data-client-id="{{ $client->client_id }}"
-                                      data-client-fname="{{ $client->client_fname }}"
-                                      data-client-lname="{{ $client->client_lname }}"
+                                      data-client-fname="{{ $client->f_name }}"
+                                      data-client-lname="{{ $client->l_name }}"
                                       data-client-email="{{ $client->email }}"
                                       data-client-phone="{{ $client->client_phone }}"
                                       data-client-types='@json($client->types->where("pivot.is_deleted", 0)->pluck("type_id"))'>
-                                  <span class="d-sm-inline d-none">Edit</span>
+                                  <span class="d-sm-inline d-none">{{__('message.Edit')}}</span>
                                   <span class="d-inline d-sm-none">E</span>
                               </button>
 
                                         <button id="delete-btn" class='btn btn-danger' data-bs-toggle='modal'
                                             data-bs-target='#deleteClientModal' data-client-id="{{$client->client_id}}"
-                                            data-client-name="{{ $client->client_fname }} {{ $client->client_lname }}">
-                                            <span class="d-sm-inline d-none">Delete</span>
+                                            data-client-name="{{ $client->full_name }}">
+                                            <span class="d-sm-inline d-none">{{__('message.Delete')}}</span>
                                             <span class="d-inline d-sm-none">D</span>
                                         </button>
                                     </div>

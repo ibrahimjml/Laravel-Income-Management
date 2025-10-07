@@ -1,0 +1,38 @@
+body[dir="rtl"] .form-check-input {
+  margin-left: 0.5rem; 
+  margin-right: 3rem;
+}
+body[dir="rtl"] .btn-close {
+  margin-left: 0.5rem; 
+  margin-right: 3rem;
+}
+body[dir="rtl"] .payments {
+  display: flex;
+  justify-content: center;
+}
+
+.small-box {
+    display: flex;
+    flex-direction: column;
+    height: 90%;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.small-box > .inner {
+    flex-grow: 1;
+    padding: 20px;
+    position: relative;
+    z-index: 2;
+}
+.small-box > .small-box-footer {
+    margin-top: auto;
+    width: 100% !important;
+    position: relative;
+}
+body[dir="rtl"] .small-box > .inner {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}

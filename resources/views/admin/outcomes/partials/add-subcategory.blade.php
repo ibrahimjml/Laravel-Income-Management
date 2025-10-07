@@ -7,26 +7,26 @@
               @csrf
               @method('POST')
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addSubCategoryModalLabel">Add Subcategory</h5>
+                    <h5 class="modal-title" id="addSubCategoryModalLabel">{{__('message.Add Subcategory')}}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="category_name" class="form-label">Category</label>
+                        <label for="category_name" class="form-label">{{__('message.Category')}}</label>
                         <select class="form-select" id="category_id" name="category_id" required>
-                            <option value="">Select Category</option>
+                            <option value="">{{__('message.Select Category')}}</option>
                             @foreach($categories as $cat)
                             <option value="{{$cat->category_id}}">{{$cat->category_name}}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="sub_name" class="form-label">Subcategory Name</label>
+                        <label for="sub_name" class="form-label">{{__('message.Subcategory name')}}</label>
                         <input type="text" class="form-control border" id="sub_name" name="sub_name" required>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Add Subcategory</button>
+                    <button type="submit" class="btn btn-primary">{{__('message.Add Subcategory')}}</button>
                 </div>
             </form>
         </div>

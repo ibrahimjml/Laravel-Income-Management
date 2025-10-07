@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +8,17 @@
 
     <!-- AdminLTE CSS -->
     <link href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/css/flag-icons.min.css">
+    @unless($dir === 'ltr')
+    <link rel="stylesheet" href="{{ asset('css/rtl.css') }}">
+    @endunless
 
+    @stack('styles')
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
+
+<body class="hold-transition sidebar-mini layout-fixed " dir="{{ $dir }}">
     <div class="wrapper">
         <!-- Navbar -->
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -24,8 +30,10 @@
            </a>
          </li>
        </ul>
-            <span class="navbar-brand ml-3" >Admin Management</span>
-            
+          <span class="navbar-brand ml-3" >{{__('message.Admin Management')}}</span>
+
+           <!-- lang drop down -->
+          @include('layouts.dropdown-lang')
         </nav>
 
         <!-- Sidebar -->

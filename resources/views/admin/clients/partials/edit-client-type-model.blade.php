@@ -5,39 +5,43 @@
               @csrf
             
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editTypeModalLabel">Edit Client Type</h5>
+                    <h5 class="modal-title" id="editTypeModalLabel">{{__('message.Edit Client Type')}}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="edit_type_id" class="form-label">Select Client Type</label>
+                        <label for="edit_type_id" class="form-label">{{__('message.Select Client Type')}}</label>
                         <select class="form-select" id="edit_type_id" name="type_id" data-url="{{ url('/admin/edit-type') }}" required>
-                            <option selected disabled  >Select Client Type</option>
+                            <option selected disabled  >{{__('message.Select Client Type')}}</option>
                            @foreach($clienttype as $type)
-                                <option value="{{$type->type_id}}">{{$type->type_name}}</option>
+                                <option value="{{$type->type_id}}">{{$type->types_name}}</option>
                         @endforeach
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="edit_type_name" class="form-label">New Type Name</label>
+                        <label for="edit_type_name" class="form-label">{{__('message.New Type Name')}}</label>
                         <input type="text" class="form-control border" id="edit_type_name" name="type_name" required>
                     </div>
                     <div class="mb-3">
-                        <label for="delete_type" class="form-label">Delete Client Type</label>
+                        <label for="delete_type" class="form-label">{{__('message.Delete Client Type')}}</label>
                         <ul class="list-group">
                           @foreach($clienttype as $type)
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                                 {{$type->type_name}}
+                                 {{$type->types_name}}
                                     <button class="btn btn-danger btn-sm" onclick="deleteType({{$type->type_id}})">
-                                        Delete
+                                        {{__('message.Delete')}}
                                     </button>
                                 </li>
                           @endforeach
                         </ul>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Update Type</button>
+                <div class="modal-footer d-flex justify-content-between">
+                  <button type="submit" class="btn btn-primary">{{__('message.Edit Client Type')}}</button>
+                  <select  name="lang" id="lang">
+                   <option value="en">EN</option>
+                   <option value="ar">AR</option>
+                   </select>
                 </div>
             </form>
         </div>
@@ -49,8 +53,10 @@ document.getElementById('editTypeForm').addEventListener('submit', async functio
   const baseUrl = document.getElementById('edit_type_id').dataset.url;
   const typeId = document.getElementById('edit_type_id').value;
   const typeName = document.getElementById('edit_type_name').value;
-  
+  const lang = document.querySelector('#editTypeModal select[name="lang"]').value;
+
   try {
+
       const response = await fetch(`${baseUrl}/${typeId}`, {
           method: 'PUT',
           headers: {
@@ -58,7 +64,7 @@ document.getElementById('editTypeForm').addEventListener('submit', async functio
               'Accept': 'application/json',
               'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
           },
-          body: JSON.stringify({ type_name: typeName })
+          body: JSON.stringify({ type_name: typeName, lang: lang })
       });
 
       const data = await response.json();

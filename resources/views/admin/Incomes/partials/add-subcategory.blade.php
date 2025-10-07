@@ -7,26 +7,30 @@
               @csrf
               @method('POST')
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addSubCategoryModalLabel">Add Subcategory</h5>
+                    <h5 class="modal-title" id="addSubCategoryModalLabel">{{__('message.Add Subcategory')}}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="category_name" class="form-label">Category</label>
+                        <label for="category_name" class="form-label">{{__('message.Category')}}</label>
                         <select class="form-select" id="category_id" name="category_id" required>
-                            <option value="">Select Category</option>
+                            <option value="">{{__('message.Select Category')}}</option>
                       @foreach($categories as $category)
-                      <option value="{{$category->category_id}}">{{$category->category_name}}</option>
+                      <option value="{{$category->category_id}}">{{$category->name}}</option>
                       @endforeach
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="sub_name" class="form-label">Subcategory Name</label>
-                        <input type="text" class="form-control border" id="sub_name" name="sub_name" required>
+                        <label for="sub_name_en" class="form-label">{{__('message.Subcategory name_en')}}</label>
+                        <input type="text" class="form-control border" id="sub_name_en" name="name_en" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="sub_name_ar" class="form-label">{{__('message.Subcategory name_ar')}}</label>
+                        <input type="text" class="form-control border" id="sub_name_ar" name="name_ar" required>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Add Subcategory</button>
+                    <button type="submit" class="btn btn-primary">{{__('message.Add Subcategory')}}</button>
                 </div>
             </form>
         </div>
