@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\ClientTypeTranslation;
 
 class ClientType extends Model
-{
+{ 
+  use ClientTypeTranslation;
   protected $table = 'client_type';
   protected $primaryKey = 'type_id';
   public $timestamps = false;
@@ -19,4 +21,5 @@ class ClientType extends Model
       return $this->belongsToMany(Client::class, 'client_types_relation', 'type_id', 'client_id')
                   ->withPivot('created_at', 'is_deleted');
   }
+
 }

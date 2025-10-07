@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\ClientTranslation;
 
 class Client extends Model
-{
+{ 
+  use ClientTranslation;
   protected $table = "clients";
   protected $primaryKey = 'client_id';
   public $timestamps = false;
@@ -38,4 +40,5 @@ class Client extends Model
 
     return $query;
 }
+  
 }

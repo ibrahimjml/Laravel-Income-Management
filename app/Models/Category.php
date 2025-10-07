@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use App\Traits\CategoryTranslation;
 class Category extends Model
 {
+  use CategoryTranslation;
   protected $primaryKey = 'category_id';
   public $timestamps = false;
 

@@ -6,10 +6,18 @@ use App\Http\Controllers\Admin\ClientsController;
 use App\Http\Controllers\Admin\IncomesController;
 use App\Http\Controllers\Admin\OutcomesController;
 use App\Http\Controllers\Auth\LoginController;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 Route::get('/',[LoginController::class,'login_page'])->name('login.page');
 Route::post('/login',[LoginController::class,'login'])->name('admin.login');
 Route::post('/logout',[LoginController::class,'logout'])->name('logout');
+
+Route::group(
+    [
+        'prefix' => LaravelLocalization::setLocale(), 
+        'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath','setLocale']
+    ], 
+    function() {
 
 Route::prefix('admin')
 ->middleware('auth')
@@ -48,3 +56,4 @@ Route::controller(OutcomesController::class)->group(function(){
   Route::post('/add-outcome', 'add_outcome')->name('add.out');
 });
 });
+    });

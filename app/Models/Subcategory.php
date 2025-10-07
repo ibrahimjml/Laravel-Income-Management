@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use App\Traits\SubcategoryTranslation;
 class Subcategory extends Model
 {
+  use SubcategoryTranslation;
   protected $primaryKey = 'subcategory_id';
   public $timestamps = false;
 
