@@ -21,19 +21,33 @@ class IncomesController extends Controller
     public function add_category(CreateCategoryRequest $request)
     {
       $fields = $request->validated();
-      Category::create([
-        'category_name' =>$fields['category_name'],
-        'category_type' => $fields['category_type']
-      ]);
+
+        $category = Category::create([
+          'category_name' => $fields['name_en'],
+          'category_type' => $fields['category_type']
+        ]);
+    
+        $category->translations()->create([
+          'lang_code'     => 'ar',
+          'category_name' => $fields['name_ar'],
+          'created_at'    => now()
+        ]);
+    
       return back()->with('success','category added successfuly !');
     }
 
     public function add_subcategory(CreateSubcategoryRequest $request)
     {
       $fields = $request->validated();
-      Subcategory::create([
+      
+      $sub =  Subcategory::create([
         'category_id' =>$fields['category_id'],
-        'sub_name' => $fields['sub_name']
+        'sub_name' => $fields['name_en']
+      ]);
+      $sub->translations()->create([
+        'lang_code' => 'ar',
+        'sub_name'  => $fields['name_ar'],
+        'created_at' => now()
       ]);
       return back()->with('success','Subcategory added successfuly !');
     }

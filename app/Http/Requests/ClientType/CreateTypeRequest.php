@@ -23,6 +23,7 @@ class CreateTypeRequest extends FormRequest
     {
         return [
             'type_name' => 'required|string|min:3|max:40',
+            'lang'      => 'required|in:en,ar',
         ];
     }
      public function messages(): array
@@ -30,7 +31,8 @@ class CreateTypeRequest extends FormRequest
         return [
             'type_name.required' => 'The client type name is required.',
             'type_name.string' => 'The client type name must be a string.',
-            'type_name.max' => 'The client type name may not be greater than 40 characters.'
+            'type_name.max' => 'The client type name may not be greater than 40 characters.',
+            'lang.in' => 'The language must be either en or ar.',
         ];
     }
 }

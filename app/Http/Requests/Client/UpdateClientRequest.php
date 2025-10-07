@@ -32,6 +32,7 @@ class UpdateClientRequest extends FormRequest
               'email'        => ['sometimes','nullable','email', Rule::unique('clients')->ignore($clientId,'client_id')],
               'type_id'      => 'sometimes|required|array',
               'type_id.*'    => 'exists:client_type,type_id', 
+              'lang'         => 'required|in:en,ar',
         ];
     }
      public function messages(): array

@@ -22,8 +22,22 @@ class CreateCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category_name' => 'required|string|max:20',
+            'name_en'       => 'required|string|max:20',
+            'name_ar'       => 'required|string|max:20',
             'category_type' => 'nullable|in:Income,Outcome'
         ];
     }
+    public function messages(): array
+{
+    return [
+        'name_en.required' => 'The English name is required.',
+        'name_en.string'   => 'The English name must be a string.',
+        'name_en.max'      => 'The English name may not be greater than 20 characters.',
+        'name_ar.required' => 'The Arabic name is required.',
+        'name_ar.string'   => 'The Arabic name must be a string.',
+        'name_ar.max'      => 'The Arabic name may not be greater than 20 characters.',
+        'category_type.in' => 'The category type must be either Income or Outcome.',
+    ];
+}
+
 }

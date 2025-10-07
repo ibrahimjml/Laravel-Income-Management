@@ -7,6 +7,7 @@ use App\Http\Requests\Client\CreateClientRequest;
 use App\Http\Requests\Client\UpdateClientRequest;
 use App\Http\Requests\ClientType\CreateTypeRequest;
 use App\Models\ClientType;
+use App\Models\ClientTypeTranslations;
 use App\Services\ClientService;
 
 
@@ -20,20 +21,46 @@ class ClientsController extends Controller
     public function add_client_type(CreateTypeRequest $request)
     {
       $fields =  $request->validated();
+       $lang = $fields['lang'] ?? 'en';
 
-      ClientType::create([
-        'type_name' => $fields['type_name']
-      ]);
+  
+       $clientType = ClientType::create([
+        'type_name' => $lang === 'en' ? $fields['type_name'] : $fields['type_name'] ,
+    ]);
 
+    // Step 2: create the translation linked to that client type
+    $clientType->translations()->create([
+        'lang_code' => 'ar',
+        'type_name' => $fields['type_name'],
+    ]);
       return back()->with('success',"client type {$request->type_name} added !");
     }
     public function edit_client_type(CreateTypeRequest $request, $id)
     {
             $clientType = ClientType::findOrFail($id);
             $validated = $request->validated();
-    
-            $clientType->update($validated);
-    
+             $lang = $validated['lang'] ;
+
+        if($lang === 'en'){
+           $clientType->update([
+          'type_name' =>  $validated['type_name']]);
+        }
+        
+        if ($lang === 'ar') {
+        $translation = $clientType->translations()->where('lang_code', 'ar')->first();
+
+        if ($translation) {
+            $translation->update([
+                'type_name' => $validated['type_name'],
+            ]);
+        } else {
+            $clientType->translations()->create([
+                'lang_code' => 'ar',
+                'type_name' => $validated['type_name'],
+            ]);
+        }
+    }
+
             return response()->json([
                 'success' => true,
                 'message' => 'Client type updated successfully',

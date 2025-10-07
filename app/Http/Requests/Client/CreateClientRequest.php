@@ -28,6 +28,7 @@ class CreateClientRequest extends FormRequest
               'email'        => 'nullable|email|unique:clients,client_id',
               'type_id'      => 'required|array',
               'type_id.*'    => 'exists:client_type,type_id', 
+              'lang'         => 'required|in:en,ar',
         ];
     }
     public function messages(): array

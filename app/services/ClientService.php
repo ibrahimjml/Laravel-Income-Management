@@ -13,7 +13,7 @@ class ClientService
         $clienttype = ClientType::where('is_deleted',0)->get();
         $clients = Client::with('types') 
                      ->where('is_deleted', 0)
-                     ->paginate(6);
+                     ->paginate(7);
             return [
                'clients' => $clients,
                'clients_type' => $clienttype
@@ -21,14 +21,33 @@ class ClientService
     }
     public function createClient(array $data)
     {
-       $client = Client::create([
+       $lang = $data['lang'] ?? 'en';
+
+       if ($lang === 'en') {
+        $client = Client::create([
             'client_fname' => $data['client_fname'],
             'client_lname' => $data['client_lname'],
-            'email'        => $data['email'],
-            'client_phone' => $data['client_phone'],
+            'email'        => $data['email'] ?? null,
+            'client_phone' => $data['client_phone'] ?? null,
             'created_at'   => now(),
         ]);
-
+     }else {
+        
+        $client = Client::create([
+            'client_fname' => $data['client_fname'] ?? $data['client_lname'] ?? 'N/A', 
+            'client_lname' => $data['client_lname'] ?? $data['client_fname'] ?? 'N/A',
+            'email'        => $data['email'] ?? null,
+            'client_phone' => $data['client_phone'] ?? null,
+            'created_at'   => now(),
+        ]);
+       
+      $client->translations()->create([
+            'lang_code'    => 'ar',
+            'client_fname' => $data['client_fname'],
+            'client_lname' => $data['client_lname'],
+            'created_at'   => now(),
+        ]);
+      }
         foreach ($data['type_id'] as $typeId) {
             ClientTypesRelation::create([
                 'type_id'   => $typeId,
@@ -45,7 +64,32 @@ class ClientService
        return DB::transaction(function() use($clientId, $data){
 
          $client = Client::findOrFail($clientId);
-         $client->update($data);
+          $lang = $data['lang'] ?? 'en';
+
+         if ($lang === 'en') {
+            $client->update([
+                'client_fname' => $data['client_fname'],
+                'client_lname' => $data['client_lname'],
+                'email'        => $data['email'] ?? $client->email,
+                'client_phone' => $data['client_phone'] ?? $client->client_phone,
+            ]);
+        } else {
+  
+            $translation = $client->translations()->where('lang_code', $lang)->first();
+
+            if ($translation) {
+                $translation->update([
+                    'client_fname' => $data['client_fname'],
+                    'client_lname' => $data['client_lname'],
+                ]);
+            } else {
+                $client->translations()->create([
+                    'lang_code'    => $lang,
+                    'client_fname' => $data['client_fname'],
+                    'client_lname' => $data['client_lname'],
+                ]);
+            }
+        }
 
         $selectedTypeIds = $data['type_id'] ?? [];
         $existingRelations = ClientTypesRelation::where('client_id', $clientId)->get();
@@ -78,7 +122,8 @@ class ClientService
           DB::transaction(function () use ($clientId) {
             $client = Client::findOrFail($clientId);
             $client->update(['is_deleted' => 1]);
-
+             $client->translations()->update(['is_deleted' => 1]);
+             
             Income::where('client_id', $clientId)->update(['is_deleted' => 1]);
             ClientTypesRelation::where('client_id', $clientId)->update(['is_deleted' => 1]);
         });
