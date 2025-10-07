@@ -7,13 +7,21 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
- ![Dashboard Screenshot](https://i.postimg.cc/KjrFby4C/Screenshot-2025-05-08-152623.png)
- ![Dashboard Screenshot](https://i.postimg.cc/59HyhHhm/Screenshot-2025-05-07-212412.png)
- ![Dashboard Screenshot](https://i.postimg.cc/hPPy4B0M/Screenshot-2025-05-07-215634.png)
- ![Dashboard Screenshot](https://i.postimg.cc/QdnVnVW3/Screenshot-2025-05-09-160413.png)
- ![Dashboard Screenshot](https://i.postimg.cc/c4DD1K9j/Screenshot-2025-05-09-183048.png)
+ ![Dashboard](https://i.postimg.cc/HWPfF9p0/Screenshot-2025-10-07-193101.png)
+ ![Dashboard arabic](https://i.postimg.cc/c1RNtnZ8/Screenshot-2025-10-07-194145.png)
+ ![Clients](https://i.postimg.cc/HLZqHwwT/Screenshot-2025-10-07-193249.png)
+ ![Clients arabic](https://i.postimg.cc/zX22yzLX/Screenshot-2025-10-07-194200.png)
+ ![Incomes](https://i.postimg.cc/2yzhwZt5/Screenshot-2025-10-07-193322.png)
+ ![Income detail](https://i.postimg.cc/SR22VfrQ/Screenshot-2025-10-07-194251.png)
+ ![Outcomes](https://i.postimg.cc/0Q9zRqC1/Screenshot-2025-10-07-193813.png)
+ ![Payments Schedule](https://i.postimg.cc/4Ncs5Sz6/Screenshot-2025-10-07-193826.png)
+ ![Payments Schedule arabic](https://i.postimg.cc/xC93shk6/Screenshot-2025-10-07-194219.png)
+ ![Reports arabic](https://i.postimg.cc/j2PPQrK1/Screenshot-2025-10-07-201040.png)
+ ![Reports](https://i.postimg.cc/J7x102bR/Screenshot-2025-10-07-201237.png)
+
  
 ### Features
+- **Multi language models** 
 - **Manage Clients** 
 - **Manage Categories and Subcategories** 
 - **Manage Incomes**
@@ -23,6 +31,9 @@
 - **Print and Export PDF** 
 - **ChartJS Analytics** 
 - **Advanced Filtering by date-range, status, categories**
+
+### Upcoming Features
+
 
 ## Admin Login
 `Use these credentails to log in as admin`
