@@ -28,7 +28,8 @@ class CreateIncomeRequest extends FormRequest
                'amount'         => 'required|numeric|min:0.01',
                'paid'           => 'nullable|numeric|min:0',
                'description'    => 'required|string',
-               'next_payment'   => 'required|date'
+               'next_payment'   => 'required|date',
+               'lang'           => 'required|in:en,ar'
         ];
     }
     public function messages(): array

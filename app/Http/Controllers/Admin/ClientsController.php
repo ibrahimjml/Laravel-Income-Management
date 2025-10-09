@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\CreateClientRequest;
 use App\Http\Requests\Client\UpdateClientRequest;
 use App\Http\Requests\ClientType\CreateTypeRequest;
+use App\Models\Client;
 use App\Models\ClientType;
-use App\Models\ClientTypeTranslations;
 use App\Services\ClientService;
 
 
@@ -28,7 +28,6 @@ class ClientsController extends Controller
         'type_name' => $lang === 'en' ? $fields['type_name'] : $fields['type_name'] ,
     ]);
 
-    // Step 2: create the translation linked to that client type
     $clientType->translations()->create([
         'lang_code' => 'ar',
         'type_name' => $fields['type_name'],
@@ -106,6 +105,43 @@ class ClientsController extends Controller
             ], 500);
         }
     
+    }
+    public function trashed_clients()
+    {
+      $clients = Client::isDeleted()->with('types')->paginate(7);
+      return view('admin.clients.trashed',['clients' => $clients]);
+    }
+    public function recover($id)
+    {
+        try {
+        $this->clientService->handleRecovery($id);
+        return response()->json([
+            'success' => true,
+            'message' => 'Client recovered successfully'
+        ]);
+        
+      } catch (\Exception $e) {  
+         return response()->json([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+         ], 500);
+     }
+    }
+    public function force_delete($id)
+    {
+       try {
+        $this->clientService->handleForceDelete($id);
+        return response()->json([
+            'success' => true,
+            'message' => 'Client permanently deleted successfully'
+        ]);
+        
+      } catch (\Exception $e) {  
+         return response()->json([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+         ], 500);
+     }
     }
 }
 

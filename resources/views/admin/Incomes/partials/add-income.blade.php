@@ -56,8 +56,12 @@
                       <input type="date" class="form-control border" id="next_payment" name="next_payment"></input>
                   </div>
               </div>
-              <div class="modal-footer">
+              <div class="modal-footer d-flex justify-content-between">
                   <button type="submit" class="btn btn-primary">{{__('message.Add Income')}}</button>
+                  <select class="form-select" name="lang" id="lang">
+                  <option value="en" selected>EN</option>
+                  <option value="ar">AR</option>
+                  </select>
               </div>
           </form>
       </div>

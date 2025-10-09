@@ -26,6 +26,7 @@ class CreateOutcomeRequest extends FormRequest
             'subcategory_id' => 'required|integer|exists:subcategories,subcategory_id',
             'amount'         => 'required|numeric|min:0.01',
             'description'    => 'required|string',
+            'lang'           => 'required|in:en,ar'
         ];
     }
 }

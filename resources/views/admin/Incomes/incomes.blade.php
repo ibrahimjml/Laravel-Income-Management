@@ -69,7 +69,7 @@
                               }}">
                                   {{ ucfirst($income->status) }}
                               </span></td>
-                                <td>{{ Str::limit($income->description, 30) }}</td>
+                                <td>{{ Str::limit($income->trans_description, 30) }}</td>
                                 <td>{{ date('M d, Y', strtotime($income->created_at)) }}</td>
                                 <td class="text-center align-middle">
                                   <div class="d-flex justify-content-center gap-2">
@@ -89,6 +89,7 @@
                     @endforeach
                     </tbody>
                 </table>
+                {{$incomes->links()}}
             </div>
     
         </div>

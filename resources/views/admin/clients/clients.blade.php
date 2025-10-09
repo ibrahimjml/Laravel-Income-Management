@@ -71,7 +71,10 @@
                             </tr>
                     @endforeach
                     </tbody>
-                </table>
+                  </table>
+                  <div class="ml-4 rounded">
+                    {{$clients->links()}}
+                  </div>
             </div>
         </div>
 
@@ -130,7 +133,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'X-HTTP-Method-Override': 'PUT'
+                    'X-HTTP-Method-Override': 'PUT',
+                    'Accept': 'application/json'
                 },
                 body: formData
             });
@@ -159,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (deleteModal) {
         deleteModal.addEventListener('show.bs.modal', function(event) {
             const button = event.relatedTarget;
-        
+            
             document.getElementById('delete_client_id').value = button.dataset.clientId;
             document.getElementById('delete_client_name').textContent = button.dataset.clientName;
         });
@@ -189,8 +193,25 @@ document.addEventListener('DOMContentLoaded', function() {
                     throw new Error(data.message || 'Delete failed');
                 }
                 
-                alert(data.message || 'Client deleted successfully');
-                location.reload();
+                // Success toast notification
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                
+                Toast.fire({
+                    icon: "success",
+                    title: "{{__('message.Client deleted successfully')}}"
+                }).then(() => {
+                    location.reload();
+                });
                 
             } catch (error) {
                 console.error('Error:', error);

@@ -26,11 +26,11 @@ class UpdateClientRequest extends FormRequest
          $clientId = $this->route('id');
 
           return [
-              'client_fname' => 'sometimes|required|string|max:20',
-              'client_lname' => 'sometimes|required|string|max:20',
-              'client_phone' => ['sometimes','required','numeric', Rule::unique('clients')->ignore($clientId,'client_id')],
-              'email'        => ['sometimes','nullable','email', Rule::unique('clients')->ignore($clientId,'client_id')],
-              'type_id'      => 'sometimes|required|array',
+              'client_fname' => 'required|string|max:20',
+              'client_lname' => 'required|string|max:20',
+              'client_phone' => ['required','numeric', Rule::unique(CLient::class)->ignore($clientId,'client_id')],
+              'email'        => ['nullable','email', Rule::unique(Client::class)->ignore($clientId,'client_id')],
+              'type_id'      => 'required|array',
               'type_id.*'    => 'exists:client_type,type_id', 
               'lang'         => 'required|in:en,ar',
         ];

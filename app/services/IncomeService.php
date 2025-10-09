@@ -34,7 +34,11 @@ class IncomeService
              'next_payment'   => $data['next_payment'],
              'status'         => 'Pending' 
          ]);
- 
+          $income->translations()->create([
+            'lang_code' => 'ar',
+            'description' => $data['description'],
+            'created_at' => now()
+          ]);
 
          if (isset($data['paid']) && $data['paid'] > 0) {
              if ($data['paid'] > $data['amount']) {
@@ -65,14 +69,23 @@ class IncomeService
        return DB::transaction(function() use($incomeId, $data){
             $income = Income::where('income_id',$incomeId)->firstOrFail();
             $data['date'] = now()->format('Y-m-d');
-
-         $income->update([
+            $lang = $data['lang'] ?? 'en';
+         
+            if($lang == 'en'){
+             $income->update([
              'client_id'      => $data['client_id'],
              'subcategory_id' => $data['subcategory_id'],
              'amount'         => $data['amount'],
              'description'    => $data['description'],
              'next_payment'   => $data['next_payment'],
-         ]);
+               ]);
+            }elseif ($lang == 'ar'){
+              $income->translations()->update([
+                    'lang_code' => 'ar',
+                    'description' => $data['description']
+                 ]);
+            }
+        
          return $income;
       });
     }
@@ -93,15 +106,15 @@ class IncomeService
          $income = Income::with(['client','subcategory.category','payments'])
                       ->withSum('payments as paid', 'payment_amount')
                       ->where('income_id', $incomeId)
-                      ->where('is_deleted', 0)
+                      ->notDeleted()
                       ->firstOrFail();
       if ($income->client->is_deleted == 1) {
             abort(404, 'Client not found');
             };
-        $payments = Payment::where('income_id',$incomeId)->where('is_deleted',0)->get();
-        $clients = Client::where('is_deleted',0)->get();
-        $categories = Category::where('is_deleted',0)->get();
-        $subcategories = Subcategory::where('is_deleted',0)->get();
+        $payments = Payment::notDeleted()->where('income_id',$incomeId)->get();
+        $clients = Client::notDeleted()->get();
+        $categories = Category::notDeleted()->get();
+        $subcategories = Subcategory::notDeleted()->get();
 
         return [
            'income'        => $income,
@@ -127,11 +140,13 @@ class IncomeService
     }
     protected function getIncomes()
     {
-      return Income::with(['client', 'subcategory.category', 'payments'])
-                     ->where('is_deleted', 0)
-                     ->get()
-                     ->each(function ($income) {
-                    $income->paid = $income->payments->sum('payment_amount');
-                    });
+    return Income::with(['client', 'subcategory.category'])
+                   ->withSum('payments', 'payment_amount')
+                   ->notDeleted()
+                   ->paginate(7)
+                   ->through(function ($income) {
+                       $income->paid = $income->payments_sum_payment_amount;
+                       return $income;
+                   });
     }
 }

@@ -63,18 +63,6 @@ class AdminController extends Controller
       'outcomes'      => $data['outcomes']
     ]);
   }
-  public function payments_page(PaymentService $paymentService)
-  {
-    $data = $paymentService->getPaymentsData();
-
-    return view('admin.payments',[
-      
-    'outdated_payments' => $data['outdated_payments'],
-    'today_payments'    => $data['today_payments'],
-    'upcoming_payments' => $data['upcoming_payments']
-    ]);
-  }
-
 
   public function reports_page(ReportService $reportService)
   {

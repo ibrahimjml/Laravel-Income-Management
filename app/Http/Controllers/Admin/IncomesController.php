@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Category\CreateCategoryRequest;
 use App\Http\Requests\Income\{CreateIncomeRequest, UpdateIncomeRequest};
-use App\Http\Requests\Payment\CreatePaymentRequest;
 use App\Http\Requests\Subcategory\CreateSubcategoryRequest;
 use App\Models\{Category, Subcategory};
 use App\Services\{IncomeService, PaymentService};
@@ -98,21 +97,7 @@ class IncomesController extends Controller
      }
 
     }
-
-    public function add_payment(CreatePaymentRequest $request,$income_id)
-    {
-      $fields = $request->validated();
-
-       try {
-            $this->paymentService->addPayment($income_id, $fields);
-            return back()->with('success','payment updated !');
-
-    } catch (\Exception $e) {
-
-        return back()->with('error','Error: ' . $e->getMessage());
-    }
-
-    }
+  
     public function show($income_id)
     {
         $data = $this->incomeService->getIcomeDetails($income_id);
