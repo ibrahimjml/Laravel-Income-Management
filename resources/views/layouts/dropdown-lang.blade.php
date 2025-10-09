@@ -7,7 +7,13 @@
     @elseif(app()->getLocale() === 'ar')
       <span class="fi fi-lb fis"></span>
     @endif
-    <span>{{ strtoupper(app()->getLocale()) }}</span>
+    <span>
+      @if(app()->getLocale() == 'ar')
+      <b>العربية</b>
+      @else
+      <b>English</b>
+      @endif
+    </span>
   </button>
   <ul class="dropdown-menu" aria-labelledby="languageDropdown">
     <li>

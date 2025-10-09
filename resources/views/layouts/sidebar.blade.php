@@ -15,36 +15,126 @@
               </a>
           </li>
 
-            <!-- Clients -->
-            <li class="nav-item">
-                <a href="{{ route('admin.clients') }}" class="nav-link {{ request()->routeIs('admin.clients') ? 'active' : '' }} py-3 text-lg">
-                    <i class="nav-icon fa fa-user"></i>
-                    <p class="ml-2">{{__('message.Clients')}}</p>
+          <!-- Clients -->
+            <li class="nav-item has-treeview {{ request()->routeIs('admin.clients*') ? 'menu-open' : '' }}">
+                <a href="#" class="nav-link  py-3 text-lg">
+                    <i class="nav-icon fas fa-users"></i>
+                    <p class="ml-2">
+                        {{__('message.Clients')}}
+                        <i class="right fas fa-angle-left mt-2"></i>
+                    </p>
                 </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{{route('admin.clients')}}" 
+                           class="nav-link {{ request()->routeIs('admin.clients') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-users"></i>
+                            <p>{{__('message.All Clients')}}</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{route('trashed.clients')}}" 
+                           class="nav-link {{ request()->routeIs('trashed.clients') ? 'active' : '' }}">
+                            <i class="fas fa-trash nav-icon"></i>
+                            <p>{{__('message.Trashed Client')}}</p>
+                        </a>
+                    </li>
+                </ul>
             </li>
 
             <!-- Incomes -->
-            <li class="nav-item">
-                <a href="{{ route('admin.incomes') }}" class="nav-link {{ request()->routeIs('admin.incomes') ? 'active' : '' }} py-3 text-lg">
+            <li class="nav-item has-treeview {{ request()->routeIs('admin.incomes') ? 'menu-open' : '' }}">
+                <a href="#" class="nav-link py-3 text-lg">
                     <i class="nav-icon fa fa-money-bill-wave"></i>
-                    <p class="ml-2">{{__('message.Incomes')}}</p>
+                    <p class="ml-2">
+                      {{__('message.Incomes')}}
+                    <i class="right fas fa-angle-left mt-2"></i>
+                    </p>
                 </a>
+                  <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{{route('admin.incomes')}}" 
+                           class="nav-link {{ request()->routeIs('admin.incomes') ? 'active' : '' }}">
+                            <i class="nav-icon fa fa-money-bill-wave"></i>
+                            <p>{{__('message.All Incomes')}}</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="" 
+                           class="nav-link {{ request()->routeIs('admin.clients.create') ? 'active' : '' }}">
+                            <i class="fas fa-trash nav-icon"></i>
+                            <p>{{__('message.Trashed Incomes')}}</p>
+                        </a>
+                    </li>
+                </ul>
             </li>
 
             <!-- Outcomes -->
-            <li class="nav-item">
-                <a href="{{ route('admin.outcomes') }}" class="nav-link {{ request()->routeIs('admin.outcomes') ? 'active' : '' }} py-3 text-lg">
+            <li class="nav-item has-treeview {{ request()->routeIs('admin.outcomes') ? 'menu-open' : '' }}">
+                <a href="#" class="nav-link  py-3 text-lg">
                     <i class="nav-icon fa fa-credit-card"></i>
-                    <p class="ml-2">{{__('message.Outcomes')}}</p>
+                    <p class="ml-2">
+                      {{__('message.Outcomes')}}
+                     <i class="right fas fa-angle-left mt-2"></i>
+                    </p>
                 </a>
+                  <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{{route('admin.outcomes')}}" 
+                           class="nav-link {{ request()->routeIs('admin.outcomes') ? 'active' : '' }}">
+                            <i class="nav-icon fa fa-credit-card"></i>
+                            <p>{{__('message.All Outcomes')}}</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="" 
+                           class="nav-link {{ request()->routeIs('admin.outcomes.trashed') ? 'active' : '' }}">
+                            <i class="fas fa-trash nav-icon"></i>
+                            <p>{{__('message.Trashed Outcomes')}}</p>
+                        </a>
+                    </li>
+                </ul>
             </li>
 
             <!-- Payments -->
-            <li class="nav-item">
-                <a href="{{ route('admin.payments') }}" class="nav-link {{ request()->routeIs('admin.payments') ? 'active' : '' }} py-3 text-lg">
+            <li class="nav-item has-treeview {{ request()->routeIs('admin.payments') ? 'menu-open' : '' }}">
+                <a href="#" class="nav-link py-3 text-lg">
                     <i class="nav-icon fa fa-calendar"></i>
-                    <p class="ml-2">{{__('message.Payments')}}</p>
+                    <p class="ml-2">
+                      {{__('message.Payments')}}
+                      <i class="right fas fa-angle-left mt-2"></i>
+                    </p>
                 </a>
+                  <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{{route('admin.payments')}}" 
+                           class="nav-link {{ request()->routeIs('admin.payments') ? 'active' : '' }}">
+                            <i class="nav-icon fa fa-credit-card"></i>
+                            <p>{{__('message.All Payments')}}</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{route('admin.upcoming')}}" 
+                           class="nav-link ">
+                              <i class="nav-icon fa fa-calendar"></i>
+                            <p>{{__('message.Upcoming Payments')}}</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{route('admin.today')}}" 
+                           class="nav-link ">
+                              <i class="nav-icon fa fa-calendar"></i>
+                            <p>{{__('message.Today\'s Payments')}}</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{route('admin.outdated')}}" 
+                           class="nav-link ">
+                              <i class="nav-icon fa fa-calendar"></i>
+                            <p>{{__('message.Outdated Payments')}}</p>
+                        </a>
+                    </li>
+                </ul>
             </li>
 
             <!-- Reports -->

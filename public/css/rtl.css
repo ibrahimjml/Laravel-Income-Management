@@ -1,16 +1,62 @@
-body[dir="rtl"] .form-check-input {
-  margin-left: 0.5rem; 
-  margin-right: 3rem;
+[dir="rtl"] body {
+    direction: rtl;
+    text-align: right;
 }
-body[dir="rtl"] .btn-close {
-  margin-left: 0.5rem; 
-  margin-right: 3rem;
+/* Reset sidebar margins */
+[dir="rtl"] .content-wrapper,
+[dir="rtl"] .main-footer,
+[dir="rtl"] .main-header,
+[dir="rtl"] .main-header .navbar {
+    margin-left: 0 !important;
+    margin-right: 250px !important;
 }
-body[dir="rtl"] .payments {
-  display: flex;
-  justify-content: center;
+/* Sidebar positioning */
+[dir="rtl"] .main-sidebar {
+    right: 0;
+    left: auto;
+    border-right: none;
+    border-left: 1px solid #4b545c;
+}
+/* collapsed sidebar */
+[dir="rtl"] .sidebar-collapse .content-wrapper,
+[dir="rtl"] .sidebar-collapse .main-footer,
+[dir="rtl"] .sidebar-collapse .main-header {
+    margin-right: 0 !important;
+    width: 100%;
 }
 
+[dir="rtl"] .sidebar-collapse .main-sidebar {
+    width: 0;
+}
+
+[dir="rtl"] .nav-item.has-treeview > .nav-link > p > .right {
+    right: auto !important;
+    left: 0.5rem !important;
+    float: left !important;
+    rotate: 180deg;
+}
+[dir="rtl"] .nav-item.has-treeview.menu-open > .nav-link > p > .right {
+    transform: rotate(-90deg) scaleX(-1) ;
+}
+
+
+/* Form elements */
+[dir="rtl"] .form-check-input {
+    margin-left: 0.5rem; 
+    margin-right: 0;
+}
+
+[dir="rtl"] .btn-close {
+    margin-left: 0.5rem; 
+    margin-right: 0;
+}
+
+[dir="rtl"] .payments {
+    display: flex;
+    justify-content: center;
+}
+
+/* Small box icon cards */
 .small-box {
     display: flex;
     flex-direction: column;
@@ -26,13 +72,15 @@ body[dir="rtl"] .payments {
     position: relative;
     z-index: 2;
 }
+
 .small-box > .small-box-footer {
     margin-top: auto;
     width: 100% !important;
     position: relative;
 }
-body[dir="rtl"] .small-box > .inner {
-  display: flex;
-  flex-direction: column;
-  align-items: end;
+
+[dir="rtl"] .small-box > .inner {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
 }
