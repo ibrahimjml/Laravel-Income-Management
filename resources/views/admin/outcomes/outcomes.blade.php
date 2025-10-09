@@ -45,17 +45,27 @@
                   @foreach($outcomes as $index => $outcome)
                             <tr>
                                 <td>{{$index + 1}}</td>
-                                <td>{{$outcome->subcategory->category->category_name}}</td>
-                                <td>{{$outcome->subcategory->sub_name}}</td>
+                                <td>{{$outcome->subcategory->category->name}}</td>
+                                <td>{{$outcome->subcategory->name}}</td>
                                 <td> ${{$outcome->amount}}</td>
-                                <td>{{$outcome->description}}</td>
+                                <td>{{$outcome->trans_description}}</td>
                                 <td>{{ date('M d, Y', strtotime($outcome->created_at)) }}</td>
                                 <td>
+                                  <div class="flex gap-1">
+                                    <button  class='edit-outcome-btn btn btn-primary' 
+                                             data-bs-toggle='modal'
+                                             data-bs-target='#editOutcomeModal' 
+                                             data-outcome='@json($outcome)'
+                                      >
+                                  <span class="d-sm-inline d-none">{{__('message.Edit')}}</span>
+                                  <span class="d-inline d-sm-none">E</span>
+                              </button>
                                     <button id="delete-btn" class='btn btn-danger' data-bs-toggle='modal'
                                         data-bs-target='#deleteOutcomeModal' data-outcome-id="{{$outcome->outcome_id}}">
                                         <span class="d-sm-inline d-none">{{__('message.Delete')}}</span>
                                         <span class="d-inline d-sm-none">D</span>
                                     </button>
+                                  </div>
                                 </td>
                             </tr>
                     @endforeach
@@ -67,6 +77,8 @@
     </div>
 {{-- add outcome model --}}
 @include('admin.outcomes.partials.add-outcome',['categories'=>$categories,'subcategories'=>$subcategories])
+{{-- edit outcome model --}}
+@include('admin.outcomes.partials.edit-outcome',['categories'=>$categories,'subcategories'=>$subcategories])
 {{-- add category  model --}}
 @include('admin.outcomes.partials.add-category')
 {{-- add sybcategory model --}}
@@ -119,6 +131,83 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const editOutcomeModal = document.getElementById('editOutcomeModal');
+    const editOutcomeForm = document.getElementById('editOutcomeForm');
+    
+    function populateEditModal(outcome) {
+
+        document.getElementById('edit_outcome_id').value = outcome.outcome_id;
+        document.getElementById('edit_category_id').value = outcome.subcategory.category_id;
+        document.getElementById('edit_subcategory_id').value = outcome.subcategory_id;
+        document.getElementById('edit_amount').value = outcome.amount;
+        const lang = document.getElementById('edit_description').value = outcome.trans_description || '';
+        
+        editOutcomeForm.action = `/admin/edit-outcome/${outcome.outcome_id}`;
+        console.log(lang);
+    }
+    
+    document.querySelectorAll('.edit-outcome-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            try {
+                const outcomeJson = this.getAttribute('data-outcome');
+                const outcome = JSON.parse(outcomeJson);
+                
+                populateEditModal(outcome);
+            } catch (error) {
+                console.error('Error parsing outcome data:', error);
+                showAlert('error', 'Error loading outcome data');
+            }
+        });
+    });
+    
+    // fetch 
+    if (editOutcomeForm) {
+        editOutcomeForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitButton = this.querySelector('button[type="submit"]');
+            const originalText = submitButton.innerHTML;
+            
+            
+            try {
+                const formData = new FormData(this);
+                
+                const response = await fetch(this.action, {
+                    method: 'POST', 
+                    headers: {
+                      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                      'X-HTTP-Method-Override': 'PUT',
+                      'Accept': 'application/json'
+                    },
+                    body: formData,
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('success', data.message);
+                    
+                    // Close modal
+                    const modal = bootstrap.Modal.getInstance(editOutcomeModal);
+                    modal.hide();
+
+                        window.location.reload();
+                    
+                } else {
+                    alert('error', data.message);
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('error', 'An error occurred while updating the outcome.');
+            } 
+        });
+    }
+    
 });
 </script>
 @endpush

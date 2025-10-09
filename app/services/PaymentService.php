@@ -30,8 +30,13 @@ class PaymentService
           $payment =  Payment::create([
                'income_id'      => $incomeId,
                'payment_amount' => $data['payment_amount'],
-               'description'    => $data['description'] ?? null
+               'description'    => $data['description'] 
              ]);
+          $payment->translations()->create([
+              'lang_code' => 'ar',
+              'description' => $data['description'],
+              'created_at' => now()
+          ]);
 
            if (isset($data['next_payment'])) {
                Income::where('income_id', $incomeId)
@@ -52,13 +57,51 @@ class PaymentService
            return $payment;
        });
     }
-    protected function getOutDatedPayments(string $today)
+    public function editPayment(int $paymentId,int $incomeId, array $data)
     {
-      return  Income::with(['client', 'payments'])
+       return DB::transaction(function() use($paymentId,$incomeId, $data){
+        $payment = Payment::findOrFail($paymentId);
+            $lang = $data['lang'] ?? 'en';
+
+          if($lang == 'en'){
+             $payment->update([
+               'income_id'      => $incomeId,
+               'payment_amount' => $data['payment_amount'],
+               'description'    => $data['description'] 
+             ]);
+          }elseif($lang == 'ar'){
+            $payment->translations()->update([
+                'lang_code' => 'ar',
+                'description' => $data['description'],
+            ]);
+          }
+        
+           if (isset($data['next_payment'])) {
+               Income::where('income_id', $incomeId)
+                   ->update(['next_payment' => $data['next_payment']]);
+           }
+
+           $income    = Income::findOrFail($incomeId);
+           $totalPaid = Payment::where('income_id', $incomeId)->sum('payment_amount');
+           
+           $status = 'pending';
+           if ($totalPaid > 0 && $totalPaid < $income->amount) {
+               $status = 'partial';
+           } elseif ($totalPaid >= $income->amount) {
+               $status = 'complete';
+           }
+   
+           $income->update(['status' => $status]);
+           return $payment;
+       });
+    }
+    public function getOutDatedPayments(string $today)
+    {
+      return  Income::notDeleted()
+                    ->with(['client', 'payments'])
                     ->whereDate('next_payment', '<', $today)
-                    ->where('is_deleted', 0)
                     ->whereHas('client', function($query) {
-                        $query->where('is_deleted', 0);
+                        $query->notDeleted();
                        })
                     ->get()
                     ->map(function($income) {
@@ -67,14 +110,14 @@ class PaymentService
                         return $income;
                     });
     }
-    protected function getTodayPayments(string $today)
+    public function getTodayPayments(string $today)
     {
-      return Income::with(['client', 'payments'])
+      return Income::notDeleted()
+                    ->with(['client', 'payments'])
                     ->whereDate('next_payment', $today)
-                    ->where('is_deleted', 0)
                     ->where('status','!=','complete')
                     ->whereHas('client', function($query) {
-                        $query->where('is_deleted', 0);
+                        $query->notDeleted();
                     })
                     ->get()
                     ->map(function($income) {
@@ -83,14 +126,14 @@ class PaymentService
                           return $income;
                     });
     }
-    protected function getUpComingPayments(string $today)
+    public function getUpComingPayments(string $today)
     {
-      return Income::with(['client', 'payments'])
+      return Income::notDeleted()
+                    ->with(['client', 'payments'])
                     ->whereDate('next_payment', '>', $today)
-                    ->where('is_deleted', 0)
                     ->where('status','!=','complete')
                     ->whereHas('client', function($query) {
-                        $query->where('is_deleted', 0);
+                        $query->notDeleted();
                         })
                     ->get()
                     ->map(function($income) {

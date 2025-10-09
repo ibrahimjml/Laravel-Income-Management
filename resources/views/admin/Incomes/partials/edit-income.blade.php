@@ -15,7 +15,7 @@
                         @foreach($clients as $client)
                               <option value="{{$client->client_id}}"
                                 {{$client->client_id === $income->client->client_id ? 'selected' : ''}}>
-                                {{$client->client_fname}} {{$client->client_lname}}
+                                {{$client->full_name}}
                               </option>
                         @endforeach
                       </select>
@@ -54,7 +54,7 @@
                   <div class="mb-3">
                       <label for="description" class="form-label">Description</label>
                       <textarea class="form-control border" id="description" name="description"
-                          required>{{$income->description}}</textarea>
+                          required>{{$income->trans_description}}</textarea>
                   </div>
                   <div class="mb-3">
                       <label for="next_payment" class="form-label">Next Payment Date</label>
@@ -64,6 +64,10 @@
               </div>
               <div class="modal-footer">
                   <button type="submit" class="btn btn-primary">Update Income</button>
+                  <select class="form-select" name="lang" id="lang">
+                  <option value="en" selected>EN</option>
+                  <option value="ar">AR</option>
+                  </select>
               </div>
           </form>
       </div>

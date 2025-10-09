@@ -15,7 +15,7 @@
                       <select class="form-select" id="category_id_outcome" name="category_id" required>
                           <option selected disabled value="">{{__('message.Select Category')}}</option>
                           @foreach($categories as $cat)
-                          <option value="{{$cat->category_id}}">{{$cat->category_name}}</option>
+                          <option value="{{$cat->category_id}}">{{$cat->name}}</option>
                           @endforeach
                       </select>
                   </div>
@@ -24,7 +24,7 @@
                       <select class="form-select" id="subcategory_id_outcome" name="subcategory_id" required>
                           <option selected disabled value="">{{__('message.Select Subcategory')}}</option>
                           @foreach($subcategories as $sub)
-                          <option value="{{$sub->subcategory_id}}">{{$sub->sub_name}}</option>
+                          <option value="{{$sub->subcategory_id}}">{{$sub->name}}</option>
                           @endforeach
                       </select>
                   </div>
@@ -38,8 +38,12 @@
                       <textarea class="form-control border" id="description" name="description"></textarea>
                   </div>
               </div>
-              <div class="modal-footer">
+              <div class="modal-footer d-flex justify-content-between">
                   <button type="submit" class="btn btn-primary">{{__('message.Add Outcome')}}</button>
+                  <select class="form-select" name="lang" id="lang">
+                  <option value="en" selected>EN</option>
+                 <option value="ar">AR</option>
+                 </select>
               </div>
           </form>
       </div>

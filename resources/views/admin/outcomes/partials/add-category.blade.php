@@ -10,8 +10,12 @@
               </div>
               <div class="modal-body">
                   <div class="mb-3">
-                      <label for="category_name" class="form-label">{{__('message.Category name')}}</label>
-                      <input type="text" class="form-control border" id="category_name" name="category_name" required>
+                      <label for="category_name_en" class="form-label">{{__('message.Category name_en')}}</label>
+                      <input type="text" class="form-control border" id="category_name_ar" name="name_en" required>
+                  </div>
+                  <div class="mb-3">
+                      <label for="category_name_ar" class="form-label">{{__('message.Category name_ar')}}</label>
+                      <input type="text" class="form-control border" id="category_name_ar" name="name_ar" required>
                   </div>
                   <input value="Outcome" type="hidden" id="category_type" name="category_type">
               </div>

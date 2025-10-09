@@ -16,13 +16,17 @@
                         <select class="form-select" id="category_id" name="category_id" required>
                             <option value="">{{__('message.Select Category')}}</option>
                             @foreach($categories as $cat)
-                            <option value="{{$cat->category_id}}">{{$cat->category_name}}</option>
+                            <option value="{{$cat->category_id}}">{{$cat->name}}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="sub_name" class="form-label">{{__('message.Subcategory name')}}</label>
-                        <input type="text" class="form-control border" id="sub_name" name="sub_name" required>
+                        <label for="sub_name_en" class="form-label">{{__('message.Subcategory name_en')}}</label>
+                        <input type="text" class="form-control border" id="sub_name_en" name="name_en" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="sub_name_ar" class="form-label">{{__('message.Subcategory name_ar')}}</label>
+                        <input type="text" class="form-control border" id="sub_name_ar" name="name_ar" required>
                     </div>
                 </div>
                 <div class="modal-footer">

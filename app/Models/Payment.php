@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\PaymentTranslation;
 use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
+  use PaymentTranslation;
   protected $primaryKey = 'payment_id';
+  protected $appends = ['trans_description'];
   public $timestamps = false;
 
   protected $fillable = [
@@ -26,4 +29,8 @@ class Payment extends Model
 
     return $query;
 }
+    public function scopeNotDeleted($query)
+  {
+    return $query->where('is_deleted',0);
+  }
 }
