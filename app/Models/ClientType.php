@@ -21,5 +21,8 @@ class ClientType extends Model
       return $this->belongsToMany(Client::class, 'client_types_relation', 'type_id', 'client_id')
                   ->withPivot('created_at', 'is_deleted');
   }
-
+    public function scopeNotDeleted($query)
+  {
+    return $query->where('is_deleted',0);
+  }
 }

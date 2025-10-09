@@ -28,4 +28,8 @@ class Subcategory extends Model
   {
       return $this->hasMany(Outcome::class, 'subcategory_id');
   }
+    public function scopeNotDeleted($query)
+  {
+    return $query->where('is_deleted',0);
+  }
 }

@@ -60,28 +60,29 @@ class ReportService
     }
     protected function getTotalIncome(?string $dateFrom, ?string $dateTo)
     {
-      return  Payment::where('is_deleted', 0)
+      return  Payment::notDeleted()
                       ->whereHas('income', function($query) use ($dateFrom, $dateTo) {
-                          $query->where('is_deleted', 0)
+                          $query->notDeleted()
                       ->dateBetween($dateFrom, $dateTo)
                       ->whereHas('client', function($q) {
-                          $q->where('is_deleted', 0);
+                          $q->notDeleted();
                             });
                       })->sum('payment_amount');
     }
     protected function getTotalOutcome(?string $dateFrom, ?string $dateTo)
     {
-      return Outcome::where('is_deleted', 0)
+      return Outcome::notDeleted()
                          ->dateBetween($dateFrom, $dateTo)
                          ->sum('amount');
     }
     protected function getTotalClients(?string $dateFrom, ?string $dateTo)
     {
-      return Client::whereHas('types', function($query) {
-                          $query->where('type_name','student');
-                            })
-                      ->dateBetween($dateFrom, $dateTo)
-                      ->count();
+      return Client::notDeleted()
+                   ->whereHas('types', function($query) {
+                         $query->where('client_type.type_name', 'student');
+                         })   
+                   ->dateBetween($dateFrom, $dateTo)
+                   ->count();
     }
     protected function getTransactionData(?string $dateFrom, ?string $dateTo)
     {
@@ -92,8 +93,8 @@ class ReportService
     }
     protected function getIncomes(?string $dateFrom, ?string $dateTo)
     {
-      return Income::with(['client', 'subcategory.category', 'payments'])
-                    ->where('is_deleted', 0)
+      return Income::notDeleted()
+                    ->with(['client', 'subcategory.category', 'payments'])
                     ->dateBetween($dateFrom, $dateTo)
                     ->get()
                     ->each(function ($income) {
@@ -102,8 +103,7 @@ class ReportService
     }
     protected function getOutcomes(?string $dateFrom, ?string $dateTo)
     {
-      return Outcome::with('subcategory.category')
-                      ->where('is_deleted',0)
+      return Outcome::notDeleted()->with('subcategory.category')
                       ->dateBetween($dateFrom, $dateTo)
                       ->get();
     }

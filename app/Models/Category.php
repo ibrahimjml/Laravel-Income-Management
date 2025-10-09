@@ -18,4 +18,8 @@ class Category extends Model
   {
       return $this->hasMany(Subcategory::class, 'category_id');
   }
+  public function scopeNotDeleted()
+  {
+    return $this->where('is_deleted',0);
+  }
 }

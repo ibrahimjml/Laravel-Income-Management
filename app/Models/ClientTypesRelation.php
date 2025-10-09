@@ -13,4 +13,9 @@ class ClientTypesRelation extends Model
   protected $fillable = [
       'client_id', 'type_id', 'is_deleted', 'created_at',
   ];
+
+    public function scopeNotDeleted($query)
+  {
+    return $query->where('is_deleted',0);
+  }
 }

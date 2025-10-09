@@ -41,27 +41,27 @@ class DashboardService
     protected function getTotalIncome(Carbon $startDate, Carbon $endDate)
     {
          return Payment::with(['income.client'])
-            ->where('is_deleted', 0)
-            ->whereHas('income', function($query) {
-                $query->where('is_deleted', 0)
-                    ->whereHas('client', function($q) {
-                        $q->where('is_deleted', 0);
-                    });
-            })
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->sum('payment_amount');
+                     ->notDeleted()
+                     ->whereHas('income', function($query) {
+                         $query->notDeleted()
+                             ->whereHas('client', function($q) {
+                                 $q->notDeleted();
+                             });
+                     })
+                     ->whereBetween('created_at', [$startDate, $endDate])
+                     ->sum('payment_amount');
     }
     protected function getTotalOtcome(Carbon $startDate, Carbon $endDate)
     {
-       return Outcome::where('is_deleted', 0)
+       return Outcome::notDeleted()
             ->whereBetween('created_at', [$startDate, $endDate])
             ->sum('amount');
     }
     protected function getTotalClients()
     {
-        return Client::whereHas('types', function($query) {
-            $query->where('type_name', 'student');
-        })->count();
+        return Client::notDeleted()->whereHas('types', function($query) {
+                         $query->where('type_name', 'student');
+                     })->count();
     }
     protected function getChartData(Carbon $firstDayOfMonth)
     {

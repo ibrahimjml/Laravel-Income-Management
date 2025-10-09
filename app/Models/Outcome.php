@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\OutcomeTranslation;
 use Illuminate\Database\Eloquent\Model;
 
 class Outcome extends Model
 {
+   use OutcomeTranslation;
   protected $table = 'outcome';
   protected $primaryKey = 'outcome_id';
+  protected $appends = ['trans_description'];
   public $timestamps = false;
 
   protected $fillable = [
@@ -27,4 +30,8 @@ class Outcome extends Model
 
     return $query;
 }
+    public function scopeNotDeleted($query)
+  {
+    return $query->where('is_deleted',0);
+  }
 }

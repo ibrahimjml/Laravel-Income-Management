@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\{Client, ClientType, ClientTypesRelation, Income};
+use App\Models\ClientTranslations;
 use Illuminate\Support\Facades\DB;
 
 class ClientService
@@ -10,10 +11,9 @@ class ClientService
     
     public function getClientsData()
     {
-        $clienttype = ClientType::where('is_deleted',0)->get();
-        $clients = Client::with('types') 
-                     ->where('is_deleted', 0)
-                     ->paginate(7);
+        $clienttype = ClientType::notDeleted()->get();
+        $clients = Client::notDeleted()->with('types') ->paginate(5);
+
             return [
                'clients' => $clients,
                'clients_type' => $clienttype
@@ -91,35 +91,23 @@ class ClientService
             }
         }
 
-        $selectedTypeIds = $data['type_id'] ?? [];
-        $existingRelations = ClientTypesRelation::where('client_id', $clientId)->get();
-
-        foreach ($existingRelations as $relation) {
-            if (!in_array($relation->type_id, $selectedTypeIds)) {
-                $relation->update(['is_deleted' => 1]);
-            }
-        }
-
+         $selectedTypeIds = $data['type_id'] ?? [];
+        
+        // delete old relation
+        ClientTypesRelation::where('client_id', $clientId)->delete();    
+        // Create new 
         foreach ($selectedTypeIds as $typeId) {
-            $relation = ClientTypesRelation::where('client_id', $clientId)
-                ->where('type_id', $typeId)
-                ->first();
-
-            if ($relation) {
-                $relation->update(['is_deleted' => 0]);
-            } else {
-                ClientTypesRelation::create([
-                    'client_id'  => $clientId,
-                    'type_id'    => $typeId,
-                    'created_at' => now(),
-                ]);
-            }
+            ClientTypesRelation::create([
+                'client_id'  => $clientId,
+                'type_id'    => $typeId,
+                'created_at' => now(),
+            ]);
         }
     });
   }
     public function deleteClient(int $clientId)
     {
-          DB::transaction(function () use ($clientId) {
+        return  DB::transaction(function () use ($clientId) {
             $client = Client::findOrFail($clientId);
             $client->update(['is_deleted' => 1]);
              $client->translations()->update(['is_deleted' => 1]);
@@ -128,6 +116,29 @@ class ClientService
             ClientTypesRelation::where('client_id', $clientId)->update(['is_deleted' => 1]);
         });
     
+    }
+    public function handleForceDelete(int $clientId)
+    {
+     return DB::transaction(function () use ($clientId) {
+        $client = Client::findOrFail($clientId);
+        
+        Income::where('client_id', $clientId)->delete();
+        ClientTypesRelation::where('client_id', $clientId)->delete();
+        ClientTranslations::where('client_id', $clientId)->delete();
+        
+        $client->delete();
+    });
+    }
+    public function handleRecovery(int $clientId)
+    {
+        return  DB::transaction(function () use ($clientId) {
+             $client = Client::findOrFail($clientId);
+             $client->update(['is_deleted' => 0]);
+             $client->translations()->update(['is_deleted' => 0]);
+             
+            Income::where('client_id', $clientId)->update(['is_deleted' => 0]);
+            ClientTypesRelation::where('client_id', $clientId)->update(['is_deleted' => 0]);
+        });
     }
     
 }
