@@ -121,6 +121,7 @@ return [
     'OK' => 'OK',
     // invoices
       'Invoices' => 'Invoices',
+      'Final' => 'Final',
     'Select Income' => 'Select Income',
     'Add Invoice' => 'Add Invoice',
     'Income Status'=>'Income Status',

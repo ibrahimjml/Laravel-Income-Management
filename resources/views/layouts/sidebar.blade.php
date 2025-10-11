@@ -146,7 +146,7 @@
             <!-- Invoices -->
             <li class="nav-item">
                 <a href="{{ route('invoices.index') }}" class="nav-link {{ request()->routeIs('discounts.index') ? 'active' : '' }} py-3 text-lg ">
-                    <i class="nav-icon fas fa-file"></i>
+                    <i class="nav-icon fas fa-receipt"></i>
                     <p class="ml-2">{{__('message.Invoices')}}</p>
                 </a>
             </li>
@@ -158,16 +158,16 @@
                 </a>
             </li>
 
-            <!-- Logout -->
-          <div class="mt-auto p-2 text-end ">
-          <form method="POST" action="{{ route('logout') }}">
+        <!-- Logout -->
+       <li class="nav-item">
+        <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
             @csrf
-            <button type="submit" class="btn  text-end text-white d-flex align-items-center gap-3 justify-content-start">
-              <i class="nav-icon fas fa-sign-out-alt"></i>
-              <span >{{ __('message.Logout') }}</span>
-            </button>
-          </form>
-        </div>
+        </form>
+        <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="nav-link py-3 text-lg ">
+            <i class="nav-icon fas fa-sign-out-alt"></i>
+            <p class="ml-2">{{ __('message.Logout') }}</p>
+        </a>
+      </li>
         </ul>
     </nav>
 </div>

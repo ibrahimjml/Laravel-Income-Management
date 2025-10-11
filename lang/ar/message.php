@@ -120,6 +120,7 @@ return [
     'OK' => 'موافق',
     // invoices
      'Invoices' => 'الفواتير',
+     'Final' => 'السعر النهائي',
      'Add Invoice' => 'أضف فاتورة',
     'Select Income' => 'اختر الدخل',
     'Income Status' => 'حالة الدفعة',
