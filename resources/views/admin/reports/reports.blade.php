@@ -96,6 +96,7 @@
                                   <tr>
                                       <th onclick="sortTable(0, this)">{{__('message.Client')}} <span class="arrow"></span></th>
                                       <th onclick="sortTable(1, this)">{{__('message.Amount')}} <span class="arrow"></span></th>
+                                      <th onclick="sortTable(1, this)">Final <span class="arrow"></span></th>
                                       <th onclick="sortTable(2, this)">{{__('message.Paid')}} <span class="arrow"></span></th>
                                       <th onclick="sortTable(3, this)">{{__('message.Date')}} <span class="arrow"></span></th>
                                   </tr>
@@ -111,7 +112,8 @@
                                             <small>{{ ucfirst($income->status) }}</small>  
                                           </span>
                                           </td>
-                                          <td>${{number_format($income->amount, 2)}}</td>
+                                          <td>${{number_format($income->amount)}}</td>
+                                          <td>${{number_format($income->final_amount)}}</td>
                                           <td>${{$income->paid}}</td>
                                           <td>{{ date('M d, Y', strtotime($income->created_at)) }}</td>
                                       </tr>

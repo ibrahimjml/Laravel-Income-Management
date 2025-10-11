@@ -23,8 +23,9 @@
         <h5 class=" mb-2 text-primary border-primary border-bottom pb-2">{{ $out->client->full_name }}</h5>
         <p class="mb-1"><strong>{{ __('message.Client Phone Number') }}:</strong> {{ $out->client->client_phone }}</p>
         <p class="mb-1"><strong>{{ __('message.Amount') }}:</strong> ${{ number_format($out->amount) }}</p>
+        <p class="mb-1"><strong>Final:</strong> ${{ number_format($out->amount) }}</p>
         <p class="mb-1"><strong>{{ __('message.Paid') }}:</strong> ${{ $out->total_paid }}</p>
-        <p class="mb-1"><strong>{{ __('message.Remaining') }}:</strong> ${{ $out->remaining - $out->total_paid }}</p>
+        <p class="mb-1"><strong>{{ __('message.Remaining') }}:</strong> ${{ $out->remaining}}</p>
         <p class="mb-1">
           <strong>{{ __('message.Status') }}:</strong>
           <span class="badge bg-{{ 

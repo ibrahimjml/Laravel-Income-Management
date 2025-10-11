@@ -23,12 +23,12 @@
             </div>
             <div>
               <h5 class=" mb-2 text-primary border-primary border-bottom pb-2">{{$upcoming->client->full_name}}</h5>
-              <p class="mb-1"><strong>{{__('message.Client Phone Number')}}: </strong> {{$upcoming->client->client_phone}}
-              </p>
+              <p class="mb-1"><strong>{{__('message.Client Phone Number')}}: </strong> {{$upcoming->client->client_phone}}  </p>
               <p class="mb-1"><strong>{{__('message.Amount')}}: </strong> ${{number_format($upcoming->amount)}}</p>
+              <p class="mb-1"><strong>Final: </strong> ${{number_format($upcoming->final_amount)}}</p>
               <p class="mb-1"><strong>{{__('message.Paid')}}: </strong> ${{$upcoming->total_paid}}</p>
               <p class="mb-1">
-                <strong>{{ __('message.Remaining') }}:</strong>${{ number_format($upcoming->remaining - $upcoming->total_paid) }}
+                <strong>{{ __('message.Remaining') }}:</strong>${{ number_format($upcoming->remaining) }}
               </p>
               <p class="mb-1">
                 <strong>{{ __('message.Status') }}:</strong>
@@ -42,9 +42,7 @@
               <strong>{{__('message.Due Date')}}: {{ date('M d, Y', strtotime($upcoming->next_payment)) }}</strong>
             </div>
           </div>
-          @if($index < count($upcoming_payments) - 1)
-            <hr style="border: none; height: 1px; background-color: #000;">
-          @endif
+          
          @empty
           <p class="text-muted">{{__('message.No upcoming payments')}}.</p>
         @endforelse

@@ -136,7 +136,20 @@
                     </li>
                 </ul>
             </li>
-
+            <!-- Discounts -->
+            <li class="nav-item">
+                <a href="{{ route('discounts.index') }}" class="nav-link {{ request()->routeIs('discounts.index') ? 'active' : '' }} py-3 text-lg ">
+                    <i class="nav-icon fas fa-percentage"></i>
+                    <p class="ml-2">{{__('message.Discounts')}}</p>
+                </a>
+            </li>
+            <!-- Invoices -->
+            <li class="nav-item">
+                <a href="{{ route('invoices.index') }}" class="nav-link {{ request()->routeIs('discounts.index') ? 'active' : '' }} py-3 text-lg ">
+                    <i class="nav-icon fas fa-file"></i>
+                    <p class="ml-2">{{__('message.Invoices')}}</p>
+                </a>
+            </li>
             <!-- Reports -->
             <li class="nav-item">
                 <a href="{{ route('admin.reports') }}" class="nav-link {{ request()->routeIs('admin.reports') ? 'active' : '' }} py-3 text-lg ">

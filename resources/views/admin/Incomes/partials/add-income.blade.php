@@ -46,7 +46,16 @@
                           <label for="amount" class="form-label">{{__('message.Paid')}} ({{__('message.Optional')}})</label>
                           <input type="number" class="form-control border" id="paid" name="paid" max="" step="1">
                       </div>
-                  </div>
+                    </div>
+                    <div class="me-2">
+                      <label for="discount_id" class="form-label">Discount: (optional)</label>
+                      <select class="form-select" name="discount_id" id="discount_id">
+                        <option value="">--Select Discount Rate--</option>
+                        @foreach($discounts as $id => $rate)
+                            <option value="{{ $id }}">{{ $rate }}%</option>
+                        @endforeach
+                    </select>
+                    </div>
                   <div class="mb-3">
                       <label for="description" class="form-label">{{__('message.Description')}}</label>
                       <textarea class="form-control border" id="description" name="description"></textarea>

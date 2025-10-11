@@ -18,8 +18,9 @@
                       <strong>{{__('message.Client Name')}}: </strong>{{$out->client->full_name}}<br>
                       <strong>{{__('message.Client Phone Number')}}: {{$out->client->client_phone}}</strong><br>
                       <strong>{{__('message.Amount')}}: {{$out->amount}}</strong> $<br>
+                      <strong>Final: {{$out->final_amount}}</strong> $<br>
                       <strong>{{__('message.Paid')}}: </strong> ${{$out->total_paid}}<br>
-                      <strong>{{__('message.Remaining')}}: </strong> $ {{$out->remaining - $out->total_paid}}<br>
+                      <strong>{{__('message.Remaining')}}: </strong> $ {{$out->remaining}}<br>
                       <strong>{{__('message.Status')}}: </strong> <span class="badge bg-{{ 
                         $out->status == 'complete' ? 'success' : 
                         ($out->status == 'partial' ? 'warning' : 'danger') 
@@ -50,8 +51,9 @@
                       <strong>{{__('message.Client Name')}}: </strong>{{$today->client->full_name}}<br>
                       <strong>{{__('message.Client Phone Number')}}: </strong> {{$today->client->client_phone}}<br>
                       <strong>{{__('message.Amount')}}: </strong> ${{$today->amount}}<br>
+                      <strong>Final: </strong> ${{$today->final_amount}}<br>
                       <strong>{{__('message.Paid')}}: </strong> ${{$today->total_paid}}<br>
-                      <strong>{{__('message.Remaining')}}: </strong> ${{ number_format($today->remaining - $today->total_paid, 2) }}<br>
+                      <strong>{{__('message.Remaining')}}: </strong> ${{ number_format($today->remaining) }}<br>
                       <strong>{{__('message.Status')}}: </strong> <span class="badge bg-{{ 
                         $today->status == 'complete' ? 'success' : 
                         ($today->status == 'partial' ? 'warning' : 'danger') 
@@ -82,8 +84,9 @@
                       <strong>{{__('message.Client Name')}}: </strong>{{$upcoming->client->full_name}}<br>
                       <strong>{{__('message.Client Phone Number')}}: </strong> {{$upcoming->client->client_phone}}<br>
                       <strong>{{__('message.Amount')}}: </strong> ${{$upcoming->amount}}<br>
-                      <strong>{{__('message.Paid')}}: </strong> ${{$upcoming->total_paid}}<br>
-                      <strong>{{__('message.Remaining')}}: </strong> ${{ number_format($upcoming->remaining - $upcoming->total_paid, 2) }}<br>
+                      <strong>final: </strong> ${{$upcoming->final_amount}}<br>
+                      <strong>{{__('message.Paid')}}: </strong> ${{ number_format($upcoming->total_paid) }}<br>
+                      <strong>{{__('message.Remaining')}}: </strong> ${{ number_format($upcoming->remaining) }}<br>
                       <strong>{{__('message.Status')}}: </strong> <span class="badge bg-{{ 
                         $upcoming->status == 'complete' ? 'success' : 
                         ($upcoming->status == 'partial' ? 'warning' : 'danger') 

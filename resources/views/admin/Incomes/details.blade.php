@@ -20,6 +20,9 @@
           <strong><p>Category: {{$income->subcategory->category->category_name}}</p></strong>
           <strong><p>Subcategory: {{$income->subcategory->sub_name}}</p></strong>
           <strong><p>Amount: {{$income->amount}}</p></strong>
+          @if(isset($income->discount->rate))
+          <strong><p>Discounted : %{{number_format($income->discount->rate)}} ~ {{$income->final_amount}}</p></strong>
+        @endif
           <strong><p>Total Paid: {{$income->paid}}</p></strong>
           <strong><p>Remaining: {{$income->remaining}}</p></strong>
 
