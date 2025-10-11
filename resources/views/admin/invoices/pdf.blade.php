@@ -6,7 +6,7 @@
         body { font-family: DejaVu Sans, sans-serif; }
         .header h1 { margin: 0; font-size: 2.2em; color: #2c3e50; letter-spacing: 2px; }
         .header p { color: #888; margin-top: 8px; font-size: 1.1em; }
-        .invoice-section { background: #fff; border: 1px solid #e3e3e3; box-shadow: 0 2px 8px #eee; padding: 30px 25px 25px 25px; border-radius: 12px; }
+        .invoice-section { background: #fff; box-shadow: 0 2px 8px #eee; padding: 30px 25px 25px 25px; }
         .invoice-title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
         .invoice-title-row h2 { margin: 0; color: #2980b9; font-size: 1.5em; }
         .invoice-title-row .date { color: #555; font-size: 1.1em; }
