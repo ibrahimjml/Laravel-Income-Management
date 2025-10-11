@@ -59,6 +59,7 @@ return [
    'Delete Outcome' => 'Delete Outcome',
    // payments schedule
    'All Payments' => 'All Payments',
+   'Discounts' => 'Discounts',
    'Search for payments' => 'Search for payments',
    'Outdated Payments' => 'Outdated Payments',
    'Client Name' => 'Client Name',
@@ -118,4 +119,18 @@ return [
     'Delete failed' => 'Delete failed',
     'Failed to delete client' => 'Failed to delete client',
     'OK' => 'OK',
+    // invoices
+      'Invoices' => 'Invoices',
+    'Select Income' => 'Select Income',
+    'Add Invoice' => 'Add Invoice',
+    'Income Status'=>'Income Status',
+    'Select Payment' => 'Select Payment',
+    'To'=>'To',
+    'From'=>'From',
+    'Thanks'=>'Thanks',
+    'Account' => 'Account',
+    'Payment Due'=> 'Payment Due',
+    'Invoice'=> 'Invoice',
+    'Back' => 'Back',
+
 ];

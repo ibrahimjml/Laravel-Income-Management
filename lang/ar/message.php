@@ -59,6 +59,7 @@ return [
   'Delete Outcome' => 'مسح المصروف',
   // payments schedule
    'All Payments'      => 'كل الدفعات',
+   'Discounts' => 'الخصومات',
    'Search for payments'      => 'البحث عن دفعات',
    'Outdated Payments'      => 'الدفعات القديمة',
    'Client Name'            => 'اسم العميل',
@@ -117,4 +118,17 @@ return [
     'Delete failed' => 'فشل الحذف',
     'Failed to delete client' => 'فشل في حذف العميل',
     'OK' => 'موافق',
+    // invoices
+     'Invoices' => 'الفواتير',
+     'Add Invoice' => 'أضف فاتورة',
+    'Select Income' => 'اختر الدخل',
+    'Income Status' => 'حالة الدفعة',
+    'Select Payment' => 'اختر الدفعة',
+    'To'=>'الى',
+    'From'=>'من',
+    'Thanks' => 'شكرا',
+    'Account'=>'حساب',
+    'Payment Due'=>'من تاريخ',
+    'Invoice'=>'فاتورة',
+    'Back' => 'رجوع',
 ];

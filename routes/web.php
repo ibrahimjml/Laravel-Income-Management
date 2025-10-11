@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\{PaymentController, AdminController,ClientsController,IncomesController,OutcomesController};
+use App\Http\Controllers\Admin\DiscountController;
+use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Auth\LoginController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Illuminate\Support\Facades\Route;
@@ -61,5 +63,9 @@ Route::controller(OutcomesController::class)->group(function(){
   Route::post('/add-outcome', 'add_outcome')->name('add.out');
   Route::put('/edit-outcome/{id}', 'edit_outcome')->name('edit.out');
 });
+
+Route::resource('/discounts',DiscountController::class)->except(['create','show','edit']);
+Route::resource('/invoices',InvoiceController::class);
+Route::get('/invoices/{invoice}/pdf', [InvoiceController::class, 'pdf'])->name('invoices.pdf');
 });
     });
