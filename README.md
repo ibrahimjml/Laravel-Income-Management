@@ -14,6 +14,8 @@
  ![Income detail](https://i.postimg.cc/SR22VfrQ/Screenshot-2025-10-07-194251.png)
  ![Outcomes](https://i.postimg.cc/nr5Bs5Vz/Screenshot-2025-10-10-011919.png)
  ![Payments Schedule arabic](https://i.postimg.cc/gc5ZHCpT/Screenshot-2025-10-10-011621.png)
+ ![Invoice](https://i.postimg.cc/pd31bPYd/Screenshot-2025-10-11-040500.png)
+ ![Invoice page](https://i.postimg.cc/9fwJBv57/Screenshot-2025-10-11-040539.png)
  ![outdated payments](https://i.postimg.cc/G26vtVm2/Screenshot-2025-10-10-013917.png)
  ![Reports](https://i.postimg.cc/tTJsh5Mb/Screenshot-2025-10-10-011546.png)
 
@@ -24,6 +26,8 @@
 - **Manage Categories and Subcategories** 
 - **Manage Incomes**
 - **Manage Outcomes**
+- **Manage discounts**
+- **Manage Invoices**
 - **Payments Schedule: Outdated Payements - Today Payments - Upcoming Payments**
 - **Manage Reports** 
 - **Print and Export PDF** 
