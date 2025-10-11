@@ -48,6 +48,7 @@ class AdminController extends Controller
 
       'categories'    => $data['categories'],
       'subcategories' => $data['sub_categories'],
+      'discounts'     => $data['discounts'],
       'clients'       => $data['clients'],
       'incomes'       => $data['incomes']
     ]);

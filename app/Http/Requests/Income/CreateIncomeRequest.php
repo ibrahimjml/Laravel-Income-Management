@@ -26,12 +26,14 @@ class CreateIncomeRequest extends FormRequest
                'category_id'    => 'required|integer|exists:categories,category_id',
                'subcategory_id' => 'required|integer|exists:subcategories,subcategory_id',
                'amount'         => 'required|numeric|min:0.01',
-               'paid'           => 'nullable|numeric|min:0',
-               'description'    => 'required|string',
-               'next_payment'   => 'required|date',
+               'paid'           => 'nullable|numeric|min:0|lte:amount',
+               'discount_id'    => 'nullable|exists:discounts,discount_id',
+               'description'    => 'sometimes|nullable|string|max:200',
+               'next_payment'   => 'sometimes|nullable|date|after_or_equal:today',
                'lang'           => 'required|in:en,ar'
         ];
     }
+    
     public function messages(): array
     {
        return [
@@ -40,8 +42,12 @@ class CreateIncomeRequest extends FormRequest
             'category_id.required'      =>'Category is required',
             'subcategory_id.required'   =>'Subcategory is required',
             'amount.required'           =>'Amount is required',
-            'description.required'      =>'Description is required',
-            'next_payment.required'     =>'Next payment is required',
+            'paid.min'                    => 'Paid amount cannot be negative.',
+            'paid.lte'                    => 'Paid amount cannot exceed the total amount.',
+            'description.required'        =>'Description is required',
+            'description.max'             => 'Description may not be greater than 200 characters.',
+            'next_payment.required'       => 'Next payment date is required.',
+            'next_payment.after_or_equal' => 'Next payment date must be today or in the future.',
 
        ];
     }

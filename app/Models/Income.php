@@ -14,7 +14,17 @@ class Income extends Model
   public $timestamps = false;
 
   protected $fillable = [
-      'subcategory_id', 'amount', 'status', 'description', 'next_payment', 'date', 'client_id', 'is_deleted',
+       'subcategory_id',
+       'amount',
+       'discount_amount',
+       'final_amount',
+       'status',
+       'description', 
+       'next_payment', 
+       'date', 
+       'client_id',
+        'is_deleted',
+        'discount_id',
   ];
 
   public function client()
@@ -32,9 +42,15 @@ class Income extends Model
       return $this->hasMany(Payment::class, 'income_id');
   }
 
-  public function getRemainingAttribute()
+public function getTotalPaidAttribute()
 {
-    return $this->amount - $this->paid;
+    return $this->payments->sum('payment_amount');
+}
+
+public function getRemainingAttribute()
+{
+    $Amount = ($this->final_amount > 0) ? $this->final_amount : $this->amount;
+    return max(0, $Amount - $this->total_paid);
 }
 
 public function scopeDateBetween($query, $from, $to)
@@ -49,4 +65,14 @@ public function scopeDateBetween($query, $from, $to)
   {
     return $query->where('is_deleted',0);
   }
+
+  public function discount()
+{
+    return $this->belongsTo(Discount::class, 'discount_id');
+}
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class, 'income_id', 'income_id')->where('is_deleted', 0);
+    }
+
 }

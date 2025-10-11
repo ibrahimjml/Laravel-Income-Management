@@ -24,7 +24,7 @@ class UpdatePaymentRequest extends FormRequest
         return [
             'income_id'      => 'required|exists:income,income_id',
             'payment_amount' => 'required|numeric|min:0.01',
-            'description'    => 'required|string',
+            'description'    => 'nullable|string',
             'next_payment'   => 'nullable|date',
             'lang'           => 'required|in:en,ar'
         ];

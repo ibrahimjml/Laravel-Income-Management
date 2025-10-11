@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\{Category, Client, Income, Payment, Subcategory};
+use App\Models\{Category, Client, Income, Payment, Penalty, Subcategory};
+use App\Models\Discount;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class IncomeService
 {
@@ -11,59 +13,86 @@ class IncomeService
     {
       $categories    = $this->getCategories();
       $subcategories = $this->getSubCategories();
+      $discountRates = $this->getDiscounts();  
       $clients       = $this->getClients();
       $incomes       = $this->getIncomes();
 
       return [
          'categories'     => $categories,
          'sub_categories' => $subcategories,
+         'discounts'      => $discountRates,
          'clients'        => $clients,
          'incomes'        => $incomes
       ];
     }
-    public function createIncome(array $data)
-    {
-      return DB::transaction(function() use($data){
-          $data['date'] = now()->format('Y-m-d');
+public function createIncome(array $data)
+{
+    return DB::transaction(function () use ($data) {
 
-         $income = Income::create([
-             'client_id'      => $data['client_id'],
-             'subcategory_id' => $data['subcategory_id'],
-             'amount'         => $data['amount'],
-             'description'    => $data['description'],
-             'next_payment'   => $data['next_payment'],
-             'status'         => 'Pending' 
-         ]);
-          $income->translations()->create([
-            'lang_code' => 'ar',
-            'description' => $data['description'],
-            'created_at' => now()
-          ]);
+        $data['date'] = now()->format('Y-m-d');
 
-         if (isset($data['paid']) && $data['paid'] > 0) {
-             if ($data['paid'] > $data['amount']) {
-                 return back()->with('error',"Paid amount cannot be greater than total income amount");
-             }
- 
-             Payment::create([
-                 'income_id' => $income->income_id,
-                 'payment_amount' => $data['paid']
-             ]);
- 
-             $totalPaid = Payment::where('income_id', $income->income_id)->sum('payment_amount');
- 
-             $status = 'pending';
-             if ($totalPaid == $data['amount']) {
-                 $status = 'complete';
-             } elseif ($totalPaid > 0) {
-                 $status = 'partial';
-             }
- 
-             $income->update(['status' => $status]);
-         }
-         return $income;
-      });
-    }
+        $amount = $data['amount'];
+        $discountAmount = 0;
+        $finalAmount = $amount;
+
+        if (!empty($data['discount_id'])) {
+            $discount = Discount::find($data['discount_id']);
+
+            if ($discount) {
+                $discountAmount = ($discount->rate / 100) * $amount;
+                $finalAmount = $amount - $discountAmount;
+            }
+        }
+
+        $income = Income::create([
+            'client_id'       => $data['client_id'],
+            'subcategory_id'  => $data['subcategory_id'],
+            'amount'          => $amount,
+            'discount_id'     => $data['discount_id'] ?? null,
+            'discount_amount' => $discountAmount,
+            'final_amount'    => $finalAmount,
+            'description'     => $data['description'] ?? null,
+            'next_payment'    => $data['next_payment'] ?? null,
+            'status'          => 'pending'
+        ]);
+
+        if (!empty($data['description']) && $data['lang'] === 'ar') {
+            $income->translations()->create([
+                'lang_code'   => 'ar',
+                'description' => $data['description'],
+                'created_at'  => now(),
+            ]);
+        }
+
+        if (!empty($data['paid']) && $data['paid'] > 0) {
+
+          $executeamount = !empty($data['discount_id']) ? $finalAmount : $amount;
+           if ($data['paid'] > $executeamount) {
+                throw new \Exception('Paid amount cannot be greater than the total due amount.');
+              }
+
+            Payment::create([
+                'income_id'      => $income->income_id,
+                'payment_amount' => $data['paid']
+            ]);
+
+            $totalPaid = Payment::where('income_id', $income->income_id)->sum('payment_amount');
+
+            $status = 'pending';
+            if ($totalPaid >= $executeamount) {
+                $status = 'complete';
+            } elseif ($totalPaid > 0) {
+                $status = 'partial';
+            }
+
+            $income->update(['status' => $status]);
+        }
+
+        return $income;
+    });
+}
+
+
     public function updateIncome(int $incomeId, array $data)
     { 
        return DB::transaction(function() use($incomeId, $data){
@@ -129,6 +158,11 @@ class IncomeService
         return Category::where('is_deleted',0)
                    ->where('category_type','Income')
                    ->get();
+    }
+    protected function getDiscounts()
+    {
+     return Discount::where('is_deleted', 0)
+                    ->pluck('rate', 'discount_id');
     }
     protected function getSubCategories()
     {

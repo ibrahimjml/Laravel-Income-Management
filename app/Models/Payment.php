@@ -13,7 +13,7 @@ class Payment extends Model
   public $timestamps = false;
 
   protected $fillable = [
-      'income_id', 'payment_amount', 'description', 'is_deleted',
+      'income_id', 'payment_amount', 'description', 'is_deleted','discount_id',
   ];
 
   public function income()
@@ -32,5 +32,13 @@ class Payment extends Model
     public function scopeNotDeleted($query)
   {
     return $query->where('is_deleted',0);
+  }
+  public function discount()
+{
+    return $this->belongsTo(Discount::class, 'discount_id');
+}
+   public function invoices()
+ {
+        return $this->hasMany(Invoice::class, 'payment_id');
   }
 }

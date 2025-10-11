@@ -26,8 +26,8 @@ class UpdateIncomeRequest extends FormRequest
             'category_id'    => 'required|integer|exists:categories,category_id',
             'subcategory_id' => 'required|integer|exists:subcategories,subcategory_id',
             'amount'         => 'required|numeric|min:0.01',
-            'description'    => 'required|string',
-            'next_payment'   => 'required|date',
+            'description'    => 'sometimes|string',
+            'next_payment'   => 'required|date|after_or_equal:today',
             'lang'           => 'required|in:en,ar'
         ];
     }

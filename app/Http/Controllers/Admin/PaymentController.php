@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Income;
 use App\Services\PaymentService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Payment\CreatePaymentRequest;
@@ -25,12 +26,12 @@ class PaymentController extends Controller
     'upcoming_payments' => $data['upcoming_payments']
     ]);
   }
-  public function add_payment(CreatePaymentRequest $request,$income_id)
+  public function add_payment(CreatePaymentRequest $request,Income $income)
     {
       $fields = $request->validated();
 
        try {
-            $this->paymentService->addPayment($income_id, $fields);
+            $this->paymentService->addPayment($income->income_id, $fields);
             return back()->with('success','payment updated !');
 
     } catch (\Exception $e) {
@@ -39,12 +40,12 @@ class PaymentController extends Controller
     }
 
     }
-  public function edit_payment(UpdatePaymentRequest $request,$payment_id,$income_id)
+  public function edit_payment(UpdatePaymentRequest $request,$payment_id,Income $income)
     {
       $fields = $request->validated();
 
        try {
-            $this->paymentService->editPayment($payment_id,$income_id, $fields);
+            $this->paymentService->editPayment($payment_id,$income->income_id, $fields);
              return response()->json([
             'success' => true,
             'message' => 'payment updated successfully!'
