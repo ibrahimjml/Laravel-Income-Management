@@ -10,12 +10,11 @@
  ![Dashboard arabic](https://i.postimg.cc/yd0SKK45/Screenshot-2025-10-12-001612.png)
  ![Clients](https://i.postimg.cc/HLZqHwwT/Screenshot-2025-10-07-193249.png)
  ![Incomes](https://i.postimg.cc/rFK98GVZ/Screenshot-2025-10-10-011500.png)
- ![Income detail](https://i.postimg.cc/SR22VfrQ/Screenshot-2025-10-07-194251.png)
+ ![Income detail](https://i.postimg.cc/7ZXFBJ5j/Screenshot-2025-10-12-004513.png)
  ![Outcomes](https://i.postimg.cc/nr5Bs5Vz/Screenshot-2025-10-10-011919.png)
  ![Payments Schedule arabic](https://i.postimg.cc/sgtXgLcf/Screenshot-2025-10-12-002759.png)
  ![Invoice](https://i.postimg.cc/8c8BdwD3/Screenshot-2025-10-12-003509.png)
  ![Invoice page](https://i.postimg.cc/9fwJBv57/Screenshot-2025-10-11-040539.png)
- ![outdated payments](https://i.postimg.cc/G26vtVm2/Screenshot-2025-10-10-013917.png)
  ![Reports](https://i.postimg.cc/tTJsh5Mb/Screenshot-2025-10-10-011546.png)
 
  
