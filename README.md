@@ -13,7 +13,7 @@
  ![Income detail](https://i.postimg.cc/7ZXFBJ5j/Screenshot-2025-10-12-004513.png)
  ![Outcomes](https://i.postimg.cc/nr5Bs5Vz/Screenshot-2025-10-10-011919.png)
  ![Payments Schedule arabic](https://i.postimg.cc/sgtXgLcf/Screenshot-2025-10-12-002759.png)
- ![Invoice](https://i.postimg.cc/8c8BdwD3/Screenshot-2025-10-12-003509.png)
+ ![Invoice](https://i.postimg.cc/jq14XM8d/Screenshot-2025-10-12-205239.png)
  ![Invoice page](https://i.postimg.cc/9fwJBv57/Screenshot-2025-10-11-040539.png)
  ![Reports](https://i.postimg.cc/tTJsh5Mb/Screenshot-2025-10-10-011546.png)
 
