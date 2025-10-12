@@ -14,12 +14,15 @@
         .info-table td { background: #f6f8fa; padding: 12px 14px; vertical-align: top; font-size: 1em; }
         .info-table strong { color: #222; }
         .info-table address { font-style: normal; color: #444; }
-        .main-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .main-table th { background: #2980b9; color: #fff; font-weight: bold; }
-        .main-table th, .main-table td { border: 1px solid #d1d1d1; padding: 10px 8px; text-align: center; font-size: 1em; }
+        .summary-table { width: 100%; border-collapse: separate;border:none; margin-bottom: 15px; }
+        .summary-table th { background: #e2e3e4; color: #000; font-weight: bold; text-align: right; border: 1px solid #d1d1d1; }
+        .summary-table td { text-align: right;}
+        .total-row { display:table;text-align: right; margin:10px 20px 40px auto; padding-top: 10px; border-top: 1px solid #d1d1d1 }
+        .main-table { width: 100%; border-collapse: separate;border:none; margin-top: 10px; }
+        .main-table th { background: #e2e3e4; color: #000; font-weight: bold; border: 1px solid #d1d1d1; text-align: left; }
         .main-table tr:nth-child(even) { background: #f2f6fa; }
-        .footer { text-align: left; margin-top: 40px; font-size: 1.1em; display: flex;flex-direction: column;gap: 2px;}
-        .footer > span{ display: block;}
+        .footer { text-align: left;width:70px; margin:left:30px; font-size: 1.1em;padding:5px; border:2px solid black; transform: rotate(-30deg) translateY(-70px)}
+        .footer > strong { text-transform: uppercase; display: block; margin-left:10px;}
   </style>
 </head>
 <body>
@@ -57,36 +60,47 @@
                 </td>
             </tr>
         </table>
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th style="text-align:left;">Category</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid #d1d1d1">
+              <td style="text-align:left;">{{ $invoice->income->subcategory->category->name. ' | '. $invoice->income->subcategory->name }}</td>
+              <td>${{ number_format($invoice->income->amount, 2) }}</td>
+            </tr>
+            <tr>
+              <td style="text-align:left;">Discount rate: %{{ number_format($invoice->income->discount->rate ?? 0) }} </td>
+              <td>${{ number_format($invoice->income->discount_amount ?? 0,2) }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="total-row">
+          <b>Total price:</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${{ number_format($invoice->income->discount_amount > 0 ? $invoice->income->final_amount : $invoice->income->amount, 2) }}
+        </div>
         <table class="main-table">
             <thead>
                 <tr>
                     <th>{{ __('message.Description') }}</th>
-                    <th>{{ __('message.Payments') }}</th>
-                    <th>{{ __('message.Amount') }}</th>
-                    <th>{{ __('message.Status') }}</th>
+                    <th style="text-align:right;">{{ __('message.Payments') }}</th>
                 </tr>
             </thead>
             <tbody>
-                @if($invoice->payment)
                 <tr>
                     <td>{{ $invoice->payment->trans_description }}</td>
-                    <td>${{ number_format($invoice->payment->payment_amount, 2) }}</td>
-                    <td>${{ number_format($invoice->income->amount, 2) }}</td>
-                    <td>{{ ucfirst($invoice->income->status) }}</td>
+                    <td style="text-align:right;">${{ number_format($invoice->payment->payment_amount, 2) }}</td>
                 </tr>
-                @else
-                <tr>
-                    <td colspan="4">{{ __('message.No payments due today') }}</td>
-                </tr>
-                @endif
             </tbody>
         </table>
+        <div class="total-row">
+          <b>Remaining:</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${{ number_format(($invoice->income->remaining), 2)  }}
+        </div>
     </div>
     <div class="footer">
-        <strong>{{ __('message.Thanks') }},</strong>
-        <span>
-          <small>Copyright © {{ date('Y') }}&nbsp;Ibrahim jamal</small>
-        </span>
+        <strong>{{ $invoice->status }}</strong>
     </div>
 </body>
 </html>
