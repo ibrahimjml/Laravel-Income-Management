@@ -15,6 +15,13 @@
                           max="{{$income->remaining}}" required>
                   </div>
                   <div class="mb-3">
+                      <label for="payment_status" class="form-label">Status:</label>
+                      <select class="form-select" name="status" id="payment_status">
+                        <option value="unpaid" selected>Unpaid</option>
+                        <option value="paid">Paid</option>
+                    </select>
+                    </div>
+                  <div class="mb-3">
                       <label for="description" class="form-label">Payment Description</label>
                       <input type="text" class="form-control border" id="description" name="description" required>
                   </div>

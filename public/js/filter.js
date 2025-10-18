@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
+
+  // ************************************
+  //       date picker by month and year
+  // ************************************
+
     const filterModal = document.getElementById('filterModal');
     const monthSelect = document.getElementById('month');
     const yearSelect = document.getElementById('year');
@@ -50,5 +55,46 @@ document.addEventListener('DOMContentLoaded', function () {
         option.textContent = year;
         yearSelect.appendChild(option);
     }
+
+    // ************************************
+   //       date range picker custom range
+  // ************************************
+    $(function () {
+
+      $('#datepicker').daterangepicker({
+        opens: 'left',
+        startDate: moment().startOf('month'),
+        endDate: moment().endOf('month'),
+        ranges: {
+          'Today': [moment(), moment()],
+          'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+          'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+          'This Month': [moment().startOf('month'), moment().endOf('month')],
+          'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        },
+        locale: {
+          format: 'YYYY-MM-DD'
+        }
+      }, function (start, end, label) {
+
+        $('#dateFrom').val(start.format('YYYY-MM-DD'));
+        $('#dateTo').val(end.format('YYYY-MM-DD'));
+      });
+
+
+      $('#dateFrom').val(moment().startOf('month').format('YYYY-MM-DD'));
+      $('#dateTo').val(moment().endOf('month').format('YYYY-MM-DD'));
+
+      // if dateFrom and To are empty 
+      $('#filterForm').submit(function (e) {
+
+        if (!$('#dateFrom').val() || !$('#dateTo').val()) {
+
+          $('#dateFrom').val(moment().startOf('month').format('YYYY-MM-DD'));
+          $('#dateTo').val(moment().endOf('month').format('YYYY-MM-DD'));
+        }
+      });
+    });
 });
 

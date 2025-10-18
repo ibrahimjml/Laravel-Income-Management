@@ -45,7 +45,7 @@
                             <th onclick="sortTable(2, this)">{{__('message.Subcategory')}} <span class="arrow"></span></th>
                             <th onclick="sortTable(3, this)">{{__('message.Amount')}} <span class="arrow"></span></th>
                             <th onclick="sortTable(3, this)">Final<span class="arrow"></span></th>
-                            <th onclick="sortTable(4, this)">{{__('message.Paid')}} <span class="arrow"></span></th>
+                            <th onclick="sortTable(4, this)">{{__('message.Total Paid')}} <span class="arrow"></span></th>
                             <th onclick="sortTable(5, this)">{{__('message.Status')}} <span class="arrow"></span></th>
                             <th onclick="sortTable(6, this)">{{__('message.Description')}} <span class="arrow"></span></th>
                             <th onclick="sortTable(7, this)">{{__('message.Date')}} <span class="arrow"></span></th>
@@ -64,7 +64,7 @@
                                 <td>{{ $income->subcategory->name }}</td>
                                 <td> ${{number_format($income->amount)}}</td>
                                 <td> ${{number_format($income->final_amount)}}</td>
-                                <td> ${{$income->paid}}</td>
+                                <td> ${{$income->total_paid}}</td>
                                 <td> <span class="badge bg-{{ 
                                   $income->status == 'complete' ? 'success' : 
                                   ($income->status == 'partial' ? 'warning' : 'danger') 

@@ -54,7 +54,7 @@
     <div class="col-md-3">
         <div class="small-box bg-info">
             <div class="inner">
-                <h3>${{ number_format($total_profit, 2) }}</h3>
+                <h3>${{ number_format($total_profit ) }}</h3>
                 <p>{{ __('message.Total Profit') }}</p>
             </div>
             <div class="icon">
@@ -95,10 +95,11 @@
                               <thead>
                                   <tr>
                                       <th onclick="sortTable(0, this)">{{__('message.Client')}} <span class="arrow"></span></th>
-                                      <th onclick="sortTable(1, this)">{{__('message.Amount')}} <span class="arrow"></span></th>
-                                      <th onclick="sortTable(1, this)">Final <span class="arrow"></span></th>
-                                      <th onclick="sortTable(2, this)">{{__('message.Paid')}} <span class="arrow"></span></th>
-                                      <th onclick="sortTable(3, this)">{{__('message.Date')}} <span class="arrow"></span></th>
+                                      <th onclick="sortTable(1, this)">{{__('message.Client Type')}} <span class="arrow"></span></th>
+                                      <th onclick="sortTable(2, this)">{{__('message.Amount')}} <span class="arrow"></span></th>
+                                      <th onclick="sortTable(3, this)">Final <span class="arrow"></span></th>
+                                      <th onclick="sortTable(4, this)">{{__('message.Total Paid')}} <span class="arrow"></span></th>
+                                      <th onclick="sortTable(5, this)">{{__('message.Date')}} <span class="arrow"></span></th>
                                   </tr>
                               </thead>
                               <tbody>
@@ -112,9 +113,10 @@
                                             <small>{{ ucfirst($income->status) }}</small>  
                                           </span>
                                           </td>
+                                          <td>{{ $income->client->types->first()?->type_name}}</td>
                                           <td>${{number_format($income->amount)}}</td>
                                           <td>${{number_format($income->final_amount)}}</td>
-                                          <td>${{$income->paid}}</td>
+                                          <td>${{$income->total_paid}}</td>
                                           <td>{{ date('M d, Y', strtotime($income->created_at)) }}</td>
                                       </tr>
                       @endforeach
@@ -140,9 +142,9 @@
                               <thead>
                                   <tr>
                                       <th onclick="sortTable1(0, this)">{{__('message.Category')}} <span class="arrow"></span></th>
-                                      <th onclick="sortTable1(0, this)">{{__('message.Subcategory')}} <span class="arrow"></span></th>
-                                      <th onclick="sortTable1(0, this)">{{__('message.Amount')}} <span class="arrow"></span></th>
-                                      <th onclick="sortTable1(0, this)">{{__('message.Date')}} <span class="arrow"></span></th>
+                                      <th onclick="sortTable1(1, this)">{{__('message.Subcategory')}} <span class="arrow"></span></th>
+                                      <th onclick="sortTable1(2, this)">{{__('message.Amount')}} <span class="arrow"></span></th>
+                                      <th onclick="sortTable1(3, this)">{{__('message.Date')}} <span class="arrow"></span></th>
                                   </tr>
                               </thead>
                               <tbody>
@@ -193,8 +195,11 @@
 @include('admin.reports.partials.filter-date-model')
 </div>
 @push('scripts')
-{{-- filter date model script --}}
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<!-- filter date model script -->
 <script src="{{asset('js/filter.js')}}"></script>
+<!-- doughnut carts -->
 <script>
   var incomeCategoryCtx = document.getElementById('incomeCategoryChart').getContext('2d');
         var incomeCategoryChart = new Chart(incomeCategoryCtx, {

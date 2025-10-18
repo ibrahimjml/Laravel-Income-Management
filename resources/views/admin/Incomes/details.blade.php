@@ -23,7 +23,7 @@
           @if(isset($income->discount->rate))
           <strong><p>Discounted : %{{number_format($income->discount->rate)}} ~ {{$income->final_amount}}</p></strong>
         @endif
-          <strong><p>Total Paid: {{$income->paid}}</p></strong>
+          <strong><p>Total Paid: {{$income->total_paid}}</p></strong>
           <strong><p>Remaining: {{$income->remaining}}</p></strong>
 
       </div>
@@ -52,8 +52,10 @@
           <thead>
               <tr>
                   <th onclick="sortTable(0, this)">Payment Amount<span class="arrow"></span></th>
-                  <th onclick="sortTable(1, this)">Description <span class="arrow"></span></th>
-                  <th onclick="sortTable(2, this)">Payment Date <span class="arrow"></span></th>
+                  <th onclick="sortTable(1, this)">Status<span class="arrow"></span></th>
+                  <th onclick="sortTable(2, this)">Description <span class="arrow"></span></th>
+                  <th onclick="sortTable(3, this)">CreatedAt <span class="arrow"></span></th>
+                  <th onclick="sortTable(4, this)">Payment_DueTo <span class="arrow"></span></th>
                   <th>Actions</th>
               </tr>
           </thead>
@@ -61,16 +63,23 @@
               @foreach($payments as $payment)
                   <tr>
                       <td> ${{$payment->payment_amount}}</td>
+                      <td> <span class="badge bg-{{ 
+                            $payment->status == 'paid' ? 'success' : 
+                            ($payment->status == 'unpaid' ? 'danger' : '') 
+                              }}">
+                      {{ ucfirst($payment->status) }}
+                      </span>
+                      </td>
                       <td>{{$payment->trans_description}}</td>
                       <td>{{ date('M d, Y', strtotime($payment->created_at)) }}</td>
+                      <td>{{ $payment->next_payment?->format('M d, Y') ?? 'N/A' }}</td>
                       <td>
                       <button class='edit-payment-btn btn btn-primary'
                               data-bs-toggle='modal'
                               data-bs-target='#editPaymentModal'
                               data-payment='@json($payment)'
                               data-income='@json([
-                              'income_id' => $income->income_id,
-                              'next_payment' =>$income->next_payment
+                              'income_id' => $income->income_id
                               ])'>
                         <span class="d-sm-inline d-none">{{__('message.Edit')}}</span>
                         <span class="d-inline d-sm-none">E</span>
@@ -102,9 +111,15 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('edit_payment_id').value = payment.payment_id;
         document.getElementById('edit_amount').value = payment.payment_amount;
         document.getElementById('edit_description').value = payment.trans_description;
-         document.getElementById('edit_next_payment').value = income.next_payment;
+        if (payment.next_payment) {
+        const date = new Date(payment.next_payment);
+        const formattedDate = date.toISOString().split('T')[0];
+        document.getElementById('edit_next_payment').value = formattedDate ?? null;
+          } 
+        document.getElementById('edit_status').value = payment.status;
 
-        editPaymentForm.action = `/admin/edit-payment/${payment.payment_id}/${income.income_id}`;
+
+        editPaymentForm.action = `/admin/edit-payment/${payment.payment_id}/${income.income_id}`; 
 
     }
     

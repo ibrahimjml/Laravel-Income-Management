@@ -43,9 +43,16 @@
                           <input type="number" class="form-control border" id="amount" name="amount" required>
                       </div>
                       <div class="flex-fill me-2">
-                          <label for="amount" class="form-label">{{__('message.Paid')}} ({{__('message.Optional')}})</label>
+                          <label for="paid" class="form-label">{{__('message.Paid')}} ({{__('message.Optional')}})</label>
                           <input type="number" class="form-control border" id="paid" name="paid" max="" step="1">
                       </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="payment_status" class="form-label">Payment status:</label>
+                      <select class="form-select" name="payment_status" id="payment_status">
+                        <option value="unpaid" selected>Unpaid</option>
+                        <option value="paid">Paid</option>
+                    </select>
                     </div>
                     <div class="me-2">
                       <label for="discount_id" class="form-label">Discount: (optional)</label>
@@ -61,7 +68,7 @@
                       <textarea class="form-control border" id="description" name="description"></textarea>
                   </div>
                   <div class="mb-3">
-                      <label for="next_payment" class="form-label">{{__('message.Next Payment Date')}}</label>
+                      <label for="next_payment" class="form-label">{{__('message.Next Payment Date')}}  ({{__('message.Optional')}})</label>
                       <input type="date" class="form-control border" id="next_payment" name="next_payment"></input>
                   </div>
               </div>
