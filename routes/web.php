@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Admin\{PaymentController, AdminController,ClientsController,IncomesController,OutcomesController};
+use App\Http\Controllers\Admin\{PaymentController, AdminController, Calendarcontroller, ClientsController,IncomesController,OutcomesController};
 use App\Http\Controllers\Admin\DiscountController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Auth\LoginController;
@@ -65,7 +65,13 @@ Route::controller(OutcomesController::class)->group(function(){
 });
 
 Route::resource('/discounts',DiscountController::class)->except(['create','show','edit']);
+// invoices
 Route::resource('/invoices',InvoiceController::class);
 Route::get('/invoices/{invoice}/pdf', [InvoiceController::class, 'pdf'])->name('invoices.pdf');
+// calendar events
+Route::resource('/calendar',Calendarcontroller::class)->except(['create','show','edit']);
+Route::get('/calendar/events',[Calendarcontroller::class,'getEvents'])->name('calendar.events');
+Route::put('/event/move/{id}',[Calendarcontroller::class,'move'])->name('calendar.move');
+Route::put('/event/resize/{id}',[Calendarcontroller::class,'resize'])->name('calendar.resize');
 });
     });
