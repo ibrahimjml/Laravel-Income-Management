@@ -7,7 +7,7 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
- ![Dashboard arabic](https://i.postimg.cc/tJjJNF4C/Screenshot-2025-10-19-000834.png)
+ ![Dashboard ](https://i.postimg.cc/s2WZPj47/Screenshot-2025-10-19-002055.png)
  ![Clients](https://i.postimg.cc/HLZqHwwT/Screenshot-2025-10-07-193249.png)
  ![Incomes](https://i.postimg.cc/YqX2h5YK/Screenshot-2025-10-19-001007.png)
  ![Income detail](https://i.postimg.cc/CLdT6znd/Screenshot-2025-10-19-001206.png)
