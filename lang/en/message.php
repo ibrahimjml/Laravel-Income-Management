@@ -47,7 +47,8 @@ return [
    'Next Payment Date' => 'Next Payment Date',
    'Details' => 'Details',
    'Amount'            => 'Amount',
-   'Paid'               => 'Paid',
+   'Total Paid'               => 'Total Paid',
+    'Will Pay'           => 'Will Pay',
    'Status'             => 'Status',
    'Description'         => 'Description',
    'Date'               => 'Date',
@@ -133,5 +134,6 @@ return [
     'Payment Due'=> 'Payment Due',
     'Invoice'=> 'Invoice',
     'Back' => 'Back',
-
+    'Calendar' => 'Calendar',
+    'Search for Events' => 'Search for Events'
 ];

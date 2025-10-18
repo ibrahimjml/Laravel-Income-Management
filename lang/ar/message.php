@@ -46,7 +46,8 @@ return [
    'Details'             => 'كشف',
    'Client'               => 'العميل',
    'Amount'               => 'المبلغ',
-   'Paid'                 => 'تم سداد',
+   'Total Paid'           => 'المبلغ المدفوع',
+   'Will Pay'           => 'سيدفع',
    'Status'               => 'الحالة',
    'Description'          => 'الوصف',
    'Date'                 => 'التاريخ',
@@ -132,4 +133,6 @@ return [
     'Payment Due'=>'من تاريخ',
     'Invoice'=>'فاتورة',
     'Back' => 'رجوع',
+    'Calendar' => 'التقويم',
+    'Search for Events' => 'البحث عن احداث'
 ];

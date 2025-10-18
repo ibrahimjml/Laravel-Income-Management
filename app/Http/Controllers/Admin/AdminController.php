@@ -27,7 +27,8 @@ class AdminController extends Controller
       'totalIncome'    => $data['financial']['total_income'],
       'totalOutcome'   => $data['financial']['total_outcome'],
       'totalStudents'  => $data['financial']['total_clients'],
-      'profit'         => $data['financial']['profit']
+      'profit'         => $data['financial']['profit'],
+      'upcomigPayments' => $data['upcoming_payments']
     ]);
   }
   public function clients_page(ClientService $clientService)

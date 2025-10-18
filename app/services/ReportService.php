@@ -61,6 +61,7 @@ class ReportService
     protected function getTotalIncome(?string $dateFrom, ?string $dateTo)
     {
       return  Payment::notDeleted()
+                      ->where('status','paid')
                       ->whereHas('income', function($query) use ($dateFrom, $dateTo) {
                           $query->notDeleted()
                       ->dateBetween($dateFrom, $dateTo)
@@ -94,12 +95,12 @@ class ReportService
     protected function getIncomes(?string $dateFrom, ?string $dateTo)
     {
       return Income::notDeleted()
-                    ->with(['client', 'subcategory.category', 'payments'])
+                    ->with(['client.types', 'subcategory.category', 'payments'])
                     ->dateBetween($dateFrom, $dateTo)
                     ->get()
                     ->each(function ($income) {
-                         $income->paid = $income->payments->sum('payment_amount');
-                      });
+                         $income->paid = $income->payments->where('status','paid')->sum('payment_amount');
+                      });      
     }
     protected function getOutcomes(?string $dateFrom, ?string $dateTo)
     {

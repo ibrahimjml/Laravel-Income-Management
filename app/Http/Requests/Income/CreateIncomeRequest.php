@@ -27,6 +27,7 @@ class CreateIncomeRequest extends FormRequest
                'subcategory_id' => 'required|integer|exists:subcategories,subcategory_id',
                'amount'         => 'required|numeric|min:0.01',
                'paid'           => 'nullable|numeric|min:0|lte:amount',
+               'payment_status' => 'required|in:paid,unpaid',
                'discount_id'    => 'nullable|exists:discounts,discount_id',
                'description'    => 'sometimes|nullable|string|max:200',
                'next_payment'   => 'sometimes|nullable|date|after_or_equal:today',

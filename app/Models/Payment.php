@@ -13,9 +13,17 @@ class Payment extends Model
   public $timestamps = false;
 
   protected $fillable = [
-      'income_id', 'payment_amount', 'description', 'is_deleted','discount_id',
+       'income_id',
+       'payment_amount',
+       'description',
+       'status',
+       'next_payment',
+       'is_deleted',
+       'discount_id',
   ];
-
+  protected $casts = [
+    'next_payment' => 'date',
+  ];
   public function income()
   {
       return $this->belongsTo(Income::class, 'income_id');

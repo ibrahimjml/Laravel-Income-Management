@@ -104,7 +104,7 @@ class IncomesController extends Controller
 
         return view('admin.incomes.details',[
           'income'        => $data['income'],
-          'payments'      =>$data['payments'],
+          'payments'      => $data['payments'],
           'clients'       => $data['clients'],
           'categories'    => $data['categories'],
           'subcategories' => $data['subcategories']

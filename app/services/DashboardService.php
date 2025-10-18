@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Client;
+use App\Models\Income;
 use App\Models\Outcome;
 use App\Models\Payment;
 use App\Services\Analytics\BarChartService;
@@ -22,6 +23,7 @@ class DashboardService
        return [
          'financial' => $this->getFinancialCard($firstDayOfMonth, $currentDay),
          'chart_data' => $this->getChartData($firstDayOfMonth),
+         'upcoming_payments' => $this->getUpcomingPayments(),
          'current_month' => date('F Y')
        ];
     }
@@ -42,13 +44,14 @@ class DashboardService
     {
          return Payment::with(['income.client'])
                      ->notDeleted()
-                     ->whereHas('income', function($query) {
+                     ->where('status', 'paid')
+                     ->whereHas('income', function($query)use ($startDate, $endDate) {
                          $query->notDeleted()
-                             ->whereHas('client', function($q) {
+                               ->whereBetween('created_at', [$startDate, $endDate])
+                         ->whereHas('client', function($q) {
                                  $q->notDeleted();
-                             });
+                          });
                      })
-                     ->whereBetween('created_at', [$startDate, $endDate])
                      ->sum('payment_amount');
     }
     protected function getTotalOtcome(Carbon $startDate, Carbon $endDate)
@@ -79,5 +82,20 @@ class DashboardService
             'outcome_data' => $outcomeData,
             'profit_data' => $profitData
          ];
+    }
+    protected function getUpcomingPayments()
+    {
+       $today = Carbon::today();
+        return Income::notDeleted()
+                           ->with(['client', 'payments'=> function ($q){
+                             $q->where('status','!=','paid');
+                           }])
+                           ->whereDate('next_payment', '>', $today)
+                           ->orwhereDate('next_payment', $today)
+                           ->where('status','!=','complete')
+                           ->whereHas('client', function($query) {
+                               $query->notDeleted();
+                               })
+                           ->get();
     }
 }

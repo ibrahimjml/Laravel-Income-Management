@@ -6,6 +6,7 @@ use App\Models\Income;
 use App\Models\Payment;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PaymentService
 {
@@ -31,6 +32,8 @@ class PaymentService
         $payment = Payment::create([
             'income_id'      => $incomeId,
             'payment_amount' => $data['payment_amount'],
+            'next_payment'   => $data['next_payment'] ?? null,
+            'status'         => $data['status'] ?? 'unpaid',
             'description'    => $data['description'] ?? null
         ]);
 
@@ -47,9 +50,14 @@ class PaymentService
                 ->update(['next_payment' => $data['next_payment']]);
         }
 
-        $income = Income::with('payments')->findOrFail($incomeId);
-        $totalPaid = $income->payments->sum('payment_amount');
-        $amount = $income->final_amount ?? $income->amount;
+         $income = Income::with('payments')->findOrFail($incomeId);
+         $totalPaid = Payment::where('income_id', $incomeId)
+                           ->where('status', 'paid')
+                           ->sum('payment_amount');
+
+          $amount =  $income->final_amount && $income->final_amount > 0
+                           ? $income->final_amount
+                           : $income->amount;
 
         $status = 'pending';
         if ($totalPaid >= $amount) {
@@ -69,34 +77,43 @@ class PaymentService
         $payment = Payment::findOrFail($paymentId);
             $lang = $data['lang'] ?? 'en';
 
-          if($lang == 'en'){
+
              $payment->update([
                'income_id'      => $incomeId,
                'payment_amount' => $data['payment_amount'],
-               'description'    => $data['description'] 
+               'status'         => $data['status'] ?? 'unpaid',
+               'next_payment'   => $data['next_payment'] ?? null,
+               'description'    => $data['description'] ?? null
              ]);
-          }elseif($lang == 'ar'){
-            $payment->translations()->update([
+
+             if(!empty($data['description']) && $lang == 'ar'){
+                 $payment->translations()->update([
                 'lang_code' => 'ar',
                 'description' => $data['description'],
             ]);
-          }
-        
+             }
+          
            if (isset($data['next_payment'])) {
                Income::where('income_id', $incomeId)
                    ->update(['next_payment' => $data['next_payment']]);
            }
 
            $income    = Income::findOrFail($incomeId);
-           $totalPaid = Payment::where('income_id', $incomeId)->sum('payment_amount');
-           
-           $status = 'pending';
-           if ($totalPaid > 0 && $totalPaid < $income->amount) {
-               $status = 'partial';
-           } elseif ($totalPaid >= $income->amount) {
-               $status = 'complete';
-           }
-   
+          $totalPaid =  Payment::where('income_id', $incomeId)
+                                     ->where('status', 'paid')
+                                     ->sum('payment_amount');
+                   
+          $amount = $income->final_amount && $income->final_amount > 0
+                           ? $income->final_amount
+                           : $income->amount;
+          
+            $status = 'pending';
+        if ($totalPaid >= $amount) {
+            $status = 'complete';
+        } elseif ($totalPaid > 0 && $totalPaid < $amount) {
+            $status = 'partial';
+        }
+
            $income->update(['status' => $status]);
            return $payment;
        });
@@ -105,11 +122,19 @@ class PaymentService
     {
       return  Income::notDeleted()
                     ->with(['client', 'payments'])
+                    ->where('status','!=','complete')
                     ->whereDate('next_payment', '<', $today)
                     ->whereHas('client', function($query) {
                         $query->notDeleted();
                        })
-                    ->get();
+                    ->get()
+                    ->map(function($income){
+                       $nextPayment = $income->payments
+                        ->where('status', '!=', 'paid')
+                        ->first();
+                        $income->next_payment_amount = $nextPayment ? $nextPayment->payment_amount : 0;
+                        return $income;
+                    });
                   
     }
     public function getTodayPayments(string $today)
@@ -121,7 +146,14 @@ class PaymentService
                     ->whereHas('client', function($query) {
                         $query->notDeleted();
                     })
-                    ->get();
+                    ->get()
+                    ->map(function($income){
+                       $nextPayment = $income->payments
+                        ->where('status', '!=', 'paid')
+                        ->first();
+                        $income->next_payment_amount = $nextPayment ? $nextPayment->payment_amount : 0;
+                        return $income;
+                    });
                   
     }
     public function getUpComingPayments(string $today)
@@ -133,7 +165,14 @@ class PaymentService
                     ->whereHas('client', function($query) {
                         $query->notDeleted();
                         })
-                    ->get();
+                    ->get()
+                    ->map(function($income){
+                       $nextPayment = $income->payments
+                        ->where('status', '!=', 'paid')
+                        ->first();
+                        $income->next_payment_amount = $nextPayment ? $nextPayment->payment_amount : 0;
+                        return $income;
+                    });
                   
     }
 }

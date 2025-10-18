@@ -33,7 +33,7 @@ public function createIncome(array $data)
 
         $amount = $data['amount'];
         $discountAmount = 0;
-        $finalAmount = $amount;
+        $finalAmount = 0;
 
         if (!empty($data['discount_id'])) {
             $discount = Discount::find($data['discount_id']);
@@ -73,12 +73,16 @@ public function createIncome(array $data)
 
             Payment::create([
                 'income_id'      => $income->income_id,
-                'payment_amount' => $data['paid']
-            ]);
+                'payment_amount' => $data['paid'],
+                'status'         => $data['payment_status'],
+                'next_payment'   => $data['next_payment'] ?? null,
+             ]);
 
-            $totalPaid = Payment::where('income_id', $income->income_id)->sum('payment_amount');
+            $totalPaid = Payment::where('income_id', $income->income_id)
+                                ->where('status', 'paid')
+                                ->sum('payment_amount');
 
-            $status = 'pending';
+             $status = 'pending';
             if ($totalPaid >= $executeamount) {
                 $status = 'complete';
             } elseif ($totalPaid > 0) {
@@ -174,9 +178,9 @@ public function createIncome(array $data)
     }
     protected function getIncomes()
     {
-    return Income::with(['client', 'subcategory.category'])
-                   ->withSum('payments', 'payment_amount')
-                   ->notDeleted()
+    return Income::notDeleted()
+                   ->with(['client', 'subcategory.category'])
+                   ->withSum( 'payments','payment_amount')
                    ->paginate(7)
                    ->through(function ($income) {
                        $income->paid = $income->payments_sum_payment_amount;

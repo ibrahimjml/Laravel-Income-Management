@@ -24,6 +24,7 @@ class CreatePaymentRequest extends FormRequest
         return [
             'income_id'      => 'required|exists:income,income_id',
             'payment_amount' => 'required|numeric|min:0.01',
+            'status'         => 'required|in:paid,unpaid',
             'description'    => 'nullable|string',
             'next_payment'   => 'nullable|date',
         ];

@@ -41,14 +41,17 @@ class Income extends Model
   {
       return $this->hasMany(Payment::class, 'income_id');
   }
-
+public function getPaymentAmountsAttribute()
+{
+    return $this->payments->pluck('payment_amount');
+}
 public function getTotalPaidAttribute()
 {
-    return $this->payments->sum('payment_amount');
+    return $this->payments->where('status', 'paid')->sum('payment_amount');
 }
 
 public function getRemainingAttribute()
-{
+{   
     $Amount = ($this->final_amount > 0) ? $this->final_amount : $this->amount;
     return max(0, $Amount - $this->total_paid);
 }
