@@ -4,14 +4,16 @@ namespace App\Models;
 
 use App\Traits\PaymentTranslation;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Payment extends Model
 {
-  use PaymentTranslation;
+  use PaymentTranslation, LogsActivity;
   protected $primaryKey = 'payment_id';
   protected $appends = ['trans_description'];
+  protected $activitySubjectName = 'income_id';
   public $timestamps = false;
-
   protected $fillable = [
        'income_id',
        'payment_amount',
@@ -49,4 +51,16 @@ class Payment extends Model
  {
         return $this->hasMany(Invoice::class, 'payment_id');
   }
+  public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['payment_amount', 'income_id', 'status','next_payment','is_deleted'])
+        ->logOnlyDirty()
+        ->setDescriptionForEvent(fn(string $eventName) => "payment {$eventName}");
+      }
+        public function getActivitySubjectNameAttribute()
+    {
+        $field = $this->activitySubjectName;
+        return $this->$field;
+    }
 }

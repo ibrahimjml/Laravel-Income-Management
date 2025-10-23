@@ -105,6 +105,7 @@ return [
    // deleting model
     'Are you sure' => 'هل أنت متأكد؟',
     'You are about to permanently delete' => 'أنت على وشك حذف',
+    'You are about to permanently delete all logs'=> 'أنت على وشك حذف كل السجلات',
     'You are about to recover' => 'أنت على وشك استرجاع',
     'This action cannot be undone' => 'هذا الإجراء لا يمكن التراجع عنه!',
     'Yes, delete permanently' => 'نعم، احذف نهائياً',
@@ -134,5 +135,7 @@ return [
     'Invoice'=>'فاتورة',
     'Back' => 'رجوع',
     'Calendar' => 'التقويم',
-    'Search for Events' => 'البحث عن احداث'
+    'Search for Events' => 'البحث عن احداث',
+    // activity 
+    'Activity Logs' => 'سجلات النشاط',
 ];

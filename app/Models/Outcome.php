@@ -4,13 +4,16 @@ namespace App\Models;
 
 use App\Traits\OutcomeTranslation;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Outcome extends Model
 {
-   use OutcomeTranslation;
+   use OutcomeTranslation, LogsActivity;
   protected $table = 'outcome';
   protected $primaryKey = 'outcome_id';
   protected $appends = ['trans_description'];
+  protected $activitySubjectName = 'outcome_id';
   public $timestamps = false;
 
   protected $fillable = [
@@ -34,4 +37,16 @@ class Outcome extends Model
   {
     return $query->where('is_deleted',0);
   }
+  public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['amount', 'description','is_deleted'])
+        ->logOnlyDirty()
+        ->setDescriptionForEvent(fn(string $eventName) => "outcome {$eventName}");
+      }
+        public function getActivitySubjectNameAttribute()
+    {
+        $field = $this->activitySubjectName;
+        return $this->$field;
+    }
 }

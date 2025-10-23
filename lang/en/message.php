@@ -106,6 +106,7 @@ return [
    // deleting model 
     'Are you sure' => 'Are you sure?',
     'You are about to permanently delete' => 'You are about to permanently delete',
+    'You are about to permanently delete all logs'=> 'You are about to permanently delete all logs',
     'You are about to recover'=>'You are about to recover',
     'This action cannot be undone' => 'This action cannot be undone!',
     'Yes, delete permanently' => 'Yes, delete permanently',
@@ -135,5 +136,7 @@ return [
     'Invoice'=> 'Invoice',
     'Back' => 'Back',
     'Calendar' => 'Calendar',
-    'Search for Events' => 'Search for Events'
+    'Search for Events' => 'Search for Events',
+    // activity
+    'Activity Logs' => 'Activity Logs',
 ];

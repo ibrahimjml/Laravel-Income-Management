@@ -4,12 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\ClientTranslation;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Client extends Model
 { 
-  use ClientTranslation;
+
+  use ClientTranslation, LogsActivity;
   protected $table = "clients";
   protected $primaryKey = 'client_id';
+  protected $activitySubjectName = ['client_fname', 'client_lname'];
   public $timestamps = false;
 
   protected $fillable = [
@@ -53,5 +57,24 @@ class Client extends Model
 
     return $query;
 }
-  
+   public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['client_fname', 'client_lname', 'email', 'client_phone','is_deleted'])
+        ->logOnlyDirty()
+        ->setDescriptionForEvent(fn(string $eventName) => "client {$eventName}");
+      }
+     public function getActivitySubjectNameAttribute()
+    {
+        $fields = $this->activitySubjectName;
+        $values = [];
+
+        foreach ($fields as $field) {
+            if (isset($this->$field)) {
+                $values[] = $this->$field;
+            }
+        }
+
+        return implode(' ', $values);
+    }
 }

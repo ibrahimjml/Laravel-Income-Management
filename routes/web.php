@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Admin\{PaymentController, AdminController, Calendarcontroller, ClientsController,IncomesController,OutcomesController};
+use App\Http\Controllers\Admin\{ActivityController, PaymentController, AdminController, Calendarcontroller, ClientsController,IncomesController,OutcomesController};
 use App\Http\Controllers\Admin\DiscountController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Auth\LoginController;
@@ -73,5 +73,9 @@ Route::resource('/calendar',Calendarcontroller::class)->except(['create','show',
 Route::get('/calendar/events',[Calendarcontroller::class,'getEvents'])->name('calendar.events');
 Route::put('/event/move/{id}',[Calendarcontroller::class,'move'])->name('calendar.move');
 Route::put('/event/resize/{id}',[Calendarcontroller::class,'resize'])->name('calendar.resize');
+// activity logs
+Route::get('/logs',[ActivityController::class,'index'])->name('activity.logs');
+Route::delete('/logs/delete',[ActivityController::class,'delete'])->name('activity.delete');
+
 });
     });

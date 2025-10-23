@@ -3,13 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Invoice extends Model
 {
-      protected $table = 'invoices';
-
+      use LogsActivity;
+    protected $table = 'invoices';
     protected $primaryKey = 'invoice_id';
-
+    protected $activitySubjectName = 'invoice_id';
     protected $fillable = [
         'income_id',
         'payment_id',
@@ -29,5 +31,17 @@ class Invoice extends Model
     public function payment()
     {
         return $this->belongsTo(Payment::class, 'payment_id');
+    }
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['income_id', 'payment_id', 'description'])
+        ->logOnlyDirty()
+        ->setDescriptionForEvent(fn(string $eventName) => "invoice {$eventName}");
+      }
+        public function getActivitySubjectNameAttribute()
+    {
+        $field = $this->activitySubjectName;
+        return $this->$field;
     }
 }

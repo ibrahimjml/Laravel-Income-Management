@@ -4,10 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\SubcategoryTranslation;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
+
 class Subcategory extends Model
 {
-  use SubcategoryTranslation;
+  use SubcategoryTranslation, LogsActivity;
   protected $primaryKey = 'subcategory_id';
+  protected $activitySubjectName = 'sub_name';
   public $timestamps = false;
 
   protected $fillable = [
@@ -32,4 +36,16 @@ class Subcategory extends Model
   {
     return $query->where('is_deleted',0);
   }
+  public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['sub_name', 'category_id','is_deleted'])
+        ->logOnlyDirty()
+        ->setDescriptionForEvent(fn(string $eventName) => "subcategory {$eventName}");
+      }
+        public function getActivitySubjectNameAttribute()
+    {
+        $field = $this->activitySubjectName;
+        return $this->$field;
+    }
 }

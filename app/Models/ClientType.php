@@ -4,12 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\ClientTypeTranslation;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class ClientType extends Model
 { 
-  use ClientTypeTranslation;
+  use ClientTypeTranslation, LogsActivity;
   protected $table = 'client_type';
   protected $primaryKey = 'type_id';
+  protected $activitySubjectName = 'type_name';
   public $timestamps = false;
 
   protected $fillable = [
@@ -25,4 +28,17 @@ class ClientType extends Model
   {
     return $query->where('is_deleted',0);
   }
+   public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['type_name','is_deleted'])
+        ->logOnlyDirty()
+        ->setDescriptionForEvent(fn(string $eventName) => "client type {$eventName}");
+      }
+    public function getActivitySubjectNameAttribute()
+    {
+        $field = $this->activitySubjectName;
+        return $this->$field;
+    }
+
 }

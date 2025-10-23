@@ -4,10 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\CategoryTranslation;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
+
 class Category extends Model
 {
-  use CategoryTranslation;
+  use CategoryTranslation, LogsActivity;
   protected $primaryKey = 'category_id';
+  protected $activitySubjectName = 'category_name';
   public $timestamps = false;
 
   protected $fillable = [
@@ -18,8 +22,21 @@ class Category extends Model
   {
       return $this->hasMany(Subcategory::class, 'category_id');
   }
-  public function scopeNotDeleted()
+  public function scopeNotDeleted($query)
   {
-    return $this->where('is_deleted',0);
+    return $query->where('is_deleted',0);
   }
+   public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['category_name', 'category_type','is_deleted'])
+        ->logOnlyDirty()
+        ->setDescriptionForEvent(fn(string $eventName) => "category {$eventName}");
+
+    }
+      public function getActivitySubjectNameAttribute()
+    {
+        $field = $this->activitySubjectName;
+        return $this->$field;
+    }
 }

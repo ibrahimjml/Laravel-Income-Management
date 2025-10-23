@@ -157,6 +157,13 @@
                     <p class="ml-2">{{__('message.Invoices')}}</p>
                 </a>
             </li>
+            <!-- Activity logs -->
+            <li class="nav-item">
+                <a href="{{ route('activity.logs') }}" class="nav-link {{ request()->routeIs('activity.logs') ? 'active' : '' }} py-3 text-lg ">
+                    <i class="nav-icon fas fa-clock"></i>
+                    <p class="ml-2">{{__('message.Activity Logs') }}</p>
+                </a>
+            </li>
             <!-- Reports -->
             <li class="nav-item">
                 <a href="{{ route('admin.reports') }}" class="nav-link {{ request()->routeIs('admin.reports') ? 'active' : '' }} py-3 text-lg ">
