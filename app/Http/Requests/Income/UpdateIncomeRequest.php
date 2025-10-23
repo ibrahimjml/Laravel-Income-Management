@@ -23,11 +23,10 @@ class UpdateIncomeRequest extends FormRequest
     {
         return [
             'client_id'      => 'required|integer|exists:clients,client_id',
-            'category_id'    => 'required|integer|exists:categories,category_id',
             'subcategory_id' => 'required|integer|exists:subcategories,subcategory_id',
             'amount'         => 'required|numeric|min:0.01',
-            'description'    => 'sometimes|string',
-            'next_payment'   => 'required|date|after_or_equal:today',
+            'description'    => 'sometimes|nullable|string|max:200',
+            'next_payment'   => 'sometimes|nullable|date|after_or_equal:today',
             'lang'           => 'required|in:en,ar'
         ];
     }

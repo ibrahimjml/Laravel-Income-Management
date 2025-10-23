@@ -93,7 +93,7 @@
 </div>
 </div>
 {{-- edit income model --}}
-@include('admin.incomes.partials.edit-income',['income'=>$income,'clients'=>$clients,'subcategories'=>$subcategories,'categories'=>$categories])
+@include('admin.incomes.partials.edit-income',['income'=>$income,'clients'=>$clients,'subcategories'=>$subcategories])
 {{-- add payment model --}}
 @include('admin.payments.partials.add-payment',['income'=>$income])
 {{-- edit payment model --}}

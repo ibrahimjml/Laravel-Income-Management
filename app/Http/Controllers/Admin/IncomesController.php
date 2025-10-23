@@ -8,6 +8,7 @@ use App\Http\Requests\Income\{CreateIncomeRequest, UpdateIncomeRequest};
 use App\Http\Requests\Subcategory\CreateSubcategoryRequest;
 use App\Models\{Category, Subcategory};
 use App\Services\{IncomeService, PaymentService};
+use Illuminate\Support\Facades\Log;
 
 class IncomesController extends Controller
 {   
@@ -60,8 +61,11 @@ class IncomesController extends Controller
          return back()->with('success', 'Income added successfully!');
  
      } catch (\Exception $e) {
-
-         return back()->with('error', 'Error: ' . $e->getMessage());
+        Log::error('Income creation failed', [
+        'message' => $e->getMessage(),
+        'data' => $fields
+    ]);
+         return back();
      }
 
     }
@@ -93,7 +97,11 @@ class IncomesController extends Controller
           return back()->with('success', 'Income updated successfully!');
  
      } catch (\Exception $e) {
-         return back()->with('error', 'Error: ' . $e->getMessage());
+          Log::error('Income update failed', [
+        'message' => $e->getMessage(),
+        'data' => $fields
+    ]);
+         return back();
      }
 
     }
@@ -106,7 +114,6 @@ class IncomesController extends Controller
           'income'        => $data['income'],
           'payments'      => $data['payments'],
           'clients'       => $data['clients'],
-          'categories'    => $data['categories'],
           'subcategories' => $data['subcategories']
         ]);
     }

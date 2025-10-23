@@ -33,77 +33,15 @@
         <button class="no-print btn btn-secondary mb-3" id="exportPdfBtn">{{__('message.Export as PDF')}}</button>
       </div>
 
-      <div class="row mb-4">
-        <!-- Total Income Card -->
-        <div class="col-md-3">
-          <div class="small-box bg-success">
-            <div class="inner">
-              <h3>${{ number_format($totalIncome) }}</h3>
-              <p>{{ __('message.Total Income') }}</p>
-            </div>
-            <div class="icon">
-              <i class="fa fa-money-bill-wave"></i>
-            </div>
-            <a href="" class="small-box-footer">
-              {{ $currentMonth }} <i class="fa fa-info"></i>
-            </a>
-          </div>
-        </div>
-
-        <!-- Total Outcome Card -->
-        <div class="col-md-3">
-          <div class="small-box bg-danger">
-            <div class="inner">
-              <h3>${{ number_format($totalOutcome) }}</h3>
-              <p>{{ __('message.Total Outcome') }}</p>
-            </div>
-            <div class="icon">
-              <i class="fa fa-receipt"></i>
-            </div>
-            <a href="" class="small-box-footer">
-              {{ $currentMonth }} <i class="fa fa-info"></i>
-            </a>
-          </div>
-        </div>
-
-        <!-- Total Profit Card -->
-        <div class="col-md-3">
-          <div class="small-box bg-primary">
-            <div class="inner">
-              <h3>${{ number_format($profit) }}</h3>
-              <p>{{ __('message.Total Profit') }}</p>
-            </div>
-            <div class="icon">
-              <i class="fa fa-chart-line"></i>
-            </div>
-            <a href="" class="small-box-footer">
-              {{ $currentMonth }} <i class="fa fa-info"></i>
-            </a>
-          </div>
-        </div>
-
-        <!-- Total Clients Card -->
-        <div class="col-md-3">
-          <div class="small-box bg-info">
-            <div class="inner">
-              <h3>{{ $totalStudents }}</h3>
-              <p>{{ __('message.Total Clients') }}</p>
-            </div>
-            <div class="icon">
-              <i class="fa fa-users"></i>
-            </div>
-            <a href="" class="small-box-footer">
-              {{ $currentMonth }} <i class="fa fa-info"></i>
-            </a>
-          </div>
-        </div>
-      </div>
+      <div class="row mb-4"><!-- dashboard cards -->
+      <x-dashboard-cards :totalIncome="$totalIncome" :currentMonth="$currentMonth" :totalOutcome="$totalOutcome" :profit="$profit" :totalStudents="$totalStudents" :totalOutdatedPayments="$totalOutdatedPayments" />
+      </div><!-- end dashboard cards -->
       <div class="d-flex flex-column flex-lg-row gap-5">
         <!-- chart data -->
         <div style="position: relative; height:500px; margin-bottom: 20px">
           <h3 class="text-center mb-4">{{__('message.Income, Outcome, and Profit for')}} {{$currentMonth}}</h3>
           <canvas id="lineChart" class="w-100"></canvas>
-        </div>
+        </div><!-- end chart data -->
         <!-- Upcoming Payments -->
         <div class="card flex-grow-1 p-2 mt-4 mt-lg-0" style="min-width: 420px; max-width: 520px; height: fit-content;">
         <div class="card-header bg-green text-white text-center">
@@ -133,7 +71,7 @@
           @empty
             <p class="text-muted p-2">{{ __('message.No upcoming payments') }}</p>
           @endforelse
-        </div>
+        </div><!-- end Upcoming Payments -->
 
       </div>
 

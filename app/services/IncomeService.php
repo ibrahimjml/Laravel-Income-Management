@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\{Category, Client, Income, Payment, Penalty, Subcategory};
+use App\Models\{Category, Client, Income, Payment, Subcategory};
 use App\Models\Discount;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -118,7 +118,7 @@ public function createIncome(array $data)
                     'description' => $data['description']
                  ]);
             }
-        
+      
          return $income;
       });
     }
@@ -145,15 +145,13 @@ public function createIncome(array $data)
             abort(404, 'Client not found');
             };
         $payments = Payment::notDeleted()->where('income_id',$incomeId)->get();
-        $clients = Client::notDeleted()->get();
-        $categories = Category::notDeleted()->get();
-        $subcategories = Subcategory::notDeleted()->get();
+        $clients = $this->getClients();
+        $subcategories = $this->getSubCategories();
 
         return [
            'income'        => $income,
            'payments'      => $payments,
            'clients'       => $clients,
-           'categories'    => $categories,
            'subcategories' => $subcategories
         ];
     }
@@ -170,7 +168,10 @@ public function createIncome(array $data)
     }
     protected function getSubCategories()
     {
-        return Subcategory::where('is_deleted',0)->get();
+        return Subcategory::notDeleted()
+               ->whereHas('category' , function($q){
+                 $q->notDeleted()->where('category_type','Income');
+              })->get();
     }
     protected function getClients()
     {

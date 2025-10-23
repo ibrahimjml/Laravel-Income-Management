@@ -23,15 +23,7 @@
                   <input type="hidden" name="income_id" value="{{$income->income_id}}">
                   <div class="mb-3">
                       <label for="category_id_income" class="form-label">Category</label>
-                      <select class="form-select" id="category_id_income" name="category_id" required>
-                        @foreach($categories as $cat)
-                        <option value="{{$cat->category_id}}"
-                          {{$cat->category_id === $income->subcategory->category->category_id ? 'selected' : ''}}>
-                          {{$cat->category_name}} 
-                        </option>
-                  @endforeach
-        
-                      </select>
+                      <input type="text" class="form-control border" id="category_id_income" value="{{ $income->subcategory->category->category_name }}" disabled readonly>
                   </div>
 
                   <div class="mb-3">
@@ -40,7 +32,7 @@
                         @foreach($subcategories as $sub)
                         <option value="{{$sub->subcategory_id}}"
                           {{$sub->subcategory_id === $income->subcategory->subcategory_id ? 'selected' : ''}}>
-                          {{$sub->sub_name}} 
+                          {{$sub->sub_name .' - '.$sub->category->category_name}} 
                         </option>
                        @endforeach
                       </select>
@@ -54,7 +46,7 @@
                   <div class="mb-3">
                       <label for="description" class="form-label">Description</label>
                       <textarea class="form-control border" id="description" name="description"
-                          required>{{$income->trans_description}}</textarea>
+                        >{{$income->trans_description}}</textarea>
                   </div>
                   <div class="mb-3">
                       <label for="next_payment" class="form-label">Next Payment Date</label>

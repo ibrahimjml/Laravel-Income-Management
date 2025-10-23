@@ -21,10 +21,10 @@ class DashboardService
        $currentDay = Carbon::now()->addDay();
 
        return [
-         'financial' => $this->getFinancialCard($firstDayOfMonth, $currentDay),
-         'chart_data' => $this->getChartData($firstDayOfMonth),
+         'financial'         => $this->getFinancialCard($firstDayOfMonth, $currentDay),
+         'chart_data'        => $this->getChartData($firstDayOfMonth),
          'upcoming_payments' => $this->getUpcomingPayments(),
-         'current_month' => date('F Y')
+         'current_month'     => date('F Y')
        ];
     }
     protected function getFinancialCard(Carbon $firstDayOfMonth, Carbon $currentDay)
@@ -32,12 +32,14 @@ class DashboardService
          $totalIncome = $this->getTotalIncome($firstDayOfMonth, $currentDay);
          $totalOutcome = $this->getTotalOtcome($firstDayOfMonth, $currentDay);
          $totalClients = $this->getTotalClients();
+         $totalOutdatedPayments = $this->getTotalOutdated();
 
          return [
-           'total_income' => $totalIncome,
-           'total_outcome' => $totalOutcome,
-           'total_clients' => $totalClients,
-           'profit' => $totalIncome - $totalOutcome
+           'total_income'            => $totalIncome,
+           'total_outcome'           => $totalOutcome,
+           'total_clients'           => $totalClients,
+           'total_outdated_payments' => $totalOutdatedPayments,
+           'profit'                  => $totalIncome - $totalOutcome
          ];
     }
     protected function getTotalIncome(Carbon $startDate, Carbon $endDate)
@@ -77,10 +79,10 @@ class DashboardService
          }, array_keys($labels));
 
          return [
-            'labels' => $labels,
-            'income_data' => $incomeData,
+            'labels'       => $labels,
+            'income_data'  => $incomeData,
             'outcome_data' => $outcomeData,
-            'profit_data' => $profitData
+            'profit_data'  => $profitData
          ];
     }
     protected function getUpcomingPayments()
@@ -97,5 +99,19 @@ class DashboardService
                                $query->notDeleted();
                                })
                            ->get();
+    }
+    protected function getTotalOutdated()
+    {
+       $today = Carbon::today();
+        return Income::notDeleted()
+                           ->with(['client', 'payments'=> function ($q){
+                             $q->where('status','!=','paid');
+                           }])
+                           ->whereDate('next_payment', '<', $today)
+                           ->where('status','!=','complete')
+                           ->whereHas('client', function($query) {
+                               $query->notDeleted();
+                               })
+                           ->count();
     }
 }

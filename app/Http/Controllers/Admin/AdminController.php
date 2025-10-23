@@ -19,16 +19,17 @@ class AdminController extends Controller
 
     return view('admin.dashboard',[
 
-      'labels'         => $data['chart_data']['labels'],
-      'incomeData'     => $data['chart_data']['income_data'],
-      'outcomeData'    => $data['chart_data']['outcome_data'],
-      'profitData'     => $data['chart_data']['profit_data'],
-      'currentMonth'   => $data['current_month'],
-      'totalIncome'    => $data['financial']['total_income'],
-      'totalOutcome'   => $data['financial']['total_outcome'],
-      'totalStudents'  => $data['financial']['total_clients'],
-      'profit'         => $data['financial']['profit'],
-      'upcomigPayments' => $data['upcoming_payments']
+      'labels'                  => $data['chart_data']['labels'],
+      'incomeData'              => $data['chart_data']['income_data'],
+      'outcomeData'             => $data['chart_data']['outcome_data'],
+      'profitData'              => $data['chart_data']['profit_data'],
+      'currentMonth'            => $data['current_month'],
+      'totalIncome'             => $data['financial']['total_income'],
+      'totalOutcome'            => $data['financial']['total_outcome'],
+      'totalStudents'           => $data['financial']['total_clients'],
+      'totalOutdatedPayments' => $data['financial']['total_outdated_payments'],
+      'profit'                  => $data['financial']['profit'],
+      'upcomigPayments'         => $data['upcoming_payments']
     ]);
   }
   public function clients_page(ClientService $clientService)
