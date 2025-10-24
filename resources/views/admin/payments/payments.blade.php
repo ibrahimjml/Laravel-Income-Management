@@ -10,6 +10,7 @@
       <!-- Outdated Payments Card -->
       <x-payment-cards 
           :payments="$outdated_payments"
+          :count="count($outdated_payments ?? [])"
           title="message.Outdated Payments"
           headerColor="danger"
           emptyMessage="message.No outdated payments"
@@ -18,6 +19,7 @@
       <!-- Today's Payments Card -->
       <x-payment-cards 
           :payments="$today_payments"
+          :count="count($today_payments ?? [])"
           title="message.Today's Payments"
           headerColor="primary"
           emptyMessage="message.No payments due today"
@@ -26,6 +28,7 @@
       <!-- Upcoming Payments Card -->
       <x-payment-cards 
           :payments="$upcoming_payments"
+          :count="count($upcoming_payments ?? [])"
           title="message.Upcoming Payments"
           headerColor="success"
           emptyMessage="message.No upcoming payments"

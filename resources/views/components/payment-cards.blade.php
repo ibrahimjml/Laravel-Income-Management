@@ -1,13 +1,14 @@
 @props([
     'payments' => [],
     'title' => 'Payments',
+    'count' => [],
     'headerColor' => 'success',
     'emptyMessage' => 'No payments found.'
 ])
 
 <div class="card flex-grow-1" style="min-width: 320px; max-width: 420px; height: fit-content;">
     <div class="card-header bg-{{ $headerColor }} text-white text-center">
-        <h3 class="text-white">{{ __($title) }}</h3>
+        <h3 class="text-whoute">{{ __($title) }} @if($count > 0)( {{ $count}} ) @endif</h3>
     </div>
     <div class="card-body" style="max-height: 70vh; overflow-y: auto;">
         @forelse($payments as $index => $payment)
@@ -59,8 +60,31 @@
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mb-1">
-                    <div><i class="fa fa-calendar-alt me-1"></i> {{ __('message.Due Date') }}</div>
-                    <div>{{ date('M d, Y', strtotime($payment->next_payment)) }}</div>
+                    <div><i class="fa fa-clock me-1"></i> {{ __('message.Due Date') }}</div>
+                    <div>{{ date('M d, Y', strtotime($payment->next_payment)) }}
+                        @if($payment->next_payment)
+                       <span class="border-start border-dark border-2 ps-1">
+                           @php
+                               $paymentDate = $payment->next_payment->startOfDay();
+                               $today = now()->startOfDay();
+                           @endphp
+                           
+                           @if($paymentDate->lt($today))
+                               <span class="text-danger">
+                                   {{ $paymentDate->diffInDays($today) }} days overdue
+                               </span>
+                           @elseif($paymentDate->gt($today))
+                               <span class="text-success">
+                                    in {{ $today->diffInDays($paymentDate) }} days
+                               </span>
+                           @else
+                               <span class="text-warning fw-bold">
+                                   Due today
+                               </span>
+                           @endif
+                       </span>
+                       @endif
+                    </div>
                 </div>
             </div>
 

@@ -25,6 +25,7 @@ return [
     'Edit'                            => 'تعديل',
     'Delete'                          => 'مسح',
     'Trashed Client'                          => 'استيراد العملاء',
+    'Client Email' => 'بريد العميل',
     // incomes
    'All Incomes'         => 'كل الايرادات',
    'Add Category'         => 'ادخل فئة جديدة',
@@ -51,6 +52,7 @@ return [
    'Status'               => 'الحالة',
    'Description'          => 'الوصف',
    'Date'                 => 'التاريخ',
+   'CreatedAt' => 'تاريخ الانشاء',
    // outcomes
    'All Outcomes'         => 'كل المصاريف',
    'Trashed Outcomes'         => 'استيراد المصاريف',

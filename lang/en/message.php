@@ -26,6 +26,7 @@ return [
    'Edit'                            => 'Edit',
    'Delete'                          => 'Delete',
    'Trashed Client'                          => 'Trashed Client',
+   'Client Email' => 'Client Email',
    // incomes
    'All Incomes' => 'All Incomes',
    'Add Category'      => 'Add Category',
@@ -52,6 +53,7 @@ return [
    'Status'             => 'Status',
    'Description'         => 'Description',
    'Date'               => 'Date',
+   'CreatedAt' => 'CreatedAt',
     // outcomes
    'All Outcomes' => 'All Outcomes',
    'Trashed Outcomes' => 'Trashed Outcomes',

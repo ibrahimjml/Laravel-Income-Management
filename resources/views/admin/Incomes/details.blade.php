@@ -15,33 +15,67 @@
 
   <div class="d-flex flex-wrap">
       <div class="p-3 border flex-grow-1">
-          <strong><p>Client: {{$income->client->client_fname}} {{$income->client->client_lname}}</p> </strong>
-          <strong><p>Client Phone: {{$income->client->client_phone}}</p></strong>
-          <strong><p>Category: {{$income->subcategory->category->category_name}}</p></strong>
-          <strong><p>Subcategory: {{$income->subcategory->sub_name}}</p></strong>
-          <strong><p>Amount: {{$income->amount}}</p></strong>
+        <div class="d-flex justify-content-between align-items-center mb-1">
+                <div><i class="fa fa-user me-2 text-secondary"></i> <b>{{ __('message.Client Name') }}</b></div>
+                <b>{{ $income->client->full_name }}</b>
+          </div>
+        <div class="d-flex justify-content-between align-items-center mb-1">
+                <div><i class="fa fa-phone me-2 text-secondary"></i><b>{{ __('message.Client Phone Number') }}</b> </div>
+                <b>{{$income->client->client_phone}}</b>
+          </div>
+        <div class="d-flex justify-content-between align-items-center mb-1">
+                    <div><i class="fa fa-envelope me-2 text-secondary"></i><b>{{ __('message.Client Email') }}</b> </div>
+                    <b>{{ $income->client->email }}</b>
+          </div>
+          <div class="d-flex justify-content-between align-items-center mb-1">
+                    <div><i class="fa fa-layer-group me-2 text-secondary"></i> <b>{{ __('message.Category') }}</b></div>
+                    <b>{{$income->subcategory->category->category_name}}</b>
+                </div>
+          <div class="d-flex justify-content-between align-items-center mb-1">
+                    <div><i class="fa fa-tags me-2 text-secondary"></i><b>{{ __('message.Subcategory') }}</b> </div>
+                    <b>{{$income->subcategory->sub_name}}</b>
+          </div>
+          <div class="d-flex justify-content-between align-items-center mb-1">
+                    <div><i class="fa fa-dollar-sign me-3 text-secondary"></i><b> {{ __('message.Amount') }}</b></div>
+                    <b>${{number_format($income->amount)}}</b>
+          </div>
           @if(isset($income->discount->rate))
-          <strong><p>Discounted : %{{number_format($income->discount->rate)}} ~ {{$income->final_amount}}</p></strong>
+          <div class="d-flex justify-content-between align-items-center mb-1">
+                    <div><i class="fa fa-percent me-2 text-secondary"></i><b>{{ __('message.Discounts') }}</b> </div>
+                    <b>%{{number_format($income->discount->rate)}} ~ ${{$income->final_amount}}</b>
+            </div>
         @endif
-          <strong><p>Total Paid: {{$income->total_paid}}</p></strong>
-          <strong><p>Remaining: {{$income->remaining}}</p></strong>
+        <div class="d-flex justify-content-between align-items-center mb-1">
+                    <div><i class="fa fa-money-bill-wave me-2 text-secondary"></i><b>{{ __('message.Total Paid') }}</b> </div>
+                    <b>${{number_format($income->total_paid)}}</b>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mb-1">
+                    <div><i class="fa fa-money-bill-wave me-2 text-secondary"></i><b>{{ __('message.Remaining') }}</b> </div>
+                    <b>${{number_format($income->remaining)}}</b>
+        </div>
 
       </div>
       <div class="p-3 border flex-grow-1">
-          <p><strong>Status: <span class="badge bg-{{ 
+          <div class="d-flex justify-content-between align-items-center mb-1">
+                    <div><i class="fa fa-check-circle me-2 text-secondary"></i><b>{{ __('message.Status') }}</b> </div>
+                    <b class="badge bg-{{ 
             $income->status == 'complete' ? 'success' : 
             ($income->status == 'partial' ? 'warning' : 'danger') 
-        }}">
-            {{ ucfirst($income->status) }}
-        </span></strong>
-            
-          </p>
-          <p><strong>Description:</strong></p>
-          <p> {{$income->description}}</p>
-          <p><strong>Next Payment Date: </strong></p>
-          <p>{{$income->next_payment}}</p>
-          <p><strong>Date: </strong></p>
-          <p>{{ date('M d, Y', strtotime($income->created_at)) }}</p>
+        }}">{{ ucfirst($income->status) }}</b>
+        </div>
+          <div class="d-flex justify-content-between align-items-center mb-1">
+                    <div><i class="fa fa-info-circle me-2 text-secondary"></i><b>{{ __('message.Description') }}</b> </div>
+                    <b>{{$income->description ?? 'N/A'}}</b>
+        </div>
+          <div class="d-flex justify-content-between align-items-center mb-1">
+                    <div><i class="fa fa-calendar-alt me-2 text-secondary"></i><b>{{ __('message.Next Payment Date') }}</b> </div>
+                    <b>{{$income->next_payment?->format('M d, Y') ?? 'N/A'}}</b>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mb-1">
+                    <div><i class="fa fa-calendar me-2 text-secondary"></i><b>{{ __('message.CreatedAt') }}</b> </div>
+                    <b>{{ date('M d, Y', strtotime($income->created_at)) }}</b>
+        </div>
+
       </div>
   </div>
 
@@ -55,7 +89,7 @@
                   <th onclick="sortTable(1, this)">Status<span class="arrow"></span></th>
                   <th onclick="sortTable(2, this)">Description <span class="arrow"></span></th>
                   <th onclick="sortTable(3, this)">CreatedAt <span class="arrow"></span></th>
-                  <th onclick="sortTable(4, this)">Payment_DueTo <span class="arrow"></span></th>
+                  <th onclick="sortTable(4, this)">Payment Due <span class="arrow"></span></th>
                   <th>Actions</th>
               </tr>
           </thead>
@@ -72,7 +106,31 @@
                       </td>
                       <td>{{$payment->trans_description}}</td>
                       <td>{{ date('M d, Y', strtotime($payment->created_at)) }}</td>
-                      <td>{{ $payment->next_payment?->format('M d, Y') ?? 'N/A' }}</td>
+                      <td>{{ $payment->next_payment?->format('M d, Y') ?? 'N/A' }}
+                        @if($payment->next_payment && $payment->status == 'unpaid')
+                       <span>
+                           <i class="fas fa-clock text-warning"></i>
+                           @php
+                               $paymentDate = $payment->next_payment->startOfDay();
+                               $today = now()->startOfDay();
+                           @endphp
+                           
+                           @if($paymentDate->lt($today))
+                               <span class="text-danger">
+                                   {{ $paymentDate->diffInDays($today) }} days overdue
+                               </span>
+                           @elseif($paymentDate->gt($today))
+                               <span class="text-success">
+                                    in {{ $today->diffInDays($paymentDate) }} days
+                               </span>
+                           @else
+                               <span class="text-warning fw-bold">
+                                   Due today
+                               </span>
+                           @endif
+                       </span>
+                       @endif
+                      </td>
                       <td>
                       <button class='edit-payment-btn btn btn-primary'
                               data-bs-toggle='modal'

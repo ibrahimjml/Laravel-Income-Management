@@ -146,7 +146,7 @@
             <!-- Calender -->
             <li class="nav-item">
                 <a href="{{ route('calendar.index') }}" class="nav-link {{ request()->routeIs('calendar.index') ? 'active' : '' }} py-3 text-lg ">
-                    <i class="nav-icon fas fa-calendar"></i>
+                    <i class="nav-icon fas fa-calendar-alt"></i>
                     <p class="ml-2">{{__('message.Calendar')}}</p>
                 </a>
             </li>
