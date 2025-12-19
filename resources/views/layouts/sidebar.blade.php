@@ -97,15 +97,15 @@
             </li>
 
             <!-- Payments -->
-            <li class="nav-item has-treeview {{ request()->routeIs('admin.payments') ? 'menu-open' : '' }}">
-                <a href="#" class="nav-link py-3 text-lg">
+            <li class="nav-item has-treeview {{ request()->routeIs('admin.payments','admin.outdated','admin.today','admin.upcoming') ? 'menu-open' : '' }}">
+                <a href="#" class="nav-link py-3 text-lg ">
                     <i class="nav-icon fa fa-calendar"></i>
                     <p class="ml-2">
                       {{__('message.Payments')}}
                       <i class="right fas fa-angle-left mt-2"></i>
                     </p>
                 </a>
-                  <ul class="nav nav-treeview">
+                  <ul class="nav nav-treeview  {{ request()->routeIs('admin.payments','admin.outdated','admin.today','admin.upcoming') ? 'active' : '' }}">
                     <li class="nav-item">
                         <a href="{{route('admin.payments')}}" 
                            class="nav-link {{ request()->routeIs('admin.payments') ? 'active' : '' }}">
@@ -115,21 +115,21 @@
                     </li>
                     <li class="nav-item">
                         <a href="{{route('admin.upcoming')}}" 
-                           class="nav-link ">
+                           class="nav-link {{ request()->routeIs('admin.upcoming') ? 'active' : '' }}">
                               <i class="nav-icon fa fa-calendar"></i>
                             <p>{{__('message.Upcoming Payments')}}</p>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{route('admin.today')}}" 
-                           class="nav-link ">
+                           class="nav-link {{ request()->routeIs('admin.today') ? 'active' : '' }}">
                               <i class="nav-icon fa fa-calendar"></i>
                             <p>{{__('message.Today\'s Payments')}}</p>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{route('admin.outdated')}}" 
-                           class="nav-link ">
+                           class="nav-link {{ request()->routeIs('admin.outdated') ? 'active' : '' }}">
                               <i class="nav-icon fa fa-calendar"></i>
                             <p>{{__('message.Outdated Payments')}}</p>
                         </a>

@@ -54,6 +54,10 @@ return [
    'Description'         => 'Description',
    'Date'               => 'Date',
    'CreatedAt' => 'CreatedAt',
+  'Since last year' => 'Since last year',
+   'Total Income' => 'Total Income',
+   'This Year Income' => 'This Year Income',
+   'Last Year Income' => 'Last Year Income',
     // outcomes
    'All Outcomes' => 'All Outcomes',
    'Trashed Outcomes' => 'Trashed Outcomes',
@@ -74,6 +78,8 @@ return [
    'No payments due today' => 'No payments due today',
    "Upcoming Payments" => "Upcoming Payments",
    'No upcoming payments' => 'No upcoming payments',
+   'View All Outdated Payments' => 'View All Outdated Payments',
+   'View All Upcoming Payments' => 'View All Upcoming Payments',
    //reports
    'Clear'                 => 'Clear',
    'Filter by Date'        => 'Filter by Date',
@@ -139,6 +145,8 @@ return [
     'Back' => 'Back',
     'Calendar' => 'Calendar',
     'Search for Events' => 'Search for Events',
+    'Total Paid Invoices' => 'Total Paid Invoices',
+    'Total Unpaid Invoices' => 'Total Unpaid Invoices',
     // activity
     'Activity Logs' => 'Activity Logs',
 ];

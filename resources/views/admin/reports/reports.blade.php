@@ -95,24 +95,24 @@
                               <thead>
                                   <tr>
                                       <th onclick="sortTable(0, this)">{{__('message.Client')}} <span class="arrow"></span></th>
-                                      <th onclick="sortTable(1, this)">{{__('message.Client Type')}} <span class="arrow"></span></th>
-                                      <th onclick="sortTable(2, this)">{{__('message.Amount')}} <span class="arrow"></span></th>
-                                      <th onclick="sortTable(3, this)">Final <span class="arrow"></span></th>
-                                      <th onclick="sortTable(4, this)">{{__('message.Total Paid')}} <span class="arrow"></span></th>
-                                      <th onclick="sortTable(5, this)">{{__('message.Date')}} <span class="arrow"></span></th>
+                                      <th onclick="sortTable(1, this)">{{__('message.Status')}} <span class="arrow"></span></th>
+                                      <th onclick="sortTable(2, this)">{{__('message.Client Type')}} <span class="arrow"></span></th>
+                                      <th onclick="sortTable(3, this)">{{__('message.Amount')}} <span class="arrow"></span></th>
+                                      <th onclick="sortTable(4, this)">Final <span class="arrow"></span></th>
+                                      <th onclick="sortTable(5, this)">{{__('message.Total Paid')}} <span class="arrow"></span></th>
+                                      <th onclick="sortTable(6, this)">{{__('message.Date')}} <span class="arrow"></span></th>
                                   </tr>
                               </thead>
                               <tbody>
                           @foreach($incomes as $income)
                                       <tr>
-                                          <td>{{$income->client->full_name}}
-                                            <span class="badge bg-{{ 
+                                          <td>{{$income->client->full_name}}</td>
+                                          <td><span class="badge bg-{{ 
                                               $income->status == 'complete' ? 'success' : 
                                               ($income->status == 'partial' ? 'warning' : 'danger') 
                                           }}">
                                             <small>{{ ucfirst($income->status) }}</small>  
-                                          </span>
-                                          </td>
+                                          </span></td>
                                           <td>{{ $income->client->types->first()?->type_name}}</td>
                                           <td>${{number_format($income->amount)}}</td>
                                           <td>${{number_format($income->final_amount)}}</td>

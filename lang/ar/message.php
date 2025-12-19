@@ -53,6 +53,10 @@ return [
    'Description'          => 'الوصف',
    'Date'                 => 'التاريخ',
    'CreatedAt' => 'تاريخ الانشاء',
+   'Since last year' => 'منذ السنة السابقة' ,
+   'Total Income' => 'مجموع الايرادات',
+   'This Year Income' => 'ايرادات هذه السنة',
+   'Last Year Income' => 'ايرادات السنة السابقة',
    // outcomes
    'All Outcomes'         => 'كل المصاريف',
    'Trashed Outcomes'         => 'استيراد المصاريف',
@@ -74,6 +78,8 @@ return [
    'No payments due today' => 'لا يوجد دفعات اليوم',
    "Upcoming Payments"     => "الدفعات القادمة",
    'No upcoming payments'  => 'لا يوجد دفعات قادمة',
+   'View All Outdated Payments' => 'عرض جميع الدفعات القديمة',
+   'View All Upcoming Payments' => 'عرض جميع الدفعات القادمة',
      //reports
    'Clear'                        => 'مسح',
    'Filter by Date'              => 'تصفية بالتاريخ',
@@ -138,6 +144,8 @@ return [
     'Back' => 'رجوع',
     'Calendar' => 'التقويم',
     'Search for Events' => 'البحث عن احداث',
+    'Total Paid Invoices' => 'اجمالي الفواتير المدفوعة',
+    'Total Unpaid Invoices' => 'اجمالي الفواتير غير مدفوعة',
     // activity 
     'Activity Logs' => 'سجلات النشاط',
 ];

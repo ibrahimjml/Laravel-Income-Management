@@ -34,46 +34,11 @@
       </div>
 
       <div class="row mb-4"><!-- dashboard cards -->
-      <x-dashboard-cards :totalIncome="$totalIncome" :currentMonth="$currentMonth" :totalOutcome="$totalOutcome" :profit="$profit" :totalStudents="$totalStudents" :totalOutdatedPayments="$totalOutdatedPayments" />
+      <x-dashboard-cards :totalIncome="$totalIncome" :currentMonth="$currentMonth" :totalOutcome="$totalOutcome" :profit="$profit" :totalStudents="$totalStudents" :outdatedPayments="$outdatedPayments" :upcomingPayments="$upcomingPayments" :totalPaidInvoices="$totalPaidInvoices"  :totalUnpaidInvoices="$totalUnpaidInvoices"/>
       </div><!-- end dashboard cards -->
-      <div class="d-flex flex-column flex-lg-row gap-5">
-        <!-- chart data -->
-        <div style="position: relative; height:500px; margin-bottom: 20px">
-          <h3 class="text-center mb-4">{{__('message.Income, Outcome, and Profit for')}} {{$currentMonth}}</h3>
-          <canvas id="lineChart" class="w-100"></canvas>
-        </div><!-- end chart data -->
-        <!-- Upcoming Payments -->
-        <div class="card flex-grow-1 p-2 mt-4 mt-lg-0" style="min-width: 420px; max-width: 520px; height: fit-content;">
-        <div class="card-header bg-green text-white text-center">
-            <h3 class="text-white">{{__('message.Upcoming Payments') }}</h3>
-         </div>
-          @forelse ($upcomigPayments as $income)
-            @foreach ($income->payments as $payment)
-              <div class="d-flex justify-content-between align-items-center gap-3 my-2 p-3 bg-success-subtle rounded shadow-sm">
-                <div class="d-flex align-items-center">
-                  <i class="fa fa-user text-success me-2"></i>
-                  <div>
-                    <strong>{{ $income->client->full_name }}</strong><br>
-                    <small class="text-muted">
-                      {{ $income->client->client_phone ?? __('No phone') }}
-                    </small>
-                  </div>
-                </div>
-                <div class="text-end">
-                  <i class="fa fa-dollar-sign text-success me-1"></i>
-                  <strong>${{ number_format($payment->payment_amount) }}</strong><br>
-                  <small class="text-muted">
-                    {{ date('M d, Y', strtotime($payment->next_payment ?? $income->next_payment)) }}
-                  </small>
-                </div>
-              </div>
-            @endforeach
-          @empty
-            <p class="text-muted p-2">{{ __('message.No upcoming payments') }}</p>
-          @endforelse
-        </div><!-- end Upcoming Payments -->
 
-      </div>
+      <!-- dashboard stats -->
+      <x-dashboard-stats :currentMonth="$currentMonth" :upcomingPayments="$upcomingPayments" :outdatedPayments="$outdatedPayments" :totalYearlyIncome="$totalYearlyIncome" :incomePercentageChange="$incomePercentageChange" :labels="$labels"/>
 
     </div>
   </div>
@@ -144,7 +109,7 @@
             maintainAspectRatio: false,
             plugins: {
               title: {
-                display: true,
+                display: false,
                 text: '{{__("message.Daily Income, Outcome, and Profit")}} ({{ $currentMonth }})',
                 font: {
                   size: 18,
@@ -215,6 +180,52 @@
         });
       });
     </script>
+    <script>
+      //-------------
+    //- BAR CHART -
+    //-------------
+        document.addEventListener('DOMContentLoaded', function () {
+        var barChartCanvas = $('#barChart').get(0).getContext('2d')
+        var barChartData = {
+            labels: @json($yearlyLabels),
+            datasets: [
+                {
+                    label: '{{__("message.This Year Income")}}',
+                    backgroundColor: 'rgba(60,141,188,0.9)',
+                    borderColor: 'rgba(60,141,188,0.8)',
+                    pointRadius: false,
+                    pointColor: '#3b8bba',
+                    pointStrokeColor: 'rgba(60,141,188,1)',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(60,141,188,1)',
+                    data: @json($thisYearIncomeData)
+                },
+                {
+                    label: '{{__("message.Last Year Income")}}',
+                    backgroundColor: 'rgba(210, 214, 222, 1)',
+                    borderColor: 'rgba(210, 214, 222, 1)',
+                    pointRadius: false,
+                    pointColor: 'rgba(210, 214, 222, 1)',
+                    pointStrokeColor: '#c1c7d1',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    data: @json($yearBeforeIncomeData)
+                }
+            ]
+        };
 
+        var barChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            datasetFill: false
+        }
+
+        new Chart(barChartCanvas, {
+            type: 'bar',
+            data: barChartData,
+            options: barChartOptions
+        });
+    });
+    </script>
   @endpush
 @endsection

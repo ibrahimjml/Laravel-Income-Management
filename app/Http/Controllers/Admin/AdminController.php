@@ -19,17 +19,24 @@ class AdminController extends Controller
 
     return view('admin.dashboard',[
 
-      'labels'                  => $data['chart_data']['labels'],
-      'incomeData'              => $data['chart_data']['income_data'],
-      'outcomeData'             => $data['chart_data']['outcome_data'],
-      'profitData'              => $data['chart_data']['profit_data'],
-      'currentMonth'            => $data['current_month'],
-      'totalIncome'             => $data['financial']['total_income'],
-      'totalOutcome'            => $data['financial']['total_outcome'],
-      'totalStudents'           => $data['financial']['total_clients'],
-      'totalOutdatedPayments' => $data['financial']['total_outdated_payments'],
-      'profit'                  => $data['financial']['profit'],
-      'upcomigPayments'         => $data['upcoming_payments']
+      'labels'                    => $data['chart_data']['labels'],
+      'incomeData'                => $data['chart_data']['income_data'],
+      'outcomeData'               => $data['chart_data']['outcome_data'],
+      'profitData'                => $data['chart_data']['profit_data'],
+      'currentMonth'              => $data['current_month'],
+      'totalIncome'               => $data['financial']['total_income'],
+      'totalOutcome'              => $data['financial']['total_outcome'],
+      'totalStudents'             => $data['financial']['total_clients'],
+      'profit'                    => $data['financial']['profit'],
+      'yearlyLabels'              => $data['yearly_chart_data']['labels'],
+      'thisYearIncomeData'        => $data['yearly_chart_data']['this_year_income'],
+      'yearBeforeIncomeData'      => $data['yearly_chart_data']['year_before_income'],
+      'totalYearlyIncome'         => $data['yearly_chart_data']['total_yearly_income'],
+      'incomePercentageChange'    => $data['yearly_chart_data']['income_percentage_change'],
+      'upcomingPayments'          => $data['upcoming_payments'],
+      'outdatedPayments'          => $data['outdated_payments'],
+      'totalPaidInvoices'         => $data['total_paid_invoices'],
+      'totalUnpaidInvoices'       => $data['total_unpaid_invoices'],
     ]);
   }
   public function clients_page(ClientService $clientService)

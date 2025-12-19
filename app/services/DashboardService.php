@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Client;
 use App\Models\Income;
+use App\Models\Invoice;
 use App\Models\Outcome;
 use App\Models\Payment;
 use App\Services\Analytics\BarChartService;
@@ -19,12 +20,19 @@ class DashboardService
     {
        $firstDayOfMonth = Carbon::now()->startOfMonth();
        $currentDay = Carbon::now()->addDay();
+       $thisYear = Carbon::now()->year;
+       $yearBefore = $thisYear - 1;
+
 
        return [
-         'financial'         => $this->getFinancialCard($firstDayOfMonth, $currentDay),
-         'chart_data'        => $this->getChartData($firstDayOfMonth),
-         'upcoming_payments' => $this->getUpcomingPayments(),
-         'current_month'     => date('F Y')
+         'financial'              => $this->getFinancialCard($firstDayOfMonth, $currentDay),
+         'chart_data'             => $this->getChartData($firstDayOfMonth),
+         'yearly_chart_data'      => $this->getYearlyChartData($thisYear, $yearBefore),
+         'upcoming_payments'      => $this->getUpcomingPayments(),
+         'outdated_payments'      => $this->getTotalOutdated(),
+         'current_month'          => date('F Y'),
+         'total_paid_invoices'    => Invoice::where('status','paid')->count(),
+         'total_unpaid_invoices'  => Invoice::where('status','unpaid')->count(),
        ];
     }
     protected function getFinancialCard(Carbon $firstDayOfMonth, Carbon $currentDay)
@@ -32,14 +40,13 @@ class DashboardService
          $totalIncome = $this->getTotalIncome($firstDayOfMonth, $currentDay);
          $totalOutcome = $this->getTotalOtcome($firstDayOfMonth, $currentDay);
          $totalClients = $this->getTotalClients();
-         $totalOutdatedPayments = $this->getTotalOutdated();
+
 
          return [
-           'total_income'            => $totalIncome,
-           'total_outcome'           => $totalOutcome,
-           'total_clients'           => $totalClients,
-           'total_outdated_payments' => $totalOutdatedPayments,
-           'profit'                  => $totalIncome - $totalOutcome
+           'total_income'    => $totalIncome,
+           'total_outcome'   => $totalOutcome,
+           'total_clients'   => $totalClients,
+           'profit'          => $totalIncome - $totalOutcome
          ];
     }
     protected function getTotalIncome(Carbon $startDate, Carbon $endDate)
@@ -85,6 +92,41 @@ class DashboardService
             'profit_data'  => $profitData
          ];
     }
+    protected function getYearlyChartData($thisYear, $yearBefore)
+    {
+        $incomeData = $this->barChartService->getYearlyIncomeData($thisYear, $yearBefore);
+
+        $thisYearIncome = array_fill(0, 12, 0);
+        $yearBeforeIncome = array_fill(0, 12, 0);
+  
+       foreach ($incomeData['thisYear'] as $month => $total) {
+            $thisYearIncome[$month - 1] = (float) $total;
+        }
+
+        foreach ($incomeData['yearBefore'] as $month => $total) {
+            $yearBeforeIncome[$month - 1] = (float) $total;
+        }
+
+        $totalThisYear = array_sum($thisYearIncome);
+        $totalYearBefore = array_sum($yearBeforeIncome);
+        $totalYearlyIncome = $totalThisYear + $totalYearBefore;
+
+         $percentageChange = 0;
+        if ($totalYearBefore > 0) {
+            $percentageChange = (($totalThisYear - $totalYearBefore) / $totalYearBefore) * 100;
+        } else {
+            $percentageChange = 100;
+        }
+
+        return [
+            'labels' => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            'this_year_income' => $thisYearIncome,
+            'year_before_income' => $yearBeforeIncome,
+            'total_yearly_income' => $totalYearlyIncome,
+            'income_percentage_change' => $percentageChange,
+        ];
+    }
+
     protected function getUpcomingPayments()
     {
        $today = Carbon::today();
@@ -112,6 +154,6 @@ class DashboardService
                            ->whereHas('client', function($query) {
                                $query->notDeleted();
                                })
-                           ->count();
+                           ->get();
     }
 }

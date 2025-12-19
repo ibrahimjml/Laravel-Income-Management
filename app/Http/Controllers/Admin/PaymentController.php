@@ -63,19 +63,19 @@ class PaymentController extends Controller
     public function upcoming_page()
     {
        $today = Carbon::today()->toDateString();
-       $data = $this->paymentService->getUpComingPayments($today);
+       $data = $this->paymentService->getUpComingPayments($today, 6);
        return view('admin.payments.upcoming',['upcoming_payments'=>$data]);
     }
     public function outdated_page()
     {
        $today = Carbon::today()->toDateString();
-      $data = $this->paymentService->getOutDatedPayments($today);
+      $data = $this->paymentService->getOutDatedPayments($today, 2);
        return view('admin.payments.outdated',['outdated_payments'=>$data]);
     }
     public function today_page()
     {
       $today = Carbon::today()->toDateString();
-       $data = $this->paymentService->getTodayPayments($today);
+       $data = $this->paymentService->getTodayPayments($today, 6);
         return view('admin.payments.today',['today_payments'=>$data]);
     }
 }
