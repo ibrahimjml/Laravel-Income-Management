@@ -7,7 +7,7 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
- ![Dashboard ](https://i.postimg.cc/s2WZPj47/Screenshot-2025-10-19-002055.png)
+ ![Dashboard ](https://i.postimg.cc/rFJyTJRy/Screenshot-2025-12-19-163155.png)
  ![Clients](https://i.postimg.cc/HLZqHwwT/Screenshot-2025-10-07-193249.png)
  ![Incomes](https://i.postimg.cc/YqX2h5YK/Screenshot-2025-10-19-001007.png)
  ![Income detail](https://i.postimg.cc/QxW2fxFc/Screenshot-2025-10-24-131501.png)
@@ -22,7 +22,7 @@
 ### Features
 - **Multi language support** 
 - **Full Ajax Dashboard** 
-- **Manage Clients and Client type** 
+- **Manage Clients and Client types** 
 - **Manage Categories and Subcategories** 
 - **Manage Incomes**
 - **Manage Outcomes**
