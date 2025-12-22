@@ -51,10 +51,10 @@
                     <div><i class="fa fa-check-circle me-1"></i> {{ __('message.Status') }}</div>
                     <div>
                         <span class="badge bg-{{ 
-                            $payment->status == 'complete' ? 'success' : 
-                            ($payment->status == 'partial' ? 'warning' : 'danger') 
+                            $payment->status == \App\Enums\IncomeStatus::COMPLETE ? 'success' : 
+                            ($payment->status == \App\Enums\IncomeStatus::PARTIAL ? 'warning' : 'danger') 
                         }}">
-                            {{ ucfirst($payment->status) }}
+                            {{ $payment->status->label() }}
                         </span>
                     </div>
                 </div>

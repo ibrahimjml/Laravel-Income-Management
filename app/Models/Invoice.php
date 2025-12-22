@@ -32,6 +32,14 @@ class Invoice extends Model
     {
         return $this->belongsTo(Payment::class, 'payment_id');
     }
+        public function scopeDateBetween($query, $from, $to)
+   {
+      if ($from && $to) {
+         return $query->whereBetween('created_at', [$from, $to]);
+      }
+
+     return $query;
+   }
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

@@ -29,39 +29,52 @@ Route::controller(AdminController::class)->group(function(){
   Route::get('/reports', 'reports_page')->name('admin.reports');
 });
 Route::controller(ClientsController::class)->group(function(){
+  // All clients
   Route::post('/add-client-type', 'add_client_type')->name('add.client.type');
   Route::put('/edit-type/{id}', 'edit_client_type')->name('edit.type');
   Route::delete('/delete-type/{id}', 'delete_type')->name('delete.type');
   Route::post('/add-client', 'add_client')->name('add.client');
   Route::put('/edit-client/{id}', 'edit_client')->name('edit.client');
   Route::put('/delete-client/{id}', 'delete_client')->name('delete.client');
+  // Recover clients
   Route::get('/clients/trashed','trashed_clients')->name('trashed.clients');
   Route::patch('/clients/recover/{id}','recover')->name('client.recover');
   Route::delete('/clients/delete/{id}','force_delete')->name('client.force.delete');
 });
 
 Route::controller(IncomesController::class)->group(function(){
+  // all incomes
   Route::post('/add-category', 'add_category')->name('add.cat');
   Route::post('/add-subcategory', 'add_subcategory')->name('add.sub');
   Route::post('/delete-income/{income}', 'delete')->name('delete.inc');
   Route::post('/add-income', 'add_income')->name('add.inc');
   Route::put('/edit-income/{income}', 'update')->name('update.inc');
   Route::get('/details/{income}' ,'show')->name('details');
+  // Recover Incomes
 });
 Route::controller(PaymentController::class)->group(function(){
+  // All payments
     Route::get('/payments', 'payments_page')->name('admin.payments');
     Route::post('/add-payment/{income}', 'add_payment')->name('add.payment');
     Route::put('/edit-payment/{payment}/{income}', 'edit_payment')->name('edit.payment');
+    Route::delete('/delete-payment/{payment}/{income}','delete_payment')->name('delete.payment');
     Route::get('/outdatedpayments', 'outdated_page')->name('admin.outdated');
     Route::get('/todaypayments', 'today_page')->name('admin.today');
     Route::get('/upcomingpayments', 'upcoming_page')->name('admin.upcoming');
+    // Recover payments
+    Route::get('/payments/trashed','trashed_payments')->name('trashed.payments');
+    Route::patch('/payments/recover/{id}','recover')->name('payment.recover');
+    Route::delete('/payments/delete/{id}','force_delete')->name('payment.force.delete');
+
 });
 Route::controller(OutcomesController::class)->group(function(){
+  // all outcomes
   Route::post('/outcome/category', 'add_category')->name('add.out.cat');
   Route::post('/outcome/subcategory', 'add_subcategory')->name('add.cat.sub');
   Route::post('/delete-outcome/{outcome}', 'delete')->name('delete.out');
   Route::post('/add-outcome', 'add_outcome')->name('add.out');
   Route::put('/edit-outcome/{id}', 'edit_outcome')->name('edit.out');
+  // recover outcomes
 });
 
 Route::resource('/discounts',DiscountController::class)->except(['create','show','edit']);

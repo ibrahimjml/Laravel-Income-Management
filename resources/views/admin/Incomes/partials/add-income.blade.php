@@ -37,27 +37,43 @@
                        @endforeach
                       </select>
                   </div>
+                  <div class="mb-3">
+                  <label class="form-label">{{ __('income.Payment Type') }}</label>
+              
+                  @foreach (\App\Enums\PaymentType::cases() as $type)
+                      <div class="form-check">
+                          <input class="form-check-input" type="radio" name="payment_type" id="payment_type_{{ $type->value }}" value="{{ $type->value }}"
+                              {{ old('payment_type', $income->payment_type ?? 'onetime') === $type->value ? 'checked' : '' }}>
+              
+                          <label class="form-check-label" for="payment_type_{{ $type->value }}">
+                              {{ __('income.payment_type.' . $type->value) }}
+                          </label>
+                      </div>
+                  @endforeach
+              </div>
+
                   <div class="d-flex mb-3">
                       <div class="flex-fill me-2">
                           <label for="amount" class="form-label">{{__('message.Amount')}}</label>
                           <input type="number" class="form-control border" id="amount" name="amount" required>
                       </div>
                       <div class="flex-fill me-2">
-                          <label for="paid" class="form-label">{{__('message.Paid')}} ({{__('message.Optional')}})</label>
+                          <label for="paid" class="form-label">{{__('message.Paid Amount')}}</label>
                           <input type="number" class="form-control border" id="paid" name="paid" max="" step="1">
                       </div>
                     </div>
                     <div class="mb-3">
-                      <label for="payment_status" class="form-label">Payment status:</label>
-                      <select class="form-select" name="payment_status" id="payment_status">
-                        <option value="unpaid" selected>Unpaid</option>
-                        <option value="paid">Paid</option>
+                      <label for="payment_status" class="form-label">{{ __('income.Payment Status') }}</label>
+                      <select class="form-select payment-status" name="payment_status" id="payment_status">
+                        @foreach (\App\Enums\PaymentStatus::cases() as $case)
+                        <option value="{{$case->value}}">{{$case->label()}}</option>
+                        @endforeach
                     </select>
                     </div>
                     <div class="me-2">
-                      <label for="discount_id" class="form-label">Discount: (optional)</label>
+                      <label for="discount_id" class="form-label">{{ __('income.Discount') }} {{ __('message.Optional') }}</label>
                       <select class="form-select" name="discount_id" id="discount_id">
-                        <option value="">--Select Discount Rate--</option>
+                        <option value="">--{{ __('income.Select Discount Rate') }}--</option>
                         @foreach($discounts as $id => $rate)
                             <option value="{{ $id }}">{{ $rate }}%</option>
                         @endforeach
@@ -67,8 +83,8 @@
                       <label for="description" class="form-label">{{__('message.Description')}}</label>
                       <textarea class="form-control border" id="description" name="description"></textarea>
                   </div>
-                  <div class="mb-3">
-                      <label for="next_payment" class="form-label">{{__('message.Next Payment Date')}}  ({{__('message.Optional')}})</label>
+                  <div class="mb-3" id="paid-wrapper">
+                      <label for="next_payment" class="form-label">{{__('message.Next Payment Date')}} </label>
                       <input type="date" class="form-control border" id="next_payment" name="next_payment"></input>
                   </div>
               </div>
@@ -83,3 +99,28 @@
       </div>
   </div>
 </div>
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const paymentStatus = document.querySelectorAll('.payment-status');
+    const paidWrapper   = document.getElementById('paid-wrapper');
+
+    function togglePaidField() {
+        const selected = paymentStatus[0].value;
+
+        if (selected === 'unpaid') {
+            paidWrapper.style.display = 'block';
+        } else {
+            paidWrapper.style.display = 'none';
+        }
+    }
+
+    paymentStatus.forEach(radio => {
+        radio.addEventListener('change', togglePaidField);
+    });
+
+    togglePaidField();
+});
+</script>
+
+@endpush

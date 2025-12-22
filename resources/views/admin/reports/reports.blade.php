@@ -21,63 +21,9 @@
               <button onclick="window.print()" class="btn btn-warning ms-2">{{__('message.Print Report')}}</button>
           </div>
 
-        <div class="row mb-4">
-    <!-- Total Income Card -->
-    <div class="col-md-3">
-        <div class="small-box bg-success">
-            <div class="inner">
-                <h3>${{ number_format($total_income) }}</h3>
-                <p>{{ __('message.Total Income') }}</p>
-            </div>
-            <div class="icon">
-                <i class="fa fa-money-bill-wave"></i>
-            </div>
-            
-        </div>
-    </div>
-
-    <!-- Total Outcome Card -->
-    <div class="col-md-3">
-        <div class="small-box bg-danger">
-            <div class="inner">
-                <h3>${{ number_format($total_outcome) }}</h3>
-                <p>{{ __('message.Total Outcome') }}</p>
-            </div>
-            <div class="icon">
-                <i class="fa fa-receipt"></i>
-            </div>
-          
-        </div>
-    </div>
-
-    <!-- Total Profit Card -->
-    <div class="col-md-3">
-        <div class="small-box bg-info">
-            <div class="inner">
-                <h3>${{ number_format($total_profit ) }}</h3>
-                <p>{{ __('message.Total Profit') }}</p>
-            </div>
-            <div class="icon">
-                <i class="fa fa-chart-line"></i>
-            </div>
-            
-        </div>
-    </div>
-
-    <!-- Total Clients Card -->
-    <div class="col-md-3">
-        <div class="small-box bg-warning">
-            <div class="inner">
-                <h3>{{ $total_students }}</h3>
-                <p>{{ __('message.Total Clients') }}</p>
-            </div>
-            <div class="icon">
-                <i class="fa fa-users"></i>
-            </div>
-          
-        </div>
-    </div>
-</div>
+        <div class="row mb-4"><!-- dashboard cards -->
+        <x-reports-cards :totalIncome="$total_income" :totalOutcome="$total_outcome" :totalProfit="$total_profit" :totalClients="$total_students" :totalInvoices="$total_invoices" :totalIncomeRemaining="$total_income_remaining" :totalRecurring="$total_recurring_payments" :totalOnetime="$total_onetime_payments"/>
+        </div><!-- end dashboard cards -->
   
           <div class="row">
               <div class="col-lg-6">
@@ -107,11 +53,12 @@
                           @foreach($incomes as $income)
                                       <tr>
                                           <td>{{$income->client->full_name}}</td>
-                                          <td><span class="badge bg-{{ 
-                                              $income->status == 'complete' ? 'success' : 
-                                              ($income->status == 'partial' ? 'warning' : 'danger') 
-                                          }}">
-                                            <small>{{ ucfirst($income->status) }}</small>  
+                                          <td>  <span class="badge bg-{{ 
+                                                  $income->status == \App\Enums\IncomeStatus::COMPLETE ? 'success' : 
+                                                  ($income->status == \App\Enums\IncomeStatus::PARTIAL ? 'warning' : 'danger') 
+                                                   }}">
+                                                  <small>{{ $income->status->label() }}</small>
+                                                 </span>
                                           </span></td>
                                           <td>{{ $income->client->types->first()?->type_name}}</td>
                                           <td>${{number_format($income->amount)}}</td>

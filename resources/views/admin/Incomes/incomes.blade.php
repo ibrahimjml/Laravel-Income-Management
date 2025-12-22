@@ -46,9 +46,10 @@
                             <th onclick="sortTable(3, this)">{{__('message.Amount')}} <span class="arrow"></span></th>
                             <th onclick="sortTable(3, this)">Final<span class="arrow"></span></th>
                             <th onclick="sortTable(4, this)">{{__('message.Total Paid')}} <span class="arrow"></span></th>
-                            <th onclick="sortTable(5, this)">{{__('message.Status')}} <span class="arrow"></span></th>
-                            <th onclick="sortTable(6, this)">{{__('message.Description')}} <span class="arrow"></span></th>
-                            <th onclick="sortTable(7, this)">{{__('message.Date')}} <span class="arrow"></span></th>
+                            <th onclick="sortTable(5, this)">{{__('income.Payment Type')}} <span class="arrow"></span></th>
+                            <th onclick="sortTable(6, this)">{{__('message.Status')}} <span class="arrow"></span></th>
+                            <th onclick="sortTable(7, this)">{{__('message.Description')}} <span class="arrow"></span></th>
+                            <th onclick="sortTable(8, this)">{{__('message.Date')}} <span class="arrow"></span></th>
                             <th>{{__('message.Actions')}}</th>
                         </tr>
                     </thead>
@@ -65,11 +66,14 @@
                                 <td> ${{number_format($income->amount)}}</td>
                                 <td> ${{number_format($income->final_amount)}}</td>
                                 <td> ${{$income->total_paid}}</td>
+                                <td> <span class="badge bg-success">
+                                  {{ $income->payment_type->label() }}
+                              </span></td>
                                 <td> <span class="badge bg-{{ 
-                                  $income->status == 'complete' ? 'success' : 
-                                  ($income->status == 'partial' ? 'warning' : 'danger') 
+                                  $income->status == \App\Enums\IncomeStatus::COMPLETE ? 'success' : 
+                                  ($income->status == \App\Enums\IncomeStatus::PARTIAL ? 'warning' : 'danger') 
                               }}">
-                                  {{ ucfirst($income->status) }}
+                                  {{ $income->status->label()}}
                               </span></td>
                                 <td>{{ Str::limit($income->trans_description, 30) }}</td>
                                 <td>{{ date('M d, Y', strtotime($income->created_at)) }}</td>

@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\IncomeStatus;
+use App\Enums\PaymentStatus;
+use App\Enums\PaymentType;
 use App\Traits\IncomeTranslation;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\LogOptions;
@@ -15,24 +18,31 @@ class Income extends Model
   protected $appends = ['trans_description'];
   protected $activitySubjectName = 'income_id';
   public $timestamps = false;
+  
+  protected $fillable = [
+    'subcategory_id',
+    'amount',
+    'discount_amount',
+    'final_amount',
+    'status',
+    'payment_type',
+    'description', 
+    'next_payment', 
+    'date', 
+    'client_id',
+    'is_deleted',
+    'discount_id',
+  ];
+  
   protected $casts = [
     'next_payment' => 'date',
+    'payment_type' => PaymentType::class,
+    'status' => IncomeStatus::class,
+    'is_deleted' => 'boolean',
+    'amount' => 'decimal:2',
+    'discount_amount' => 'decimal:2',
+    'final_amount' => 'decimal:2',
   ];
-
-  protected $fillable = [
-       'subcategory_id',
-       'amount',
-       'discount_amount',
-       'final_amount',
-       'status',
-       'description', 
-       'next_payment', 
-       'date', 
-       'client_id',
-       'is_deleted',
-       'discount_id',
-  ];
-
   public function client()
   {
       return $this->belongsTo(Client::class, 'client_id');
@@ -47,19 +57,33 @@ class Income extends Model
   {
       return $this->hasMany(Payment::class, 'income_id');
   }
+  public function isRecurring()
+  {
+    return $this->payment_type == 'recurring';
+  }
+  public function isOneTime()
+  {
+    return $this->payment_type == 'onetime';
+  }
     public function getPaymentAmountsAttribute()
    {
      return $this->payments->pluck('payment_amount');
    }
    public function getTotalPaidAttribute()
   {
-     return $this->payments->where('status', 'paid')->sum('payment_amount');
+    if (array_key_exists('paid_payments_sum_payment_amount', $this->attributes)) {
+        return (float) $this->paid_payments_sum_payment_amount;
+    }
+
+     return (float) $this->paidPayments()->sum('payment_amount');
   }
 
      public function getRemainingAttribute()
     {   
-       $Amount = ($this->final_amount > 0) ? $this->final_amount : $this->amount;
-       return max(0, $Amount - $this->total_paid);
+       $amount = $this->final_amount > 0 
+             ? $this->final_amount 
+             : $this->amount;
+       return max(0, $amount - $this->total_paid);
     }
 
     public function scopeDateBetween($query, $from, $to)
@@ -74,7 +98,18 @@ class Income extends Model
      {
        return $query->where('is_deleted',0);
      }
-
+    public function unpaidPayments()
+    {
+        return $this->hasMany(Payment::class, 'income_id')
+                    ->where('status', PaymentStatus::UNPAID->value)
+                    ->notDeleted();
+    }
+    public function paidPayments()
+    {
+        return $this->hasMany(Payment::class, 'income_id')
+                    ->where('status', PaymentStatus::PAID->value)
+                    ->notDeleted();
+    }
        public function discount()
       {
         return $this->belongsTo(Discount::class, 'discount_id');

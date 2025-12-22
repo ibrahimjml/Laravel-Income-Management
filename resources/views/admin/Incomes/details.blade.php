@@ -5,12 +5,10 @@
 @section('content')
 <div id="content" class="d-flex flex-column">
 <div class="flex-grow-1 p-3">
-  <h3 class="text-center mb-4">Income Details</h3>
+  <h3 class="text-center mb-4">{{ __('message.Income Details') }}</h3>
   <div class="d-flex justify-content-between mb-3">
-      <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#editIncomeModal">Edit
-          Income</button>
-      <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#addPaymentModal">Add
-          Payment</button>
+      <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#editIncomeModal">{{ __('message.Edit Income') }}</button>
+      <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#addPaymentModal">{{ __('message.Add Payment') }}</button>
   </div>
 
   <div class="d-flex flex-wrap">
@@ -59,9 +57,13 @@
           <div class="d-flex justify-content-between align-items-center mb-1">
                     <div><i class="fa fa-check-circle me-2 text-secondary"></i><b>{{ __('message.Status') }}</b> </div>
                     <b class="badge bg-{{ 
-            $income->status == 'complete' ? 'success' : 
-            ($income->status == 'partial' ? 'warning' : 'danger') 
-        }}">{{ ucfirst($income->status) }}</b>
+             $income->status == \App\Enums\IncomeStatus::COMPLETE ? 'success' : 
+            ($income->status == \App\Enums\IncomeStatus::PARTIAL ? 'warning' : 'danger') 
+        }}">{{ $income->status->label() }}</b>
+        </div>
+          <div class="d-flex justify-content-between align-items-center mb-1">
+                    <div><i class="fa fa-info-circle me-2 text-secondary"></i><b>{{ __('income.Payment Type') }}</b> </div>
+                    <b class="badge bg-success">{{ $income->payment_type->label() }}</b>
         </div>
           <div class="d-flex justify-content-between align-items-center mb-1">
                     <div><i class="fa fa-info-circle me-2 text-secondary"></i><b>{{ __('message.Description') }}</b> </div>
@@ -79,18 +81,18 @@
       </div>
   </div>
 
-  <h4 class="mt-4">Payments</h4>
+  <h4 class="mt-4">{{ __('message.Payments') }}</h4>
   <div class="table-responsive">
 
       <table id="sortableTable" class="table mt-3">
           <thead>
               <tr>
-                  <th onclick="sortTable(0, this)">Payment Amount<span class="arrow"></span></th>
-                  <th onclick="sortTable(1, this)">Status<span class="arrow"></span></th>
-                  <th onclick="sortTable(2, this)">Description <span class="arrow"></span></th>
-                  <th onclick="sortTable(3, this)">CreatedAt <span class="arrow"></span></th>
-                  <th onclick="sortTable(4, this)">Payment Due <span class="arrow"></span></th>
-                  <th>Actions</th>
+                  <th onclick="sortTable(0, this)">{{ __('income.Payment Amount') }}<span class="arrow"></span></th>
+                  <th onclick="sortTable(1, this)">{{ __('message.Status') }}<span class="arrow"></span></th>
+                  <th onclick="sortTable(2, this)">{{ __('message.Description') }} <span class="arrow"></span></th>
+                  <th onclick="sortTable(3, this)">{{ __('message.CreatedAt') }} <span class="arrow"></span></th>
+                  <th onclick="sortTable(4, this)">{{ __('income.Payment Due') }}<span class="arrow"></span></th>
+                  <th>{{ __('message.Actions') }}</th>
               </tr>
           </thead>
           <tbody>
@@ -98,16 +100,16 @@
                   <tr>
                       <td> ${{$payment->payment_amount}}</td>
                       <td> <span class="badge bg-{{ 
-                            $payment->status == 'paid' ? 'success' : 
-                            ($payment->status == 'unpaid' ? 'danger' : '') 
+                            $payment->status == \App\Enums\PaymentStatus::PAID ? 'success' : 
+                            ($payment->status == \App\Enums\PaymentStatus::UNPAID ? 'danger' : '') 
                               }}">
-                      {{ ucfirst($payment->status) }}
+                      {{ $payment->status->label() }}
                       </span>
                       </td>
                       <td>{{$payment->trans_description}}</td>
                       <td>{{ date('M d, Y', strtotime($payment->created_at)) }}</td>
                       <td>{{ $payment->next_payment?->format('M d, Y') ?? 'N/A' }}
-                        @if($payment->next_payment && $payment->status == 'unpaid')
+                        @if($payment->next_payment && $payment->status->value == 'unpaid')
                        <span>
                            <i class="fas fa-clock text-warning"></i>
                            @php
@@ -141,7 +143,17 @@
                               ])'>
                         <span class="d-sm-inline d-none">{{__('message.Edit')}}</span>
                         <span class="d-inline d-sm-none">E</span>
-                        </button>
+                      </button>
+                      <button class='delete-btn btn btn-danger'
+                              data-client-name="{{$income->client->client_fname}}{{$income->client->client_lname}}"
+                              data-payment-id="{{ $payment->payment_id }}"
+                              data-income-id="{{$income->income_id}}">
+                              <span class="d-sm-inline d-none">{{__('message.Delete')}}</span>
+                              <span class="d-inline d-sm-none">D</span>
+                      </button>
+                      <button class="btn btn-warning">
+                        <span class="d-inline"><i class="fas fa-file-invoice-dollar text-white"></i></span>
+                      </button>
                       </td>
                   </tr>
         @endforeach
@@ -241,6 +253,93 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+});
+</script>
+<script>
+  // delete payment
+  document.addEventListener('DOMContentLoaded', function() {
+    // Handle delete button
+    const deleteButtons = document.querySelectorAll('.delete-btn');
+    
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const incomeId = this.dataset.incomeId;
+            const paymentId = this.dataset.paymentId;
+            const clientName = this.dataset.clientName;
+
+            Swal.fire({
+                title: '{{__("message.Are you sure")}}?',
+                text: `{{__("message.You are about to delete payment for")}} ${clientName} !`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: '{{__("message.Yes, delete")}}',
+                cancelButtonText: '{{__("message.Cancel")}}',
+                reverseButtons: true,
+                customClass: {
+                    confirmButton: 'btn btn-danger',
+                    cancelButton: 'btn btn-secondary'
+                }
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    await deletePayment(incomeId, paymentId);
+                }
+            });
+        });
+    });
+    
+    async function deletePayment(incomeId, paymentId) {
+        try {
+    
+            Swal.fire({
+                text: '{{__("message.Please wait")}}',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
+            const response = await fetch(`/admin/delete-payment/${paymentId}/${incomeId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.message || 'delete error');
+            }
+            
+            // Success notification
+            Swal.fire({
+                title: '{{__("message.Deleted")}}!',
+                text: `{{__("message.Payment has been succeesful deleted")}}`,
+                icon: 'success',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: '{{__("message.OK")}}'
+            }).then((result) => {
+
+                 location.reload();
+            });
+            
+        } catch (error) {
+            console.error('Error:', error);
+            
+            Swal.fire({
+                title: '{{__("message.Error")}}!',
+                text: error.message || '{{__("message.Failed to delete payment")}}',
+                icon: 'error',
+                confirmButtonColor: '#d33',
+                confirmButtonText: '{{__("message.OK")}}'
+            });
+        }
+    }
 });
 </script>
 @endpush

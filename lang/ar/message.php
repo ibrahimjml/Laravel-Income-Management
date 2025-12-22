@@ -24,7 +24,7 @@ return [
     'Add Client Type'                 => 'اضافة نوع العميل',
     'Edit'                            => 'تعديل',
     'Delete'                          => 'مسح',
-    'Trashed Client'                          => 'استيراد العملاء',
+    'Recover Clients'                 => 'استيراد العملاء',
     'Client Email' => 'بريد العميل',
     // incomes
    'All Incomes'         => 'كل الايرادات',
@@ -54,18 +54,24 @@ return [
    'Date'                 => 'التاريخ',
    'CreatedAt' => 'تاريخ الانشاء',
    'Since last year' => 'منذ السنة السابقة' ,
-   'Total Income' => 'مجموع الايرادات',
    'This Year Income' => 'ايرادات هذه السنة',
    'Last Year Income' => 'ايرادات السنة السابقة',
+   'Paid Amount' => 'المبلغ المدفوع',
+   'Income Details' => 'تفاصيل الدخل',
+   'Edit Income' => 'تعديل الدخل',
+   'Add Payment' => 'إضافة دفعة',
+   'Recover Incomes' => 'استيراد الايرادات',
    // outcomes
    'All Outcomes'         => 'كل المصاريف',
    'Trashed Outcomes'         => 'استيراد المصاريف',
    'Trashed Incomes'         => 'استيراد الايرادات',
+   'Recover Outcomes'         => 'استيراد المصاريف',
 
    'Add Outcome'   => 'اضافة مصروف جديد',
   'Delete Outcome' => 'مسح المصروف',
   // payments schedule
    'All Payments'      => 'كل الدفعات',
+   'Edit Payment'      => 'تعديل الدفعة',
    'Discounts' => 'الخصومات',
    'Search for payments'      => 'البحث عن دفعات',
    'Outdated Payments'      => 'الدفعات القديمة',
@@ -80,6 +86,11 @@ return [
    'No upcoming payments'  => 'لا يوجد دفعات قادمة',
    'View All Outdated Payments' => 'عرض جميع الدفعات القديمة',
    'View All Upcoming Payments' => 'عرض جميع الدفعات القادمة',
+   'Recover Payments' => 'استيراد الدفعات',
+   'Payments Stats' => 'احصائيات الدفعات',
+   'Today' => 'اليوم',
+   'overdue' => 'متأخر',
+   'day' => '{1} يوم|{2} يومان|[3,10] :count أيام|[11,*] :count يوم',
      //reports
    'Clear'                        => 'مسح',
    'Filter by Date'              => 'تصفية بالتاريخ',
@@ -128,6 +139,10 @@ return [
     'Delete failed' => 'فشل الحذف',
     'Failed to delete client' => 'فشل في حذف العميل',
     'OK' => 'موافق',
+    'You are about to permanently delete payment for' => 'أنت على وشك حذف الدفعة',
+    'Payment Permanently Deleted' => 'تم حذف الدفعة',
+    'Payment Recovered' => 'تم استرداد الدفعة',
+    'Recovered' => 'تم الاسترداد',
     // invoices
      'Invoices' => 'الفواتير',
      'Final' => 'السعر النهائي',
@@ -146,6 +161,9 @@ return [
     'Search for Events' => 'البحث عن احداث',
     'Total Paid Invoices' => 'اجمالي الفواتير المدفوعة',
     'Total Unpaid Invoices' => 'اجمالي الفواتير غير مدفوعة',
+    'Recent Activity Logs' => 'سجلات النشاط',
+    'View All Logs' => 'عرض جميع السجلات',
+    'Total Invoices' => 'إجمالي الفواتير',
     // activity 
     'Activity Logs' => 'سجلات النشاط',
 ];

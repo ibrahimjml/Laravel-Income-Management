@@ -58,11 +58,11 @@
                 <div class="d-flex justify-content-between align-items-center mb-1">
                     <div><i class="fa fa-check-circle me-1"></i> {{ __('message.Status') }}</div>
                     <div>
-                        <span class="badge bg-{{ 
-                            $out->status == 'complete' ? 'success' : 
-                            ($out->status == 'partial' ? 'warning' : 'danger') 
+                          <span class="badge bg-{{ 
+                            $out->status == \App\Enums\IncomeStatus::COMPLETE ? 'success' : 
+                            ($out->status == \App\Enums\IncomeStatus::PARTIAL ? 'warning' : 'danger') 
                         }}">
-                            {{ ucfirst($out->status) }}
+                            {{ $out->status->label() }}
                         </span>
                     </div>
                 </div>

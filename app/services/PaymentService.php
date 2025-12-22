@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Enums\IncomeStatus;
+use App\Enums\PaymentStatus;
 use App\Models\Income;
 use App\Models\Payment;
 use Carbon\Carbon;
@@ -13,11 +15,10 @@ class PaymentService
     public function getPaymentsData()
     {
         $today = Carbon::today()->toDateString();
-        $paginate = null;
 
-        $outdatedPayments = $this->getOutDatedPayments($today,$paginate);
-        $todayPayments    = $this->getTodayPayments($today, $paginate);
-        $upcomingPayments = $this->getUpComingPayments($today, $paginate);
+        $outdatedPayments = $this->getPaymentsByDate($today, '<');
+        $todayPayments    = $this->getPaymentsByDate($today, '=');
+        $upcomingPayments = $this->getPaymentsByDate($today, '>');
 
         return [
 
@@ -34,11 +35,11 @@ class PaymentService
             'income_id'      => $incomeId,
             'payment_amount' => $data['payment_amount'],
             'next_payment'   => $data['next_payment'] ?? null,
-            'status'         => $data['status'] ?? 'unpaid',
+            'status'         => PaymentStatus::from($data['status'])->value,
             'description'    => $data['description'] ?? null
         ]);
 
-        if (!empty($data['description'])) {
+        if (!empty($data['description']) && $data['lang'] === 'ar') {
             $payment->translations()->create([
                 'lang_code'   => $data['lang'] ?? 'ar',
                 'description' => $data['description'],
@@ -52,23 +53,19 @@ class PaymentService
         }
 
          $income = Income::with('payments')->findOrFail($incomeId);
-         $totalPaid = Payment::where('income_id', $incomeId)
-                           ->where('status', 'paid')
-                           ->sum('payment_amount');
+         $totalPaid = $income->total_paid;
 
           $amount =  $income->final_amount && $income->final_amount > 0
                            ? $income->final_amount
                            : $income->amount;
 
-        $status = 'pending';
-        if ($totalPaid >= $amount) {
-            $status = 'complete';
-        } elseif ($totalPaid > 0 && $totalPaid < $amount) {
-            $status = 'partial';
-        }
-
-        $income->update(['status' => $status]);
-
+        $income->update([
+          'status' => match (true) {
+              $totalPaid <= 0        => IncomeStatus::PENDING->value,
+              $totalPaid <  $amount  => IncomeStatus::PARTIAL->value,
+               default               => IncomeStatus::COMPLETE->value,
+             }
+        ]);
         return $payment;
     });
     }
@@ -82,7 +79,7 @@ class PaymentService
              $payment->update([
                'income_id'      => $incomeId,
                'payment_amount' => $data['payment_amount'],
-               'status'         => $data['status'] ?? 'unpaid',
+               'status'         => PaymentStatus::from($data['status']),
                'next_payment'   => $data['next_payment'] ?? null,
                'description'    => $data['description'] ?? null
              ]);
@@ -101,123 +98,75 @@ class PaymentService
 
            $income    = Income::findOrFail($incomeId);
           $totalPaid =  Payment::where('income_id', $incomeId)
-                                     ->where('status', 'paid')
+                                     ->where('status', PaymentStatus::PAID->value)
                                      ->sum('payment_amount');
                    
           $amount = $income->final_amount && $income->final_amount > 0
                            ? $income->final_amount
                            : $income->amount;
           
-            $status = 'pending';
+            $status = IncomeStatus::PENDING->value;
         if ($totalPaid >= $amount) {
-            $status = 'complete';
+            $status = IncomeStatus::COMPLETE->value;
         } elseif ($totalPaid > 0 && $totalPaid < $amount) {
-            $status = 'partial';
+            $status = IncomeStatus::PARTIAL->value;
         }
 
            $income->update(['status' => $status]);
            return $payment;
        });
     }
-    public function getOutDatedPayments(string $today, ?int $paginate = null)
+    public function deletePayment(Payment $payment, Income $income)
     {
-      $query =  Income::notDeleted()
-                    ->with(['client', 'payments'])
-                    ->where('status','!=','complete')
-                    ->whereDate('next_payment', '<', $today)
-                    ->whereHas('client', fn($q)=> $q->notDeleted());
-      // with Pagination 
-       if ($paginate) {
-        $result = $query->paginate($paginate);
-        $result->getCollection()->transform(function ($income) {
-            $nextPayment = $income->payments
-                ->where('status', '!=', 'paid')
-                ->first();
+        return DB::transaction(function() use($payment, $income){
 
+            $payment->update([
+              'is_deleted' => 1
+            ]);
+
+            $totalPaid = $income->total_paid;
+
+            $income->update([
+              'status' => match (true) {
+                      $totalPaid <= 0 => IncomeStatus::PENDING,
+                      ($totalPaid > 0 && $totalPaid < $income->amount) => IncomeStatus::PARTIAL,
+                      default => IncomeStatus::COMPLETE,
+                  }
+            ]);
+            return $payment;
+        });
+    }
+public function getPaymentsByDate(string $today, string $operator = '=', ?int $paginate = null)
+{
+    $query = Income::notDeleted()
+        ->with(['client', 'unpaidPayments'])
+        ->withSum('paidPayments', 'payment_amount')
+        ->where('status', '!=', IncomeStatus::COMPLETE->value)
+        ->whereDate('next_payment', $operator, $today)
+        ->whereHas('client', fn($q) => $q->notDeleted())
+        ->whereHas('unpaidPayments');
+
+    // with pagination
+    $addNextPaymentAmount = function ($collection) {
+        return $collection->map(function ($income) {
+            $nextPayment = $income->unpaidPayments->first();
             $income->next_payment_amount = $nextPayment ? $nextPayment->payment_amount : 0;
-
             return $income;
         });
+    };
 
-        return $result;
-    }            
-      // without pagination   
-      return $query->get()->map(function ($income) {
-        $nextPayment = $income->payments
-            ->where('status', '!=', 'paid')
-            ->first();
-
-        $income->next_payment_amount = $nextPayment ? $nextPayment->payment_amount : 0;
-
-        return $income;
-    });
-    }
-    public function getTodayPayments(string $today, ?int $paginate = null)
-    {
-      $query = Income::notDeleted()
-                    ->with(['client', 'payments'])
-                    ->whereDate('next_payment', $today)
-                    ->where('status','!=','complete')
-                    ->whereHas('client', fn($q)=> $q->notDeleted());
-      // with Pagination 
-       if ($paginate) {
+    if ($paginate) {
         $result = $query->paginate($paginate);
+
         $result->getCollection()->transform(function ($income) {
-            $nextPayment = $income->payments
-                ->where('status', '!=', 'paid')
-                ->first();
-
+            $nextPayment = $income->unpaidPayments->first();
             $income->next_payment_amount = $nextPayment ? $nextPayment->payment_amount : 0;
-
             return $income;
         });
-
         return $result;
-    }            
-      // without pagination   
-      return $query->get()->map(function ($income) {
-        $nextPayment = $income->payments
-            ->where('status', '!=', 'paid')
-            ->first();
-
-        $income->next_payment_amount = $nextPayment ? $nextPayment->payment_amount : 0;
-
-        return $income;
-    });
-                  
     }
-    public function getUpComingPayments(string $today, ?int $paginate = null)
-    {
-      $query =  Income::notDeleted()
-                    ->with(['client', 'payments'])
-                    ->whereDate('next_payment', '>', $today)
-                    ->where('status','!=','complete')
-                    ->whereHas('client', fn($q)=> $q->notDeleted());
-        // with Pagination 
-       if ($paginate) {
-        $result = $query->paginate($paginate);
-        $result->getCollection()->transform(function ($income) {
-            $nextPayment = $income->payments
-                ->where('status', '!=', 'paid')
-                ->first();
 
-            $income->next_payment_amount = $nextPayment ? $nextPayment->payment_amount : 0;
+    return $addNextPaymentAmount($query->get());
+}
 
-            return $income;
-        });
-
-        return $result;
-    }            
-      // without pagination   
-      return $query->get()->map(function ($income) {
-        $nextPayment = $income->payments
-            ->where('status', '!=', 'paid')
-            ->first();
-
-        $income->next_payment_amount = $nextPayment ? $nextPayment->payment_amount : 0;
-
-        return $income;
-    });          
-                  
-    }
 }

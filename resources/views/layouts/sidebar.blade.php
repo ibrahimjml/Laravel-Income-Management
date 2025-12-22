@@ -16,7 +16,7 @@
           </li>
 
           <!-- Clients -->
-            <li class="nav-item has-treeview {{ request()->routeIs('admin.clients*') ? 'menu-open' : '' }}">
+            <li class="nav-item has-treeview {{ request()->routeIs('admin.clients','trashed.clients') ? 'menu-open' : '' }}">
                 <a href="#" class="nav-link  py-3 text-lg">
                     <i class="nav-icon fas fa-users"></i>
                     <p class="ml-2">
@@ -35,15 +35,15 @@
                     <li class="nav-item">
                         <a href="{{route('trashed.clients')}}" 
                            class="nav-link {{ request()->routeIs('trashed.clients') ? 'active' : '' }}">
-                            <i class="fas fa-trash nav-icon"></i>
-                            <p>{{__('message.Trashed Client')}}</p>
+                            <i class="fas fa-recycle nav-icon"></i>
+                            <p>{{__('message.Recover Clients')}}</p>
                         </a>
                     </li>
                 </ul>
             </li>
 
             <!-- Incomes -->
-            <li class="nav-item has-treeview {{ request()->routeIs('admin.incomes') ? 'menu-open' : '' }}">
+            <li class="nav-item has-treeview {{ request()->routeIs('admin.incomes','trashed.incomes') ? 'menu-open' : '' }}">
                 <a href="#" class="nav-link py-3 text-lg">
                     <i class="nav-icon fa fa-money-bill-wave"></i>
                     <p class="ml-2">
@@ -61,16 +61,16 @@
                     </li>
                     <li class="nav-item">
                         <a href="" 
-                           class="nav-link {{ request()->routeIs('admin.clients.create') ? 'active' : '' }}">
-                            <i class="fas fa-trash nav-icon"></i>
-                            <p>{{__('message.Trashed Incomes')}}</p>
+                           class="nav-link {{ request()->routeIs('trashed.incomes') ? 'active' : '' }}">
+                            <i class="fas fa-recycle nav-icon"></i>
+                            <p>{{__('message.Recover Incomes')}}</p>
                         </a>
                     </li>
                 </ul>
             </li>
 
             <!-- Outcomes -->
-            <li class="nav-item has-treeview {{ request()->routeIs('admin.outcomes') ? 'menu-open' : '' }}">
+            <li class="nav-item has-treeview {{ request()->routeIs('admin.outcomes','trashed.outcomes') ? 'menu-open' : '' }}">
                 <a href="#" class="nav-link  py-3 text-lg">
                     <i class="nav-icon fa fa-credit-card"></i>
                     <p class="ml-2">
@@ -88,16 +88,16 @@
                     </li>
                     <li class="nav-item">
                         <a href="" 
-                           class="nav-link {{ request()->routeIs('admin.outcomes.trashed') ? 'active' : '' }}">
-                            <i class="fas fa-trash nav-icon"></i>
-                            <p>{{__('message.Trashed Outcomes')}}</p>
+                           class="nav-link {{ request()->routeIs('trashed.outcomes') ? 'active' : '' }}">
+                            <i class="fas fa-recycle nav-icon"></i>
+                            <p>{{__('message.Recover Outcomes')}}</p>
                         </a>
                     </li>
                 </ul>
             </li>
 
             <!-- Payments -->
-            <li class="nav-item has-treeview {{ request()->routeIs('admin.payments','admin.outdated','admin.today','admin.upcoming') ? 'menu-open' : '' }}">
+            <li class="nav-item has-treeview {{ request()->routeIs('admin.payments','admin.outdated','admin.today','admin.upcoming','trashed.payments') ? 'menu-open' : '' }}">
                 <a href="#" class="nav-link py-3 text-lg ">
                     <i class="nav-icon fa fa-calendar"></i>
                     <p class="ml-2">
@@ -111,6 +111,13 @@
                            class="nav-link {{ request()->routeIs('admin.payments') ? 'active' : '' }}">
                             <i class="nav-icon fa fa-credit-card"></i>
                             <p>{{__('message.All Payments')}}</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{route('trashed.payments')}}" 
+                           class="nav-link {{ request()->routeIs('trashed.payments') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-recycle"></i>
+                            <p>{{__('message.Recover Payments')}}</p>
                         </a>
                     </li>
                     <li class="nav-item">

@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\Enums\IncomeStatus;
+use App\Enums\PaymentStatus;
+use App\Enums\PaymentType;
 use App\Models\{Category, Client, Income, Payment, Subcategory};
 use App\Models\Discount;
 use Illuminate\Support\Facades\DB;
@@ -48,12 +51,13 @@ public function createIncome(array $data)
             'client_id'       => $data['client_id'],
             'subcategory_id'  => $data['subcategory_id'],
             'amount'          => $amount,
+            'payment_type'    => PaymentType::from($data['payment_type']),
             'discount_id'     => $data['discount_id'] ?? null,
             'discount_amount' => $discountAmount,
             'final_amount'    => $finalAmount,
             'description'     => $data['description'] ?? null,
             'next_payment'    => $data['next_payment'] ?? null,
-            'status'          => 'pending'
+            'status'          => IncomeStatus::PENDING->value
         ]);
 
         if (!empty($data['description']) && $data['lang'] === 'ar') {
@@ -74,19 +78,19 @@ public function createIncome(array $data)
             Payment::create([
                 'income_id'      => $income->income_id,
                 'payment_amount' => $data['paid'],
-                'status'         => $data['payment_status'],
+                'status'         => PaymentStatus::from($data['payment_status']),
                 'next_payment'   => $data['next_payment'] ?? null,
              ]);
 
             $totalPaid = Payment::where('income_id', $income->income_id)
-                                ->where('status', 'paid')
+                                ->where('status', PaymentStatus::PAID->value)
                                 ->sum('payment_amount');
 
-             $status = 'pending';
+              $status = IncomeStatus::PENDING->value;
             if ($totalPaid >= $executeamount) {
-                $status = 'complete';
+                $status = IncomeStatus::COMPLETE->value;
             } elseif ($totalPaid > 0) {
-                $status = 'partial';
+                $status = IncomeStatus::PARTIAL->value;
             }
 
             $income->update(['status' => $status]);
@@ -137,7 +141,7 @@ public function createIncome(array $data)
     public function getIcomeDetails(int $incomeId)
     {
          $income = Income::with(['client','subcategory.category','payments'])
-                      ->withSum('payments as paid', 'payment_amount')
+                      ->withSum('paidPayments', 'payment_amount')
                       ->where('income_id', $incomeId)
                       ->notDeleted()
                       ->firstOrFail();
@@ -169,6 +173,7 @@ public function createIncome(array $data)
     protected function getSubCategories()
     {
         return Subcategory::notDeleted()
+               ->with('category')
                ->whereHas('category' , function($q){
                  $q->notDeleted()->where('category_type','Income');
               })->get();
@@ -181,7 +186,7 @@ public function createIncome(array $data)
     {
     return Income::notDeleted()
                    ->with(['client', 'subcategory.category'])
-                   ->withSum( 'payments','payment_amount')
+                   ->withSum('paidPayments', 'payment_amount')
                    ->paginate(7)
                    ->through(function ($income) {
                        $income->paid = $income->payments_sum_payment_amount;

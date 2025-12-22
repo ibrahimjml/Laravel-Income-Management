@@ -28,15 +28,21 @@ class AdminController extends Controller
       'totalOutcome'              => $data['financial']['total_outcome'],
       'totalStudents'             => $data['financial']['total_clients'],
       'profit'                    => $data['financial']['profit'],
+      'totalIncomeRemaining'      => $data['financial']['total_income_remaining'],
       'yearlyLabels'              => $data['yearly_chart_data']['labels'],
       'thisYearIncomeData'        => $data['yearly_chart_data']['this_year_income'],
       'yearBeforeIncomeData'      => $data['yearly_chart_data']['year_before_income'],
       'totalYearlyIncome'         => $data['yearly_chart_data']['total_yearly_income'],
       'incomePercentageChange'    => $data['yearly_chart_data']['income_percentage_change'],
+      'sumPaidPayments'           => $data['sum_payments']['sum_paid'],
+      'sumUnpaidPayments'         => $data['sum_payments']['sum_unpaid'],
+      'percentageSumPaid'         => $data['sum_payments']['percentage_sum_paid'],
+      'percentageSumUnpaid'       => $data['sum_payments']['percentage_sum_unpaid'],
       'upcomingPayments'          => $data['upcoming_payments'],
       'outdatedPayments'          => $data['outdated_payments'],
       'totalPaidInvoices'         => $data['total_paid_invoices'],
       'totalUnpaidInvoices'       => $data['total_unpaid_invoices'],
+      'logs'                      => $data['logs'],
     ]);
   }
   public function clients_page(ClientService $clientService)
@@ -81,17 +87,21 @@ class AdminController extends Controller
 
     return view('admin.reports.reports',[
       
-      'date_range'             => $filters,
-      'total_income'           => $data['summary']['total_income'],
-      'total_outcome'          => $data['summary']['total_outcome'],
-      'total_profit'           => $data['summary']['profit'],
-      'total_students'         => $data['summary']['total_clients'],
-      'incomes'                => $data['transactions']['incomes'],
-      'outcomes'               => $data['transactions']['outcomes'],
-      'incomeCategoryData'     => $data['charts']['income_category'],
-      'incomeSubcategoryData'  => $data['charts']['income_sub_category'],
-      'outcomeCategoryData'    => $data['charts']['outcome_category'],
-      'outcomeSubcategoryData' => $data['charts']['outcome_sub_category']
+      'date_range'               => $filters,
+      'total_income'             => $data['summary']['total_income'],
+      'total_outcome'            => $data['summary']['total_outcome'],
+      'total_profit'             => $data['summary']['profit'],
+      'total_students'           => $data['summary']['total_clients'],
+      'incomes'                  => $data['transactions']['incomes'],
+      'outcomes'                 => $data['transactions']['outcomes'],
+      'incomeCategoryData'       => $data['charts']['income_category'],
+      'incomeSubcategoryData'    => $data['charts']['income_sub_category'],
+      'outcomeCategoryData'      => $data['charts']['outcome_category'],
+      'outcomeSubcategoryData'   => $data['charts']['outcome_sub_category'],
+      'total_invoices'           => $data['summary']['total_invoices'],
+      'total_income_remaining'   => $data['summary']['total_income_remaining'], 
+      'total_recurring_payments' => $data['summary']['total_recurring_payments'],
+      'total_onetime_payments'   => $data['summary']['total_onetime_payments'],
 
     ]);
   }

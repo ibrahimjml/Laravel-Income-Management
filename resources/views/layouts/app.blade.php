@@ -18,6 +18,12 @@
     <link rel="stylesheet" href="{{ asset('css/rtl.css') }}">
     @endunless
 
+    <style>
+      .arrow {font-size: 12px;margin-left: 5px;}
+      .arrow.asc::after {content: "▲";}
+      .arrow.desc::after { content: "▼";}
+    </style>
+    
     @stack('styles')
 </head>
 

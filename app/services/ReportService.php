@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
-use App\Models\{Client, Income, Outcome, Payment};
+use App\Enums\PaymentType;
+use App\Models\{Client, Income, Invoice, Outcome, Payment};
+use App\Services\Analytics\BarChartService;
 use App\Services\Analytics\IncomeReportService;
 use App\Services\Analytics\OutcomeReportService;
 
@@ -10,12 +12,15 @@ class ReportService
 {
     protected $incomeReportService;
     protected $outcomeReportService;
+    protected $barChartService;
     public function __construct(
       IncomeReportService $incomeReportService, 
-      OutcomeReportService $outcomeReportService)
+      OutcomeReportService $outcomeReportService,
+      BarChartService $barChartService)
     {
         $this->incomeReportService = $incomeReportService;
         $this->outcomeReportService = $outcomeReportService;
+        $this->barChartService = $barChartService;
     }
     public function getReportsData(array $filters)
     {
@@ -47,15 +52,25 @@ class ReportService
     }
     protected function getSummaryData(?string $dateFrom, ?string $dateTo)
     {
-       $totalIncome = $this->getTotalIncome($dateFrom, $dateTo);
-       $totalOutcome = $this->getTotalOutcome($dateFrom, $dateTo);
-       $totalClients = $this->getTotalClients($dateFrom, $dateTo);
+       $totalIncome            = $this->getTotalIncome($dateFrom, $dateTo);
+       $totalOutcome           = $this->getTotalOutcome($dateFrom, $dateTo);
+       $totalClients           = $this->getTotalClients($dateFrom, $dateTo);
+       $totalInvoices          = $this->getTotalInvoices($dateFrom, $dateTo);
+       $totalIncomeRemaining   = $this->barChartService->getTotalRemainingIncome($dateFrom, $dateTo);
+       $totalRecurringPayments = $this->getTotalRecurringPayments($dateFrom, $dateTo);
+       $totalOneTimePayments   = $this->getTotalOneTimePayments($dateFrom, $dateTo);
 
-       return [
-         'total_income' => $totalIncome,
-         'total_outcome' => $totalOutcome,
-         'total_clients' => $totalClients,
-         'profit'        => $totalIncome - $totalOutcome
+
+
+        return [
+         'total_income'             => $totalIncome,
+         'total_outcome'            => $totalOutcome,
+         'total_clients'            => $totalClients,
+         'profit'                   => $totalIncome - $totalOutcome,
+         'total_invoices'           => $totalInvoices,
+         'total_income_remaining'   => $totalIncomeRemaining,
+         'total_recurring_payments' => $totalRecurringPayments,
+         'total_onetime_payments'  => $totalOneTimePayments,
        ];
     }
     protected function getTotalIncome(?string $dateFrom, ?string $dateTo)
@@ -85,6 +100,31 @@ class ReportService
                    ->dateBetween($dateFrom, $dateTo)
                    ->count();
     }
+    protected function getTotalInvoices(?string $dateFrom, ?string $dateTo)
+    {
+       return Invoice::dateBetween($dateFrom, $dateTo)->count();
+    }
+    protected function getTotalRecurringPayments(?string $dateFrom, ?string $dateTo)
+    {
+       return Income::from('income as i')
+               ->where('i.is_deleted',0)
+               ->where('i.payment_type', PaymentType::RECURRING->value)
+               ->when($dateFrom && $dateTo, function ($q) use ($dateFrom, $dateTo) {
+                  $q->whereBetween('i.created_at', [$dateFrom, $dateTo]);
+                 })
+               ->count();
+    }
+    protected function getTotalOneTimePayments(?string $dateFrom, ?string $dateTo)
+    {
+       return Income::from('income as i')
+               ->where('i.is_deleted',0)
+               ->where('i.payment_type', PaymentType::ONETIME->value)
+               ->when($dateFrom && $dateTo, function ($q) use ($dateFrom, $dateTo) {
+                  $q->whereBetween('i.created_at', [$dateFrom, $dateTo]);
+                 })
+               ->count();
+    }
+
     protected function getTransactionData(?string $dateFrom, ?string $dateTo)
     {
         return [
@@ -95,12 +135,10 @@ class ReportService
     protected function getIncomes(?string $dateFrom, ?string $dateTo)
     {
       return Income::notDeleted()
-                    ->with(['client.types', 'subcategory.category', 'payments'])
+                    ->with(['client.types', 'subcategory.category'])
+                    ->withSum('paidPayments', 'payment_amount')
                     ->dateBetween($dateFrom, $dateTo)
-                    ->get()
-                    ->each(function ($income) {
-                         $income->paid = $income->payments->where('status','paid')->sum('payment_amount');
-                      });      
+                    ->get();
     }
     protected function getOutcomes(?string $dateFrom, ?string $dateTo)
     {

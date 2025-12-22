@@ -34,11 +34,11 @@
       </div>
 
       <div class="row mb-4"><!-- dashboard cards -->
-      <x-dashboard-cards :totalIncome="$totalIncome" :currentMonth="$currentMonth" :totalOutcome="$totalOutcome" :profit="$profit" :totalStudents="$totalStudents" :outdatedPayments="$outdatedPayments" :upcomingPayments="$upcomingPayments" :totalPaidInvoices="$totalPaidInvoices"  :totalUnpaidInvoices="$totalUnpaidInvoices"/>
+      <x-dashboard-cards :totalIncome="$totalIncome" :currentMonth="$currentMonth" :totalOutcome="$totalOutcome" :profit="$profit" :totalIncomeRemaining="$totalIncomeRemaining" :totalStudents="$totalStudents" :outdatedPayments="$outdatedPayments" :upcomingPayments="$upcomingPayments" :totalPaidInvoices="$totalPaidInvoices"  :totalUnpaidInvoices="$totalUnpaidInvoices"/>
       </div><!-- end dashboard cards -->
 
       <!-- dashboard stats -->
-      <x-dashboard-stats :currentMonth="$currentMonth" :upcomingPayments="$upcomingPayments" :outdatedPayments="$outdatedPayments" :totalYearlyIncome="$totalYearlyIncome" :incomePercentageChange="$incomePercentageChange" :labels="$labels"/>
+      <x-dashboard-stats :currentMonth="$currentMonth" :upcomingPayments="$upcomingPayments" :outdatedPayments="$outdatedPayments" :totalYearlyIncome="$totalYearlyIncome" :incomePercentageChange="$incomePercentageChange" :labels="$labels" :percentageSumPaid="$percentageSumPaid" :percentageSumUnpaid="$percentageSumUnpaid" :logs="$logs"/>
 
     </div>
   </div>
@@ -226,6 +226,38 @@
             options: barChartOptions
         });
     });
+    </script>
+    <script>
+        //-------------
+  // - PIE CHART -
+  //-------------
+  // Get context with jQuery - using jQuery's .get() method.
+  var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+    var pieData = {
+        labels: [
+            '{{ \App\Enums\PaymentStatus::PAID->label() }}',
+            '{{ \App\Enums\PaymentStatus::UNPAID->label() }}',
+        ],
+        datasets: [
+            {
+                data: [@json($sumPaidPayments), @json($sumUnpaidPayments)],
+                backgroundColor: ['#00a65a', '#f56954'] // success (paid), danger (unpaid)
+            }
+        ]
+    }
+    var pieOptions = {
+    legend: {
+      display: false
+    }
+  }
+  // Create pie or douhnut chart
+  // You can switch between pie and douhnut using the method below.
+  // eslint-disable-next-line no-unused-vars
+  var pieChart = new Chart(pieChartCanvas, {
+        type: 'doughnut',
+        data: pieData,
+        options: pieOptions
+  })
     </script>
   @endpush
 @endsection

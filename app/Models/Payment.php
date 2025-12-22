@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentStatus;
 use App\Traits\PaymentTranslation;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\LogOptions;
@@ -25,6 +26,9 @@ class Payment extends Model
   ];
   protected $casts = [
     'next_payment' => 'date',
+    'status'     => PaymentStatus::class,
+    'is_deleted' => 'boolean',
+    'payment_amount' => 'decimal:2',
   ];
   public function income()
   {
@@ -42,6 +46,10 @@ class Payment extends Model
     public function scopeNotDeleted($query)
   {
     return $query->where('is_deleted',0);
+  }
+    public function scopeIsDeleted($query)
+  {
+    return $query->where('is_deleted',1);
   }
   public function discount()
 {

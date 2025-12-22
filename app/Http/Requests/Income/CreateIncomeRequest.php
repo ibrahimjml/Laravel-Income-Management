@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests\Income;
 
+use App\Enums\PaymentStatus;
+use App\Enums\PaymentType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class CreateIncomeRequest extends FormRequest
 {
@@ -26,11 +29,12 @@ class CreateIncomeRequest extends FormRequest
                'category_id'    => 'required|integer|exists:categories,category_id',
                'subcategory_id' => 'required|integer|exists:subcategories,subcategory_id',
                'amount'         => 'required|numeric|min:0.01',
-               'paid'           => 'nullable|numeric|min:0|lte:amount',
-               'payment_status' => 'required|in:paid,unpaid',
+               'payment_type'   =>  ['required',new Enum(PaymentType::class)],
+               'paid'           => ['nullable', 'numeric', 'min:0', 'lte:amount'],
+               'payment_status' => ['required',new Enum(PaymentStatus::class)],
                'discount_id'    => 'nullable|exists:discounts,discount_id',
                'description'    => 'sometimes|nullable|string|max:200',
-               'next_payment'   => 'sometimes|nullable|date|after_or_equal:today',
+               'next_payment'   => ['nullable','required_if:payment_status,'.PaymentStatus::UNPAID->value,'date','after_or_equal:today'],
                'lang'           => 'required|in:en,ar'
         ];
     }
