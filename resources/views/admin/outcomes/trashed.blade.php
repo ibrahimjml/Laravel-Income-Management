@@ -1,61 +1,52 @@
 @extends('layouts.app')
 
-@section('title', 'Recover Payments')
+@section('title', 'Recover Outcomes')
 
 @section('content')
-  <h1 class="mb-4 text-center">{{ __('message.Recover Payments') }}</h1>
+  <h1 class="mb-4 text-center">{{ __('message.Recover Outcomes') }}</h1>
 <div class="card">
   <div class="table-responsive">
     <table id="sortableTable" class="table">
       <thead>
-        <tr>
-          <th onclick="sortTable(0, this)"># <span class="arrow"></span></th>
-          <th onclick="sortTable(1, this)">{{__('message.Client')}} <span class="arrow"></span></th>
-          <th onclick="sortTable(1, this)">{{__('message.Category')}} <span class="arrow"></span></th>
-          <th onclick="sortTable(2, this)">{{__('message.Amount')}} <span class="arrow"></span></th>
-          <th onclick="sortTable(3, this)">{{__('message.Description')}} <span class="arrow"></span></th>
-          <th onclick="sortTable(4, this)">{{__('message.Status')}} <span class="arrow"></span></th>
-          <th>{{__('message.Actions')}}</th>
-        </tr>
-      </thead>
-      <tbody>
-        @foreach($payments as $index => $payment)
-          <tr>
-            <td>{{$index + 1}}</td>
-            <td>{{$payment->income->client->full_name}}</td>
-            <td>{{$payment->income->subcategory->name.' | '.$payment->income->subcategory->category->name}}</td>
-            <td>${{$payment->payment_amount}}</td>
-            <td>{{$payment->trans_description ?? 'N/A'}}</td>
-            <td>
-              <span class="badge bg-{{ 
-                $payment->status == \App\Enums\PaymentStatus::PAID ? 'success' :
-                 ($payment->status == \App\Enums\PaymentStatus::UNPAID ? 'danger' : '')
-                }}">
-               {{ $payment->status->label() }}
-              </span>
-            </td>
-            <td>
-              <div class="flex gap-1">
+       <tr>
+           <th onclick="sortTable(0, this)">{{__('message.Nb')}} <span class="arrow"></span></th>
+           <th onclick="sortTable(1, this)">{{__('message.Category')}} <span class="arrow"></span></th>
+           <th onclick="sortTable(2, this)">{{__('message.Subcategory')}} <span class="arrow"></span></th>
+           <th onclick="sortTable(3, this)">{{__('message.Amount')}} <span class="arrow"></span></th>
+           <th onclick="sortTable(4, this)">{{__('message.Description')}} <span class="arrow"></span></th>
+           <th onclick="sortTable(5, this)">{{__('message.Date')}}  <span class="arrow"></span></th>
+           <th>{{__('message.Actions')}}</th>
+       </tr>
+   </thead>
+    <tbody>
+       @foreach($outcomes as $index => $outcome)
+            <tr>
+                <td>{{$index + 1}}</td>
+                <td>{{$outcome->subcategory->category->name}}</td>
+                <td>{{$outcome->subcategory->name}}</td>
+                <td> ${{$outcome->amount}}</td>
+                <td>{{$outcome->trans_description}}</td>
+                <td>{{ date('M d, Y', strtotime($outcome->created_at)) }}</td>
+                <td>
+                  <div class="flex gap-1">
                 <button class='btn btn-primary recovery-btn' 
-                        data-payment-id="{{ $payment->payment_id }}" 
-                        data-client-name="{{ $payment->income->client->full_name }}">
+                        data-outcome-id="{{ $outcome->outcome_id }}" >
                   <span class="d-sm-inline d-none">{{__('message.Recover')}}</span>
                   <span class="d-inline d-sm-none">R</span>
               </button>
 
                 <button class='btn btn-danger force-delete-btn' 
-                        data-payment-id="{{ $payment->payment_id }}" 
-                        data-client-name="{{ $payment->income->client->full_name }}">
+                        data-outcome-id="{{ $outcome->outcome_id }}" >
                   <span class="d-sm-inline d-none">{{__('message.Delete')}}</span>
                   <span class="d-inline d-sm-none">D</span>
               </button>
               </div>
-            </td>
-          </tr>
-        @endforeach
-      </tbody>
+                </td>
+            </tr>
+    @endforeach
+    </tbody>
     </table>
-    {{$payments->links()}}
+    {{$outcomes->links()}}
   </div>
 </div>  
 
@@ -71,12 +62,11 @@
         button.addEventListener('click', function(e) {
             e.preventDefault();
             
-            const paymentId = this.dataset.paymentId;
-            const clientName = this.dataset.clientName;
+            const outcomeId = this.dataset.outcomeId;
 
             Swal.fire({
                 title: '{{__("message.Are you sure")}}?',
-                text: `{{__("message.You are about to recover")}} ${clientName} !`,
+                text: `{{__("message.You are about to recover")}} ${outcomeId} !`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
@@ -90,13 +80,13 @@
                 }
             }).then(async (result) => {
                 if (result.isConfirmed) {
-                    await recoverClient(paymentId, clientName);
+                    await recoverOutcome(outcomeId);
                 }
             });
         });
     });
     
-    async function recoverClient(paymentId, clientName) {
+    async function recoverOutcome(outcomeId) {
         try {
     
             Swal.fire({
@@ -107,7 +97,7 @@
                 }
             });
             
-            const response = await fetch("{{ route('payment.recover', ':id') }}".replace(':id', paymentId), {
+            const response = await fetch("{{ route('outcome.recover', ':id') }}".replace(':id', outcomeId), {
                 method: 'PATCH',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -139,7 +129,7 @@
             
             Swal.fire({
                 title: '{{__("message.Error")}}!',
-                text: error.message || '{{__("message.Failed to recover Payment")}}',
+                text: error.message || '{{__("message.Failed to recover Outcome")}}',
                 icon: 'error',
                 confirmButtonColor: '#d33',
                 confirmButtonText: '{{__("message.OK")}}'
@@ -157,13 +147,12 @@
         button.addEventListener('click', function(e) {
             e.preventDefault();
             
-            const paymentId = this.dataset.paymentId;
-            const clientName = this.dataset.clientName;
+            const outcomeId = this.dataset.outcomeId;
             
             // confirmation
             Swal.fire({
                 title: '{{__("message.Are you sure")}}?',
-                text: `{{__("message.You are about to permanently delete payment for")}} ${clientName}. {{__("message.This action cannot be undone")}}!`,
+                text: `{{__("message.You are about to permanently delete outcome ")}}. {{__("message.This action cannot be undone")}}!`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
@@ -177,14 +166,14 @@
                 }
             }).then(async (result) => {
                 if (result.isConfirmed) {
-                    await forceDeleteClient(paymentId, clientName);
+                    await forceDeleteOutcome(outcomeId);
                 }
             });
         });
     });
     
 
-    async function forceDeleteClient(paymentId, clientName) {
+    async function forceDeleteOutcome(outcomeId) {
         try {
             // loader
             Swal.fire({
@@ -196,7 +185,7 @@
                 }
             });
             
-            const response = await fetch("{{ route('payment.force.delete', ':id') }}".replace(':id', paymentId), {
+            const response = await fetch("{{ route('outcome.force.delete', ':id') }}".replace(':id', outcomeId), {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -227,7 +216,7 @@
             
             Swal.fire({
                 title: '{{__("message.Error")}}!',
-                text: error.message || '{{__("message.Failed to delete payment")}}',
+                text: error.message || '{{__("message.Failed to delete outcome")}}',
                 icon: 'error',
                 confirmButtonColor: '#d33',
                 confirmButtonText: '{{__("message.OK")}}'

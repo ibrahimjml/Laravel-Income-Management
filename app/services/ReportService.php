@@ -2,25 +2,27 @@
 
 namespace App\Services;
 
+
 use App\Enums\PaymentType;
 use App\Models\{Client, Income, Invoice, Outcome, Payment};
 use App\Services\Analytics\BarChartService;
+use App\Services\Analytics\DoughnutService;
 use App\Services\Analytics\IncomeReportService;
 use App\Services\Analytics\OutcomeReportService;
 
 class ReportService
 {
-    protected $incomeReportService;
-    protected $outcomeReportService;
     protected $barChartService;
+    protected $doughnutService;
+    protected $dashboardService;
     public function __construct(
-      IncomeReportService $incomeReportService, 
-      OutcomeReportService $outcomeReportService,
-      BarChartService $barChartService)
+      BarChartService $barChartService,
+      DoughnutService $doughnutService,
+      DashboardService $dashboardService,)
     {
-        $this->incomeReportService = $incomeReportService;
-        $this->outcomeReportService = $outcomeReportService;
         $this->barChartService = $barChartService;
+        $this->doughnutService = $doughnutService;
+        $this->dashboardService = $dashboardService;
     }
     public function getReportsData(array $filters)
     {
@@ -94,8 +96,8 @@ class ReportService
     protected function getTotalClients(?string $dateFrom, ?string $dateTo)
     {
       return Client::notDeleted()
-                   ->whereHas('types', function($query) {
-                         $query->where('client_type.type_name', 'student');
+                   ->withWhereHas('types', function($query) {
+                         $query->selectRaw('COUNT(type_name) as count');
                          })   
                    ->dateBetween($dateFrom, $dateTo)
                    ->count();
@@ -150,10 +152,14 @@ class ReportService
     protected function getChartData(?string $dateFrom, ?string $dateTo)
     {
        return [
-          'income_category'      => $this->incomeReportService->getIncomeByCategory($dateFrom, $dateTo),
-          'income_sub_category'  => $this->incomeReportService->getIncomeBySubcategory($dateFrom, $dateTo),
-          'outcome_category'     => $this->outcomeReportService->getOutcomeByCategory($dateFrom, $dateTo),
-          'outcome_sub_category' => $this->outcomeReportService->getOutcomeBySubcategory($dateFrom, $dateTo)
-       ];
+          'income_category'       => $this->doughnutService->getIncomeByCategory($dateFrom, $dateTo),
+          'income_sub_category'   => $this->doughnutService->getIncomeBySubcategory($dateFrom, $dateTo),
+          'outcome_category'      => $this->doughnutService->getOutcomeByCategory($dateFrom, $dateTo),
+          'outcome_sub_category'  => $this->doughnutService->getOutcomeBySubcategory($dateFrom, $dateTo),
+          'payments_stats'        => $this->doughnutService->getPaymentsStats($dateFrom,$dateTo),
+          'income_stats'          => $this->doughnutService->getIcomeStats($dateFrom, $dateTo),
+          'clients_stats'         => $this->doughnutService->getTotalCLientsStats($dateFrom, $dateTo),
+
+        ];
     }
 }

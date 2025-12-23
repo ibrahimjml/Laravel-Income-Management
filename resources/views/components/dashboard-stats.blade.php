@@ -200,17 +200,17 @@
         <ul class="nav nav-pills flex-column">
           <li class="nav-item">
             <a href="#" class="nav-link">
-              {{ \App\Enums\PaymentStatus::PAID->label() }}
+              <b>{{ $paymentsStats['paid']['count'] }}</b>  {{ \App\Enums\PaymentStatus::PAID->label() }}
               <span class="float-right text-success">
-                {{ number_format($percentageSumPaid, 1) }}%
+              {{ number_format($paymentsStats['paid']['percentage'], 1) }}%
               </span>
             </a>
           </li>
           <li class="nav-item">
             <a href="#" class="nav-link">
-              {{ \App\Enums\PaymentStatus::UNPAID->label() }}
+              <b>{{ $paymentsStats['unpaid']['count'] }}</b>  {{ \App\Enums\PaymentStatus::UNPAID->label() }}
               <span class="float-right text-danger">
-                {{ number_format($percentageSumUnpaid, 1) }}%
+                {{ number_format($paymentsStats['unpaid']['percentage'], 1) }}%
               </span>
             </a>
           </li>

@@ -23,6 +23,7 @@
       }
 
     }
+
   </style>
   <div id="content" class="d-flex flex-column">
     <h1 class="mb-4 text-center">{{__('message.Dashboard')}}</h1>
@@ -38,7 +39,7 @@
       </div><!-- end dashboard cards -->
 
       <!-- dashboard stats -->
-      <x-dashboard-stats :currentMonth="$currentMonth" :upcomingPayments="$upcomingPayments" :outdatedPayments="$outdatedPayments" :totalYearlyIncome="$totalYearlyIncome" :incomePercentageChange="$incomePercentageChange" :labels="$labels" :percentageSumPaid="$percentageSumPaid" :percentageSumUnpaid="$percentageSumUnpaid" :logs="$logs"/>
+      <x-dashboard-stats :currentMonth="$currentMonth" :upcomingPayments="$upcomingPayments" :outdatedPayments="$outdatedPayments" :totalYearlyIncome="$totalYearlyIncome" :incomePercentageChange="$incomePercentageChange" :labels="$labels" :paymentsStats="$paymentsStats" :logs="$logs"/>
 
     </div>
   </div>
@@ -240,7 +241,7 @@
         ],
         datasets: [
             {
-                data: [@json($sumPaidPayments), @json($sumUnpaidPayments)],
+                data: [@json($paymentsStats['paid']['total']), @json($paymentsStats['unpaid']['total'])],
                 backgroundColor: ['#00a65a', '#f56954'] // success (paid), danger (unpaid)
             }
         ]

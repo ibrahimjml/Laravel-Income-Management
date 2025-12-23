@@ -8,15 +8,19 @@ use App\Services\PaymentService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Payment\CreatePaymentRequest;
 use App\Http\Requests\Payment\UpdatePaymentRequest;
+use App\Models\Invoice;
 use App\Models\Payment;
+use App\Services\InvoiceService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
     protected $paymentService;
-    public function __construct(PaymentService $paymentService){
+    protected $invoiceService;
+    public function __construct(PaymentService $paymentService, InvoiceService $invoiceService){
       $this->paymentService = $paymentService;
+      $this->invoiceService = $invoiceService;
     }
     public function payments_page()
   {
@@ -151,5 +155,24 @@ class PaymentController extends Controller
             'message' => 'Error: ' . $e->getMessage()
          ], 500);
      }
+    }
+    public function generate_invoice(Payment $payment)
+    {
+       $generated_invoice = Invoice::where('payment_id', $payment->payment_id)->exists();
+       $incomeId = $payment->income->income_id;
+
+       if($generated_invoice){
+        return response()->json([
+            'success' => false,
+            'message' => __('message.Invoice Already Generated')
+        ]);
+       }else{
+        $this->invoiceService->generateInvoice($incomeId,$payment->payment_id);
+        return response()->json([
+            'success' => true,
+            'message' => __('message.Invoice Generated')
+        ]);
+
+       }
     }
 }

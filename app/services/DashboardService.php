@@ -9,14 +9,17 @@ use App\Models\Invoice;
 use App\Models\Outcome;
 use App\Models\Payment;
 use App\Services\Analytics\BarChartService;
+use App\Services\Analytics\DoughnutService;
 use Carbon\Carbon;
 use Spatie\Activitylog\Models\Activity;
 
 class DashboardService
 {
     protected $barChartService;
-    public function __construct(BarChartService $barChartService){
+    protected $doughnutService;
+    public function __construct(BarChartService $barChartService, DoughnutService $doughnutService){
       $this->barChartService = $barChartService;
+      $this->doughnutService = $doughnutService;
     }
     public function getDashboardData()
     {
@@ -30,7 +33,6 @@ class DashboardService
          'financial'              => $this->getFinancialCard($firstDayOfMonth, $currentDay),
          'chart_data'             => $this->getChartData($firstDayOfMonth),
          'yearly_chart_data'      => $this->getYearlyChartData($thisYear, $yearBefore),
-         'sum_payments'           => $this->getSumPayments(),
          'upcoming_payments'      => $this->getUpcomingPayments(),
          'outdated_payments'      => $this->getTotalOutdated(),
          'current_month'          => date('F Y'),
@@ -86,6 +88,7 @@ class DashboardService
          $labels = range(1, date('t')); 
          $incomeData = $this->barChartService->getDailyIncomeData($firstDayOfMonth);
          $outcomeData = $this->barChartService->getDailyOutcomeData($firstDayOfMonth);
+         $paymentsStats = $this->doughnutService->getPaymentsStats($dateFrom = null, $dateTo = null);
 
          $profitData = array_map(function($i) use ($incomeData, $outcomeData) {
              return $incomeData[$i] - $outcomeData[$i];
@@ -95,7 +98,8 @@ class DashboardService
             'labels'       => $labels,
             'income_data'  => $incomeData,
             'outcome_data' => $outcomeData,
-            'profit_data'  => $profitData
+            'profit_data'  => $profitData,
+            'payments_stats' => $paymentsStats,
          ];
     }
     protected function getYearlyChartData($thisYear, $yearBefore)
@@ -132,30 +136,6 @@ class DashboardService
             'income_percentage_change' => $percentageChange,
         ];
     }
-public function getSumPayments()
-{
-  $sumPaid = $this->barChartService->getSumPaymentsData()['sum_paid'];
-  $sumUnpaid = $this->barChartService->getSumPaymentsData()['sum_unpaid'];
-
-  $percentageSumPaid = 0;
-  $percentageSumUnpaid = 0;
-  $totalPayments = $sumPaid + $sumUnpaid;
-
-  if ($totalPayments > 0) {
-      $percentageSumPaid = ($sumPaid / $totalPayments) * 100;
-      $percentageSumUnpaid = ($sumUnpaid / $totalPayments) * 100;
-  } else {
-      $percentageSumPaid = 0;
-      $percentageSumUnpaid = 0;
-  }
-
-  return [
-    'sum_paid' => $sumPaid,
-    'sum_unpaid' => $sumUnpaid,
-    'percentage_sum_paid' => round($percentageSumPaid, 2),
-    'percentage_sum_unpaid' => round($percentageSumUnpaid, 2),
-  ];
-}
 protected function getUpcomingPayments()
 {
     $today = Carbon::today();

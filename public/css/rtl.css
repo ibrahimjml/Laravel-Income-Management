@@ -84,3 +84,11 @@
     flex-direction: column;
     align-items: end;
 }
+/* doughnot chart */
+[dir="rtl"] .nav-pills {
+    justify-content: space-between;
+}
+
+[dir="rtl"] .nav-pills .nav-link > .float-right {
+    float: left !important;
+}

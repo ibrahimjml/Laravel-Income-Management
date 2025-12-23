@@ -8,6 +8,7 @@ use App\Http\Requests\Outcome\CreateOutcomeRequest;
 use App\Http\Requests\Outcome\UpdateOutcomeRequest;
 use App\Http\Requests\Subcategory\CreateSubcategoryRequest;
 use App\Models\Category;
+use App\Models\Outcome;
 use App\Models\Subcategory;
 use App\Services\OutcomeService;
 
@@ -81,5 +82,45 @@ class OutcomesController extends Controller
         ], 500);
      }
     }
-    
+    public function trashed_outcomes()
+    {
+      return view('admin.outcomes.trashed',['outcomes'=> Outcome::isDeleted()->with('subcategory.category')->latest()->paginate('10')]);
+    }
+    public function recover($id)
+    {
+       try {
+            $outcome = Outcome::findOrFail($id);
+
+            $outcome->update([
+                'is_deleted' => 0
+             ]);
+          
+        return response()->json([
+            'success' => true,
+            'message' => __('message.outcome Recovered')
+        ]);
+        
+      } catch (\Exception $e) {  
+         return response()->json([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+         ], 500);
+     }
+    }
+    public function force_delete($id)
+    {
+        try {
+        Outcome::findOrFail($id)->delete();
+        return response()->json([
+            'success' => true,
+            'message' => __('message.Outcome Permanently Deleted')
+        ]);
+        
+      } catch (\Exception $e) {  
+         return response()->json([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+         ], 500);
+     }
+    }
 }

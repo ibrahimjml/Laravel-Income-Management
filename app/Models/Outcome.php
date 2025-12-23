@@ -37,6 +37,10 @@ class Outcome extends Model
   {
     return $query->where('is_deleted',0);
   }
+    public function scopeIsDeleted($query)
+  {
+    return $query->where('is_deleted',1);
+  }
   public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

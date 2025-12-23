@@ -61,6 +61,7 @@ Route::controller(PaymentController::class)->group(function(){
     Route::get('/outdatedpayments', 'outdated_page')->name('admin.outdated');
     Route::get('/todaypayments', 'today_page')->name('admin.today');
     Route::get('/upcomingpayments', 'upcoming_page')->name('admin.upcoming');
+    Route::post('/payment/invoice/{payment}','generate_invoice')->name('payment.invoice');
     // Recover payments
     Route::get('/payments/trashed','trashed_payments')->name('trashed.payments');
     Route::patch('/payments/recover/{id}','recover')->name('payment.recover');
@@ -75,6 +76,9 @@ Route::controller(OutcomesController::class)->group(function(){
   Route::post('/add-outcome', 'add_outcome')->name('add.out');
   Route::put('/edit-outcome/{id}', 'edit_outcome')->name('edit.out');
   // recover outcomes
+  Route::get('/outcomes/trashed','trashed_outcomes')->name('trashed.outcomes');
+  Route::patch('/outcomes/recover/{id}','recover')->name('outcome.recover');
+  Route::delete('/outcomes/delete/{id}','force_delete')->name('outcome.force.delete');
 });
 
 Route::resource('/discounts',DiscountController::class)->except(['create','show','edit']);

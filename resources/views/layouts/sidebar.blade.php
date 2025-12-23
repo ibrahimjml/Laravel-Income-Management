@@ -87,7 +87,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="" 
+                        <a href="{{ route('trashed.outcomes') }}" 
                            class="nav-link {{ request()->routeIs('trashed.outcomes') ? 'active' : '' }}">
                             <i class="fas fa-recycle nav-icon"></i>
                             <p>{{__('message.Recover Outcomes')}}</p>

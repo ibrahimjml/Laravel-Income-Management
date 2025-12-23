@@ -57,7 +57,7 @@
     <div class="col-md-3">
       <div class="small-box bg-black bg-gradient">
         <div class="inner">
-          <h3>${{ $totalIncomeRemaining}}</h3>
+          <h3>${{ number_format($totalIncomeRemaining)}}</h3>
           <p>{{ __('income.Total Income Remaining') }}</p>
         </div>
         <div class="icon bf-light">

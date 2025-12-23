@@ -27,6 +27,7 @@ return [
    'Delete'                          => 'Delete',
    'Recover Clients'                  => 'Recover Clients',
    'Client Email' => 'Client Email',
+   'Clients Stats' => 'Clients Stats',
    // incomes
    'All Incomes' => 'All Incomes',
    'Add Category'      => 'Add Category',
@@ -63,6 +64,7 @@ return [
    'Edit Income' => 'Edit Income',
    'Add Payment' => 'Add Payment',
    'Recover Incomes' => 'Recover Incomes',
+   'Incomes Stats' => 'Incomes Stats',
     // outcomes
    'All Outcomes' => 'All Outcomes',
    'Trashed Outcomes' => 'Trashed Outcomes',
@@ -70,6 +72,8 @@ return [
    'Add Outcome' => 'Add Outcome',
    'Delete Outcome' => 'Delete Outcome',
    'Recover Outcomes' => 'Recover Outcomes',
+   'Outcome Permanently Deleted' => 'Outcome Permanently Deleted',
+   'outcome Recovered' => 'outcome Recovered',
    // payments schedule
    'All Payments' => 'All Payments',
    'Edit Payment' => 'Edit Payment',
@@ -165,6 +169,12 @@ return [
     'Recent Activity Logs' => 'Recent Activity Logs',
     'View All Logs' => 'View All Logs',
     'Total Invoices' => 'Total Invoices',
+    'Invoice Already Generated' => 'Invoice Already Generated',
+    'Invoice Generated' => 'Invoice Generated',
+    'Generating failed' => 'Generating failed',
+    'Failed to generate invoice' => 'Failed to generate invoice',
+    'Not Generated' => 'Not Generated',
+    'Generated' => 'Generated',
     // activity
     'Activity Logs' => 'Activity Logs',
 ];

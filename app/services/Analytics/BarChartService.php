@@ -1,7 +1,7 @@
 <?php
 namespace App\Services\Analytics;
 
-use App\Enums\IncomeStatus;
+
 use App\Enums\PaymentStatus;
 use App\Models\Income;
 use App\Models\Outcome;
@@ -59,19 +59,7 @@ class BarChartService
             'yearBefore' => $yearBeforeIncomes,
         ];
   }
-  // sum payments paid vs unpaid        
-  public function getSumPaymentsData()
-  {
-    $paidStatus = PaymentStatus::PAID;
-    $unpaidStatus = PaymentStatus::UNPAID;
-
-    return [
-      'sum_paid' => $this->getSumPayments($paidStatus),
-      'sum_unpaid' => $this->getSumPayments($unpaidStatus),
-    ];
-  
-  }
-
+// total remianing income card       
 public function getTotalRemainingIncome($dateFrom, $dateTo): float
 {
     $subQuery = DB::table('income as i')
@@ -115,17 +103,5 @@ public function getTotalRemainingIncome($dateFrom, $dateTo): float
                      ->groupBy('month')
                      ->pluck('total', 'month');
   }
-  private function getSumPayments(PaymentStatus $status)
-  {
-    return (float) DB::table('payments as p')
-                ->join('income as i', function ($q) {
-                         $q->on('p.income_id', '=', 'i.income_id')
-                           ->where('i.is_deleted', 0);
-                     })
-                ->where('p.is_deleted', 0)
-                ->where('p.status', $status)
-                ->whereYear('p.created_at', now()->year)
-                ->sum('p.payment_amount');
-  }
-  
+
 }

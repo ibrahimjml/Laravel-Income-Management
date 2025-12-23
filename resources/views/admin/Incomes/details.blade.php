@@ -151,8 +151,11 @@
                               <span class="d-sm-inline d-none">{{__('message.Delete')}}</span>
                               <span class="d-inline d-sm-none">D</span>
                       </button>
-                      <button class="btn btn-warning">
-                        <span class="d-inline"><i class="fas fa-file-invoice-dollar text-white"></i></span>
+                      <button class="invoice-btns btn btn-warning"
+                              data-payment-id="{{ $payment->payment_id }}">
+                        <span class="d-inline">
+                          <i class="fas fa-file-invoice-dollar text-white"></i>
+                        </span>
                       </button>
                       </td>
                   </tr>
@@ -334,6 +337,89 @@ document.addEventListener('DOMContentLoaded', function() {
             Swal.fire({
                 title: '{{__("message.Error")}}!',
                 text: error.message || '{{__("message.Failed to delete payment")}}',
+                icon: 'error',
+                confirmButtonColor: '#d33',
+                confirmButtonText: '{{__("message.OK")}}'
+            });
+        }
+    }
+});
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Handle force delete button clicks
+    const generateInvoiceButtons = document.querySelectorAll('.invoice-btns');
+    
+    generateInvoiceButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const paymentId = this.dataset.paymentId;
+
+             fetchInvoice(paymentId);
+        
+        });
+    });
+    
+    // Fetch invoice 
+    async function fetchInvoice(paymentId) {
+        try {
+            // Show loading indicator
+            Swal.fire({
+                title: '{{__("message.Generating")}}...',
+                text: '{{__("message.Please wait")}}',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
+            const response = await fetch("{{ route('payment.invoice', ':id') }}".replace(':id', paymentId), {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error('{{__("message.Generating failed")}}');
+            }
+            if(data.success === false){
+                // info notification
+            Swal.fire({
+                title: '{{__("message.Not Generated")}}!',
+                text: data.message,
+                icon: 'info',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: '{{__("message.OK")}}'
+            }).then((result) => {
+
+                 location.reload();
+            });
+            return;
+            }
+            // Success notification
+            Swal.fire({
+                title: '{{__("message.Generated")}}!',
+                text: data.message,
+                icon: 'success',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: '{{__("message.OK")}}'
+            }).then((result) => {
+
+                 location.reload();
+            });
+            
+        } catch (error) {
+            console.error('Error:', error);
+            
+            Swal.fire({
+                title: '{{__("message.Error")}}!',
+                text: error.message || '{{__("message.Failed to generate invoice")}}',
                 icon: 'error',
                 confirmButtonColor: '#d33',
                 confirmButtonText: '{{__("message.OK")}}'

@@ -22,6 +22,11 @@
       .arrow {font-size: 12px;margin-left: 5px;}
       .arrow.asc::after {content: "▲";}
       .arrow.desc::after { content: "▼";}
+
+    @media (400px <= width <= 600px) {
+    .small-box {display: flex;flex-direction: row;justify-content: space-between;align-items: center;}    
+    .small-box .icon {  display: block ;}
+    .small-box-footer {position: absolute !important;bottom: 0;width: 100%;}}
     </style>
     
     @stack('styles')

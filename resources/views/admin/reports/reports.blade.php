@@ -110,95 +110,18 @@
               </div>
           </div>
   
-          <div class="row">
-              <div class="col-lg-3">
-                  <div class="shadow p-3 mb-3">
-                      <h3 class="text-center">{{__('message.Income by Category')}}</h3>
-                      <canvas id="incomeCategoryChart"></canvas>
-                  </div>
-              </div>
-              <div class="col-lg-3">
-                  <div class="shadow p-3 mb-3">
-                      <h3 class="text-center">{{__('message.Income by Subcategory')}}</h3>
-                      <canvas id="incomeSubcategoryChart"></canvas>
-                  </div>
-              </div>
-              <div class="col-lg-3">
-                  <div class="shadow p-3 mb-3">
-                      <h3 class="text-center">{{__('message.Outcome by Category')}}</h3>
-                      <canvas id="outcomeCategoryChart"></canvas>
-                  </div>
-              </div>
-  
-              <div class="col-lg-3">
-                  <div class="shadow p-3 mb-3" >
-                      <h4 class="text-center">{{__('message.Outcome by Subcategory')}}</h4>
-                      <canvas id="outcomeSubcategoryChart"></canvas>
-                  </div>
-              </div>
+          <div class="row"><!-- reports stats -->
+           @include('admin.reports.partials.reports-stats')
           </div>
       </div>
 {{-- filter by date model --}}
 @include('admin.reports.partials.filter-date-model')
 </div>
+@endsection
+
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <!-- filter date model script -->
 <script src="{{asset('js/filter.js')}}"></script>
-<!-- doughnut carts -->
-<script>
-  var incomeCategoryCtx = document.getElementById('incomeCategoryChart').getContext('2d');
-        var incomeCategoryChart = new Chart(incomeCategoryCtx, {
-            type: 'doughnut',
-            data: {
-                labels: @json(array_column($incomeCategoryData->toArray(), 'category')),
-                datasets: [{
-                    label: 'Income by Category',
-                    data: @json(array_column($incomeCategoryData->toArray(), 'total_amount')),
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
-                }]
-            }
-          });
-
-          var incomeSubcategoryCtx = document.getElementById('incomeSubcategoryChart').getContext('2d');
-        var incomeSubcategoryChart = new Chart(incomeSubcategoryCtx, {
-            type: 'doughnut',
-            data: {
-                labels: @json(array_column($incomeSubcategoryData->toArray(), 'subcategory')),
-                datasets: [{
-                    label: 'Income by Subcategory',
-                    data: @json(array_column($incomeSubcategoryData->toArray(), 'total_amount')),
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
-                }]
-            }
-        });    
-        var outcomeCategoryCtx = document.getElementById('outcomeCategoryChart').getContext('2d');
-        var outcomeCategoryChart = new Chart(outcomeCategoryCtx, {
-            type: 'doughnut',
-            data: {
-                labels: @json(array_column($outcomeCategoryData->toArray(), 'category')),
-                datasets: [{
-                    label: 'Outcome by Category',
-                    data: @json(array_column($outcomeCategoryData->toArray(), 'total_amount')),
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
-                }]
-            }
-        });
-
-        var outcomeSubcategoryCtx = document.getElementById('outcomeSubcategoryChart').getContext('2d');
-        var outcomeSubcategoryChart = new Chart(outcomeSubcategoryCtx, {
-            type: 'doughnut',
-            data: {
-                labels: @json(array_column($outcomeSubcategoryData->toArray(), 'subcategory')),
-                datasets: [{
-                    label: 'Outcome by Subcategory',
-                    data: @json(array_column($outcomeSubcategoryData->toArray(), 'total_amount')),
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
-                }]
-            }
-        });
-
-</script>
 @endpush   
-@endsection

@@ -7,16 +7,20 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
- ![Dashboard ](https://i.postimg.cc/rFJyTJRy/Screenshot-2025-12-19-163155.png)
- ![Clients](https://i.postimg.cc/HLZqHwwT/Screenshot-2025-10-07-193249.png)
- ![Incomes](https://i.postimg.cc/YqX2h5YK/Screenshot-2025-10-19-001007.png)
- ![Income detail](https://i.postimg.cc/QxW2fxFc/Screenshot-2025-10-24-131501.png)
+ 
+ [![Dashboard](https://i.postimg.cc/mk19hHp7/Screenshot-2025-12-23-234357.png)](https://postimg.cc/9wV0nrhf)
+ [![Dashboard 2](https://i.postimg.cc/ZKKRf3xW/Screenshot_2025_12_23_234422.png)](https://postimg.cc/WtCTzdKV)
+[![Clients](https://i.postimg.cc/9fSZ2b1J/Screenshot_2025_12_23_235505.png)](https://postimg.cc/qtszX8P3)
+[![Incomes](https://i.postimg.cc/bY0DVqXC/Screenshot_2025_12_23_234456.png)](https://postimg.cc/mhDgtfgC)
+[![Income Detail](https://i.postimg.cc/26Q6t7tK/Screenshot_2025_12_23_234702.png)](https://postimg.cc/sQ2sQ7sY)
  ![Outcomes](https://i.postimg.cc/nr5Bs5Vz/Screenshot-2025-10-10-011919.png)
  ![Payments Schedule](https://i.postimg.cc/fLVsZ7RS/Screenshot-2025-10-24-131117.png)
+ [![outdated](https://i.postimg.cc/4dWCnKHR/Screenshot_2025_12_23_234512.png)](https://postimg.cc/MMf3FpY9)
  ![Calendar](https://i.postimg.cc/zXywLjWx/Screenshot-2025-10-18-231522.png)
  ![Invoice](https://i.postimg.cc/jq14XM8d/Screenshot-2025-10-12-205239.png)
  ![Invoice page](https://i.postimg.cc/9fwJBv57/Screenshot-2025-10-11-040539.png)
- ![Reports](https://i.postimg.cc/tTJsh5Mb/Screenshot-2025-10-10-011546.png)
+[![Reports](https://i.postimg.cc/3whzBj2c/Screenshot_2025_12_23_233848.png)](https://postimg.cc/YvXX2Wn6)
+ [![Reports 2](https://i.postimg.cc/sX68stb3/Screenshot_2025_12_23_234325.png)](https://postimg.cc/R6tGTbMY)
 
  
 ### Features
@@ -29,6 +33,7 @@
 - **Manage discounts**
 - **Manage Invoices**
 - **Dynamic Calendar events based on upcomig payments**
+- **manage payments Recurring and Onetime Payments**
 - **Payments Schedule: Outdated Payements - Today Payments - Upcoming Payments**
 - **Manage Reports** 
 - **Print and Export PDF** 
